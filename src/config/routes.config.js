@@ -4,9 +4,11 @@
  * home: { path: '/', background: 'black', rollbackLink: '/login' },
  */
 export default {
-  home: { path: '/' },
-  firstPage: { path: '/page-1' },
-  signUp: { path: '/sign-up' },
-  signIn: { path: '/sign-in' },
-  account: { path: '/account' },
+  feed: '/',
+  search: '/search',
+  new: '/new',
+  profile: '/profile',
+  notification: '/notification',
+  signUp: '/sign-up',
+  signIn: '/sign-in',
 };

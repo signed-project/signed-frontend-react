@@ -1,32 +1,64 @@
 import React, { useState } from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
-
+import { useSelector } from 'react-redux';
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import Layout from '../layout/Layout';
-import { ErrorBoundary } from '../utils';
 
-import Home, { config as homeConfig } from '../pages/Home/Home';
-import SignIn, { config as signInConfig } from '../pages/SignIn/SignIn';
+import Feed from '../pages/Feed/Feed';
+import SingUp from '../pages/SingUp/SingUp';
+// import Search from '../pages/SignIn/SignIn';
+// import NewPost from '../pages/SignIn/SignIn';
+// import Profile from '../pages/SignIn/SignIn';
+// import SignIn from '../pages/SignIn/SignIn';
+// import Notification from '../pages/SignIn/SignIn';
 import PageNotFound from '../pages/PageNotFound/PageNotFound';
+import routes from '../../config/routes.config'
+// import MainRouts from './MainRoutes';
 
 const App = () => {
-  const [appError, setAppError] = useState(false);
+
+  const isAuth = useSelector(state => state.user.isAuth)
+  console.log('is', isAuth);
+
+  const checkAuth = () => {
+    if (isAuth) {
+      return (
+        <Switch>
+          <Layout>
+            <Route path={routes.feed} exact component={Feed} />
+            {/*   <Route path={signInConfig.path} component={Search} />
+            <Route path={signInConfig.path} component={NewPost} />
+            <Route path={signInConfig.path} component={Profile} />
+            <Route path={signInConfig.path} component={Notification} /> */}
+            {/* <Route component={PageNotFound} /> */}
+          </Layout>
+        </Switch>
+      )
+    }
+    else {
+      return (
+        <Switch>
+          <Redirect to={routes.signUp} />
+          {/* <Route path={routes.signUp} exact component={SingUp} /> */}
+        </Switch>
+      )
+    }
+  }
 
   return (
     <BrowserRouter basename={'/'}>
-      <ErrorBoundary onError={() => setAppError(true)}>
-        <Switch>
-          <Layout>
-            <Switch>
-              <Route path={homeConfig.path} exact component={Home} />
-              <Route path={signInConfig.path} component={SignIn} />
+      {/* <ErrorBoundary onError={() => setAppError(true)}> */}
+      {checkAuth()}
 
-              <Route component={PageNotFound} />
-            </Switch>
-          </Layout>
-          {/* <Notifications /> if would be created */}
-        </Switch>
-      </ErrorBoundary>
-    </BrowserRouter>
+
+      {!isAuth &&
+        <>
+          < Switch >
+            <Route path={routes.signUp} exact component={SingUp} />
+          </Switch>
+        </>
+      }
+      {/* </ErrorBoundary> */}
+    </BrowserRouter >
   );
 };
 

@@ -1,7 +1,20 @@
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import logo from './logo.svg';
+import { appActions } from './api/storage/app';
 import './App.css';
 
-function App() {
+
+
+
+const App = () => {
+
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(appActions.setTest(777))
+  }, [dispatch])
+
   return (
     <div className="App">
       <header className="App-header">

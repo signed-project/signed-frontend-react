@@ -14,9 +14,9 @@ if (process.env.REACT_APP_DEBUG) {
   });
 } else {
   setLogger({
-    log: () => {},
-    warn: () => {},
-    error: () => {},
+    log: () => { },
+    warn: () => { },
+    error: () => { },
   });
 }
 

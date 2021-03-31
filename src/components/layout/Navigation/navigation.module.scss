@@ -1,19 +1,10 @@
 .bar {
   position: fixed;
   left: 0;
-  top: 225px;
+  right: 0;
+  bottom: 0;
   background-color: #24c967;
-  max-width: 72px;
-  border-radius: 0 25px 25px 0;
+  width: 100%;
   box-shadow: 0px 2px 20px 0 rgba(155, 172, 184, 0.35);
   color: #fff;
-
-  & a.nav-link.active {
-    background-color: #1eac5e;
-  }
-
-  & a {
-    color: #fff;
-  }
-
 }

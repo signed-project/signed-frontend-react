@@ -1,3 +1,3 @@
 import reducer from './reducer';
-import * as authActions from './actions';
-export { reducer, authActions };
+import * as axiosActions from './actions';
+export { reducer, axiosActions };
