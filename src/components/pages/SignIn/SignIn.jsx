@@ -1,12 +1,13 @@
 import React from 'react';
 
-import withAuthorization from '../../../hoc/withAuthorization';
-import routeConfig from '../../../config/routes.config';
 
-export const config = { path: routeConfig.signIn.path };
 
 const SignIn = (props) => {
-  return <div className="">SignIn</div>;
+  return (
+    <>
+      <h1 style={{ height: '3000px' }}>SignIn</h1>
+    </>
+  );
 };
 
-export default withAuthorization(false)(SignIn);
+export default SignIn;

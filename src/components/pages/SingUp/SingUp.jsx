@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 
-const Feed = (props) => {
+const SingUp = (props) => {
 
   return (
     <>
@@ -10,4 +10,4 @@ const Feed = (props) => {
   );
 };
 
-export default Feed;
+export default SingUp;
