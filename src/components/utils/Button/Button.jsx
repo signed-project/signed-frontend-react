@@ -1,9 +1,29 @@
-import React from 'react';
+import React from 'react'
+import styles from './button.module.scss'
+/* 
+  Button class names: 
+  Sizes: tiny, small
+  Colors: clean_white, clean, red, secondary, primary
+*/
+const Button = ({ className, onClick, disabled, type, children }) => {
+  let buttonClasses = [styles.button]
+  if (className) {
+    const currentClasses = className.split(' ')
+    currentClasses.forEach(type => {
+      buttonClasses = [...buttonClasses, styles[type]]
+    })
+  }
 
-import styles from './button.module.scss';
+  return (
+    <button
+      className={buttonClasses.join(' ')}
+      onClick={onClick}
+      disabled={disabled}
+      type={type ? type : 'button'}
+    > {children}
+    </button>
+  )
+}
 
-const Button = (props) => {
-  return <input type="button" value="" />;
-};
 
-export default Button;
+export default Button

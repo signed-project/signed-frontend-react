@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Header from './Header/Header';
 import Navigation from './Navigation/Navigation';
+import WelcomeSing from './WelcomeSing/WelcomeSing';
 
 const Layout = ({ children, theme }) => {
   console.log('theme', theme);
@@ -13,6 +14,7 @@ const Layout = ({ children, theme }) => {
         {children}
       </main>
       { theme && <Navigation />}
+      {/* <WelcomeSing /> */}
     </div >
   );
 };

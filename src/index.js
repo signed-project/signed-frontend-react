@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-// import 'normalize.css';
+import './assets/css/index.scss';
 import App from './components/App/App';
 import store from './api/storage';
 import { Provider as StoreProvider } from 'react-redux';

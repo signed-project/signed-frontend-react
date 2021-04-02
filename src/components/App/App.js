@@ -13,11 +13,12 @@ const App = () => {
     theme: themeVal,
     toggleTheme: (val) => setThemeVal(val)
   };
-  // value={true}
   return (
     <BrowserRouter basename={'/'}>
       <LayoutProvider.Provider value={state}  >
-        <MainRouts />
+        <BrowserRouter>
+          <MainRouts />
+        </BrowserRouter>
       </LayoutProvider.Provider>
     </BrowserRouter >
   );

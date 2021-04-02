@@ -1,0 +1,18 @@
+.author {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.wrapperContent {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.menuIcon {
+  height: 15px;
+  margin-right: 10px;
+}

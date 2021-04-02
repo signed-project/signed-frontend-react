@@ -19,31 +19,32 @@ const MainRouts = () => {
             <LayoutProvider.Consumer >
                 {({ theme, toggleTheme }) => {
                     return (
+                        // <BrowserRouter basename={'/'}>
                         <Layout theme={theme}>
-                            <Suspense fallback={''}>
-                                <Switch>
-                                    <Route path={routes.feed} exact
-                                        component={() => <Feed theme={theme} toggleTheme={toggleTheme} />}
-                                    />
-                                    <Route path={routes.search} exact
-                                        component={() => <Search theme={theme} toggleTheme={toggleTheme} />}
-                                    />
-                                    <Route path={routes.newPost} exact
-                                        component={() => <NewPost theme={theme} toggleTheme={toggleTheme} />}
-                                    />
-                                    <Route path={routes.profile} exact
-                                        component={() => <Profile theme={theme} toggleTheme={toggleTheme} />}
-                                    />
-
-                                    <Route path={routes.notification} exact
-                                        component={() => <Notification theme={theme} toggleTheme={toggleTheme} />}
-                                    />
-                                    <Route path={routes.signUp} exact
-                                        component={() => <SingUp theme={theme} toggleTheme={toggleTheme} />}
-                                    />
-                                </Switch>
-                            </Suspense>
+                            {/* <Suspense fallback={''}> */}
+                            <Switch>
+                                <Route path={routes.feed} exact
+                                    component={() => <Feed theme={theme} toggleTheme={toggleTheme} />}
+                                />
+                                <Route path={routes.search} exact
+                                    component={() => <Search theme={theme} toggleTheme={toggleTheme} />}
+                                />
+                                <Route path={routes.newPost} exact
+                                    component={() => <NewPost theme={theme} toggleTheme={toggleTheme} />}
+                                />
+                                <Route path={routes.profile} exact
+                                    component={() => <Profile theme={theme} toggleTheme={toggleTheme} />}
+                                />
+                                <Route path={routes.notification} exact
+                                    component={() => <Notification theme={theme} toggleTheme={toggleTheme} />}
+                                />
+                                <Route path={routes.signUp} exact
+                                    component={() => <SingUp theme={theme} toggleTheme={toggleTheme} />}
+                                />
+                            </Switch>
+                            {/* </Suspense> */}
                         </Layout>
+                        // </BrowserRouter>
                     )
                 }
                 }

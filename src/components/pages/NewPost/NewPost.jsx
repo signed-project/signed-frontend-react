@@ -3,9 +3,6 @@ import React, { useEffect, useState } from 'react';
 
 const NewPost = ({ toggleTheme }) => {
 
-  useEffect(() => {
-    toggleTheme(false);
-  }, [toggleTheme]);
 
   return (
     <>

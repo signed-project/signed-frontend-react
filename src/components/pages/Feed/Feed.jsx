@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from 'react';
+import Post from '../../utils/Post/Post';
+import style from './feed.module.scss';
 
 
 const Feed = (props) => {
 
+  console.log('Feed');
+
   return (
     <>
-      <h1 style={{ height: '3000px' }}>feed</h1>
+      <div className={style.feed}>
+        <Post />
+      </div>
     </>
   );
 };

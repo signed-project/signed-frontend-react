@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
 
 
-const SingUp = (props) => {
+const SingUp = ({ toggleTheme }) => {
+
+  useEffect(() => {
+    toggleTheme(false);
+  }, [toggleTheme]);
 
   return (
     <>
