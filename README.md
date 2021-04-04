@@ -42,8 +42,10 @@
 * dateEnd - unixtime
 * posts - [post]
 * sources - [source]
+* hash - optional
 
 ## tag
 * name
 * posts - [post]
 * sources - [source]
+* hash - optional
