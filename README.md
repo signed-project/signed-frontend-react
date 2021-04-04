@@ -10,7 +10,6 @@
 * attachments - [media]
 * replyTo - post, optional
 * permalinks - [url]
-* url - optional
 * hash - optional
 * signatures - [signature], optional 
 
@@ -29,11 +28,10 @@
 
 ## media
 * contentType - mime
-* content
-  * url
-  * hash
+* hash
 
 ## index
+* fileStores - [url]
 * recentPosts - [post]
 * sources - [source]
 * archives - [archive]
