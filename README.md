@@ -17,8 +17,8 @@
 ## media
 * contentType - mime
 * content
-** url
-** hash
+  * url
+  * hash
 
 ## signedContent
 
