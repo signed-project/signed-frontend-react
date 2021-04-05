@@ -1,22 +1,23 @@
 # Data Dictionary
 
 ## post
-* sourceAddress
+* source - source
 * uniqueKey - string
 * type - 'post' | 'like' | 'repost' | 'reply'
-* created - unixtime
-* updated - unixtime, the client may reject anything updated in the future
+* created - epoch time in milliseconds
+* updated - epoch time in milliseconds, the client may reject anything updated in the future
 * text
 * attachments - [media]
 * replyTo - post, optional
-* permalinks - [url]
 * hash - optional
 * signatures - [signature], optional 
+* likesCount - int
+* repostsCount - int
 
 ## source
 * address
 * name
-* updated
+* updated - epoch time in milliseconds
 * avatar - media
 * hosts - [url]
 * signatures - [signature], optional
