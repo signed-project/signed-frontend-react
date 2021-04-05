@@ -1,0 +1,61 @@
+{
+  "posts": [
+    {
+      "sourceAddress": "1HZwkjkeaoZfTSaJxDw6aKkxp45agDiEzN_001",
+      "uniqueKey": "1111",
+      "type": "post",
+      "created": "1617630271111",
+      "text": "Одним из важных факторов ранжирования в Google является скорость загрузки страниц сайта, которую измеряют ",
+      "attachments": [
+        {
+          "contentType": "image/jpeg",
+          "content": {
+            "url": "filename.jpeg",
+            "hash": "f433c21fe3c6c7475f7be0017294547e93d7fcd44617f62bf7f369a13b48e764"
+          }
+        }
+      ],
+      "signatures": "",
+      "likesCount": 1123,
+      "reportsCount": 33
+    },
+    {
+      "sourceAddress": "1HZwkjkeaoZfTSaJxDw6aKkxp45agDiEzN_001",
+      "uniqueKey": "1112",
+      "type": "post",
+      "created": "1617630272110",
+      "text": "Одним из важных факторов ранжирования в Google является скорость загрузки страниц сайта, которую измеряют ",
+      "attachments": [
+        {
+          "contentType": "image/jpeg",
+          "content": {
+            "url": "filename.jpeg",
+            "hash": "f433c21fe3c6c7475f7be0017294547e93d7fcd44617f62bf7f369a13b48e764"
+          }
+        }
+      ],
+      "signatures": "",
+      "likesCount": 44,
+      "reportsCount": 21
+    },
+    {
+      "sourceAddress": "1HZwkjkeaoZfTSaJxDw6aKkxp45agDiEzN_002",
+      "uniqueKey": "1113",
+      "type": "post",
+      "created": "1617630272159",
+      "text": "Одним из важных факторов ранжирования в Google является скорость загрузки страниц сайта, которую измеряют ",
+      "attachments": [
+        {
+          "contentType": "image/jpeg",
+          "content": {
+            "url": "filename.jpeg",
+            "hash": "f433c21fe3c6c7475f7be0017294547e93d7fcd44617f62bf7f369a13b48e764"
+          }
+        }
+      ],
+      "signatures": "",
+      "likesCount": 33,
+      "reportsCount": 11
+    }
+  ]
+}

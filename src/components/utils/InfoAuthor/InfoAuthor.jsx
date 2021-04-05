@@ -2,17 +2,17 @@
 import styles from './infoAuthor.module.scss';
 import icon from '../../../assets/svg/icon';
 
-const InfoAuthor = () => {
+const InfoAuthor = ({ name, date }) => {
     return (
         <>
             <div className={styles.info}>
                 <div className={styles.textWrapper} >
                     <div className={styles.nameBlock} >
                         <img src={icon.tickOne} alt="tick icon" className={styles.tickOne} />
-                        <span className={styles.name}>Jenny Wilson</span>
+                        <span className={styles.name}>{name}</span>
                     </div>
                     <div className={styles.date}>
-                        fev 24, 8:30 pm
+                        <span>{date}</span>
                     </div>
                 </div>
             </div>

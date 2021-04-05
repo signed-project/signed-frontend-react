@@ -2,7 +2,7 @@
 import styles from './reaction.module.scss';
 import icon from '../../../assets/svg/icon';
 
-const Reaction = () => {
+const Reaction = ({ likesCount, reportsCount }) => {
 
     return (
         <>
@@ -11,13 +11,13 @@ const Reaction = () => {
                     <div className={styles.like}>
                         <img src={icon.likeIcon} alt="" className={styles.reactionHistoryIcon} />
                         <span className={styles.reactionHistoryData}>
-                            13
+                            {likesCount}
                         </span>
                     </div>
                     <div className={styles.like}>
                         <img src={icon.commentIcon} alt="" className={styles.reactionHistoryIcon} />
                         <span className={styles.reactionHistoryData}>
-                            2
+                            {reportsCount}
                         </span>
                     </div>
                 </div>

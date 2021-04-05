@@ -1,17 +1,18 @@
 import AuthorBlock from '../AuthorBlock/AuthorBlock';
-import Content from '../Content/Content';
+import PostContent from '../PostContent/PostContent';
 import Reaction from '../Reaction/Reaction';
+import style from './post.module.scss';
 
-const Post = () => {
-
+const Post = ({ name, text, date, likesCount, reportsCount }) => {
     return (
         <>
-            <div>
-                <AuthorBlock />
-                <Content />
-                <Reaction />
+            <div className={style.post}>
+                <AuthorBlock name={name} date={date} />
+                <PostContent text={text} />
+                <Reaction
+                    likesCount={likesCount}
+                    reportsCount={reportsCount} />
             </div>
-
         </>
     )
 }
