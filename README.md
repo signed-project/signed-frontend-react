@@ -39,6 +39,7 @@
 * hash
 
 ## index
+* mainSource - source
 * fileStores - [url]
 * recentPosts - [post]
 * sources - [source]
