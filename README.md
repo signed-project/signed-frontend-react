@@ -37,6 +37,9 @@
 ## media
 * contentType - mime
 * hash
+* width - optional
+* height - optional
+* thumbnail - media, optional
 
 ## index
 * mainSource - source
