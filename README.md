@@ -8,19 +8,26 @@
 * updated - epoch time in milliseconds, the client may reject anything updated in the future
 * text
 * attachments - [media]
-* replyTo - post, optional
-* hash - optional
+* replyToSource - hash. Retrieve the file from the same fileStore
+* replyToPost - hash. Retrieve the file from the replyToSource.fileStores
 * signatures - [signature], optional 
 * likesCount - int
 * repostsCount - int
+* commentsCount - int
+* hash - string, every post shall be stored as a separate file in the fileStore
 
 ## source
 * address
 * name
 * updated - epoch time in milliseconds
 * avatar - media
-* hosts - [url]
+* hosts - [host]
 * signatures - [signature], optional
+* hash - string, every source shall be stored as a separate file in the fileStore
+
+## host
+* fileStores - [url]
+* index - url
 
 ## signature
 * address - string
