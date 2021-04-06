@@ -45,6 +45,7 @@
 * mainSource - source
 * fileStores - [url]
 * recentPosts - [post]
+* pinnedPosts - [post]
 * sources - [source]
 * archives - [archive]
 * tags - [tag]
