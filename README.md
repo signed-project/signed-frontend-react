@@ -4,8 +4,8 @@
 * source - source
 * id - string
 * type - 'post' | 'like' | 'repost' | 'reply'
-* created - epoch time in milliseconds
-* updated - epoch time in milliseconds, the client may reject anything updated in the future
+* createdAt - epoch time in milliseconds
+* updatedAt - epoch time in milliseconds, the client may reject anything updated in the future
 * text
 * attachments - [media]
 * target
@@ -20,7 +20,7 @@
 ## source
 * address
 * name
-* updated - epoch time in milliseconds
+* updatedAt - epoch time in milliseconds
 * avatar - media
 * hosts - [host]
 * signatures - [signature], optional
