@@ -2,7 +2,7 @@
 
 ## post
 * source - source
-* uniqueKey - string
+* id - string
 * type - 'post' | 'like' | 'repost' | 'reply'
 * created - epoch time in milliseconds
 * updated - epoch time in milliseconds, the client may reject anything updated in the future
