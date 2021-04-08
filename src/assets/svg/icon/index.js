@@ -8,6 +8,7 @@ import tickOne from './tickOne.svg';
 import menuIcon from './menu.svg';
 import likeIcon from './like.svg';
 import commentIcon from './comment.svg';
+import arrowBackIcon from './arrowBack.svg';
 
 export default {
     notificationIcon,
@@ -20,4 +21,5 @@ export default {
     menuIcon,
     likeIcon,
     commentIcon,
+    arrowBackIcon
 }

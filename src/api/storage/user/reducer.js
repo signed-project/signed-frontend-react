@@ -10,6 +10,7 @@ export const ACTIONS = {
 
 const initialState = {
   isAuth: true,
+  sourceAddress: '1HZwkjkeaoZfTSaJxDw6aKkxp45agDiEzN_002',
   isLoginError: false,
   isLoginProcess: false,
   token: "",

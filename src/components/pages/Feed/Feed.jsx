@@ -1,28 +1,67 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import Post from '../../utils/Post/Post';
 import style from './feed.module.scss';
 import dummyPosts from '../../../dummyData/dummyPosts.json';
 import dummySources from '../../../dummyData/dummySources.json';
 import fromUnixTime from 'date-fns/fromUnixTime';
 import format from 'date-fns/format';
+import getUniqId from '../../../libs/UniqueIdGenerator';
 
-
-const Feed = (props) => {
+const Feed = ({ toggleTheme }) => {
 
   const [posts, setPosts] = useState([]);
+  const [sources, setSources] = useState([]);
+  const [user, setUser] = useState('');
+  const userStore = useSelector(state => state.user);
 
-  const getSource = (adr) => {
-    const res = dummySources.sources.find(src => src.address === adr);
+  console.log('userStore', userStore);
+
+  console.log('________________posts__________________', posts);
+
+
+  useEffect(() => {
+    toggleTheme(true);
+  }, [toggleTheme]);
+
+  useEffect(() => {
+    setUser(userStore)
+  }, [userStore]);
+
+  // useEffect(() => {
+  //   setSources(dummySources.sources)
+  // }, [dummySources]);
+
+
+  const getPost = (id) => {
+    const res = posts.find(post => post.uniqueKey === id);
     return res;
   }
 
   useEffect(() => {
     console.log('dummyPosts', dummyPosts);
-    const newPosts = dummyPosts.posts.map(post => {
-      post.source = getSource(post.sourceAddress);
-    })
     setPosts(dummyPosts.posts);
   }, [])
+
+
+  const handleLike = (postId, type = 'like',) => {
+
+    const renewedPost = posts.slice();
+    renewedPost.push({
+      "sourceAddress": user.sourceAddress,
+      "uniqueKey": getUniqId(),
+      "type": type,
+      "created": new Date().getTime(),
+      "text": "",
+      "source": '',
+      "attachments": [],
+      "replyTo": postId,
+      "signatures": "",
+      "likesCount": "",
+      "reportsCount": ""
+    });
+    setPosts(renewedPost);
+  }
 
   const renderPosts = posts.map((p, i) => {
     let date = '';
@@ -33,11 +72,13 @@ const Feed = (props) => {
     return (
       <Post
         key={i}
+        type={p.type}
         name={p.source.name}
         text={p.text}
         date={date}
         likesCount={p.likesCount}
         reportsCount={p.reportsCount}
+        handleLike={() => handleLike(p)}
       />
     )
   })
