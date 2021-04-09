@@ -8,7 +8,7 @@ import { layoutType } from '../layout/LayoutProvider.jsx';
 // import sha256 from 'crypto-js/sha256';
 import CryptoAES from 'crypto-js/aes';
 import CryptoENC from 'crypto-js/enc-utf8';
-import postsDummy from '../../dummyData/dummyPosts.json';
+import { post as postsDummy } from '../../dummyData';
 import stringify from 'fast-json-stable-stringify';
 import sortKeys from 'sort-keys';
 

@@ -1,4 +1,4 @@
-{
+export const sources = {
   "sources": [
     {
       "address": "1HZwkjkeaoZfTSaJxDw6aKkxp45agDiEzN_001",

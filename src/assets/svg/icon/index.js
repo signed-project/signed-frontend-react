@@ -1,25 +1,27 @@
-import notificationIcon from './notification.svg';
-import feedIcon from './feed.svg';
-import addNewIcon from './addNew.svg';
-import searchIcon from './search.svg';
-import profileIcon from './profile.svg';
-import infoIcon from './info.svg';
+import notification from './notification.svg';
+import feed from './feed.svg';
+import addNew from './addNew.svg';
+import search from './search.svg';
+import profile from './profile.svg';
+import info from './info.svg';
 import tickOne from './tickOne.svg';
-import menuIcon from './menu.svg';
-import likeIcon from './like.svg';
-import commentIcon from './comment.svg';
-import arrowBackIcon from './arrowBack.svg';
+import menu from './menu.svg';
+import like from './like.svg';
+import comment from './comment.svg';
+import arrowBack from './arrowBack.svg';
+import messageSend from './messageSend.svg';
 
 export default {
-    notificationIcon,
-    feedIcon,
-    addNewIcon,
-    searchIcon,
-    profileIcon,
-    infoIcon,
+    notification,
+    feed,
+    addNew,
+    search,
+    profile,
+    info,
     tickOne,
-    menuIcon,
-    likeIcon,
-    commentIcon,
-    arrowBackIcon
+    menu,
+    like,
+    comment,
+    arrowBack,
+    messageSend
 }

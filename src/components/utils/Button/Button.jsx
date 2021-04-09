@@ -1,10 +1,13 @@
 import React from 'react'
 import styles from './button.module.scss'
-/* 
-  Button class names: 
-  Sizes: tiny, small
-  Colors: clean_white, clean, red, secondary, primary
-*/
+ 
+
+/**
+ * @param {string}  classNames:  - defines button style and colors
+ *    Colors: clean_white, clean, primary
+ *  
+ */
+
 const Button = ({ className, onClick, disabled, type, children }) => {
   let buttonClasses = [styles.button]
   if (className) {

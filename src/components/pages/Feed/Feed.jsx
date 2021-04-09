@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Post from '../../utils/Post/Post';
 import style from './feed.module.scss';
-import dummyPosts from '../../../dummyData/dummyPosts.json';
-import dummySources from '../../../dummyData/dummySources.json';
+// import dummyPosts from '../../../dummyData/dummyPosts';
+// import dummySources from '../../../dummyData/dummySources';
 import fromUnixTime from 'date-fns/fromUnixTime';
 import format from 'date-fns/format';
 import getUniqId from '../../../libs/UniqueIdGenerator';
@@ -14,11 +14,11 @@ const Feed = ({ toggleTheme }) => {
   const [sources, setSources] = useState([]);
   const [user, setUser] = useState('');
   const userStore = useSelector(state => state.user);
+  const stream = useSelector(state => state.post.stream);
 
-  console.log('userStore', userStore);
+  console.log('userStore', stream);
 
   console.log('________________posts__________________', posts);
-
 
   useEffect(() => {
     toggleTheme(true);
@@ -28,10 +28,6 @@ const Feed = ({ toggleTheme }) => {
     setUser(userStore)
   }, [userStore]);
 
-  // useEffect(() => {
-  //   setSources(dummySources.sources)
-  // }, [dummySources]);
-
 
   const getPost = (id) => {
     const res = posts.find(post => post.uniqueKey === id);
@@ -39,10 +35,9 @@ const Feed = ({ toggleTheme }) => {
   }
 
   useEffect(() => {
-    console.log('dummyPosts', dummyPosts);
-    setPosts(dummyPosts.posts);
-  }, [])
-
+    console.log('stream____________________________', stream);
+    setPosts(stream);
+  }, [stream])
 
   const handleLike = (postId, type = 'like',) => {
 
@@ -51,7 +46,7 @@ const Feed = ({ toggleTheme }) => {
       "sourceAddress": user.sourceAddress,
       "uniqueKey": getUniqId(),
       "type": type,
-      "created": new Date().getTime(),
+      "createdAt": new Date().getTime(),
       "text": "",
       "source": '',
       "attachments": [],
@@ -64,9 +59,12 @@ const Feed = ({ toggleTheme }) => {
   }
 
   const renderPosts = posts.map((p, i) => {
+
+    console.log('p', p);
+
     let date = '';
-    if (p.created && Number(p.created) !== NaN) {
-      date = format(new Date(fromUnixTime(p.created / 1000).toString()), 'PPpp')
+    if (p.createdAt && Number(p.createdAt) !== NaN) {
+      date = format(new Date(fromUnixTime(p.createdAt / 1000).toString()), 'PPpp')
     }
 
     return (

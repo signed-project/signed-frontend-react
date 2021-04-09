@@ -12,7 +12,7 @@ const AuthorBlock = ({ name, date }) => {
                 <Avatar />
                 <div className={styles.wrapperContent}>
                     <InfoAuthor date={date} name={name} />
-                    <img src={icon.menuIcon} alt="menu icon" className={styles.menuIcon} />
+                    <img src={icon.menu} alt="menu icon" className={styles.menuIcon} />
                 </div>
             </div>
         </>

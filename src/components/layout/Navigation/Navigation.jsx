@@ -28,34 +28,34 @@ const Navigation = (props) => {
     <div className={styles.bar}>
       <NavItem
         to={routes.feed}
-        icon={icons.feedIcon}
+        icon={icons.feed}
         alt={'feed icon'}
         title={'Feed'}
       />
 
       <NavItem
         to={routes.search}
-        icon={icons.searchIcon}
+        icon={icons.search}
         alt={'Search icon'}
         title={'Search'}
       />
 
       <NavItem
         to={routes.newPost}
-        icon={icons.addNewIcon}
+        icon={icons.addNew}
         alt={'New post icon'}
         title={''}
       />
 
       <NavItem
         to={routes.profile}
-        icon={icons.profileIcon}
+        icon={icons.profile}
         alt={'Profile icon'}
         title={'Profile'}
       />
       <NavItem
         to={routes.notification}
-        icon={icons.notificationIcon}
+        icon={icons.notification}
         alt={'Notification icon'}
         title={'Notification'}
       />

@@ -15,7 +15,8 @@ const WelcomeSing = () => {
                 <div className={styles.buttonWrapper}>
                     {/* clean_white, clean, red, secondary, primary */}
                     <Button className="clean">Sing up </Button>
-                    <Button className="secondary">Sing in</Button>
+                    {/* <Button className="secondary">Sing in</Button> */}
+                    <Button className="primary">Sing in</Button>
                 </div>
             </div>
         </>

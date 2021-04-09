@@ -1,3 +1,43 @@
 .backBlock {
+  height: 48px;
+  width: 100%;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
 
+.backBlock img {
+  margin-left: 16px;
+  width: 19px;
+}
+
+.messageBlock {
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.textarea {
+  width: 100%;
+  border: none;
+  height: 500px;
+}
+
+.toolsBlock {
+  position: absolute;
+  bottom: 0;
+  height: 54px;
+  border-top: 1px solid #f0f0f0;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.buttonWrapper {
+  margin-right: 12px;
 }

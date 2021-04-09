@@ -1,5 +1,5 @@
 import { takeEvery } from 'redux-saga/effects';
-import { ACTIONS } from '../../storage/app/reducer';
+import { ACTIONS } from '../../storage/sourse/reducer';
 
 
 export function* workerLogin(action) {

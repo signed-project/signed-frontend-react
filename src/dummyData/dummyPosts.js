@@ -1,10 +1,10 @@
-{
+export const post = {
   "posts": [
     {
       "source": {
         "address": "1HZwkjkeaoZfTSaJxDw6aKkxp45agDiEzN_001",
         "name": "Name1",
-        "updated": "1617630271111",
+        "updatedAt": "1617630271111",
         "avatar": {
           "contentType": "image/jpeg",
           "content": {
@@ -15,10 +15,10 @@
         "hosts": [],
         "hash": "keaoZfTSaJxDw6aKkxp45"
       },
-      "uniqueKey": "1111",
+      "id": "1111",
       "type": "post",
-      "created": "1617630271111",
-      "updated": "1617630271111",
+      "createdAt": "1617630271111",
+      "updatedAt": "1617630271111",
       "text": "Одним из важных факторов ранжирования в Google является скорость загрузки страниц сайта, которую измеряют ",
       "attachments": [
         {
@@ -29,50 +29,14 @@
           }
         }
       ],
-      "replyToSource": "replyToSource",
-      "replyToPost": "replyToSource",
+      "target": {
+        "sourceHash": "",
+        "postHash": ""
+      },
       "signatures": "",
       "likesCount": 222,
       "repostsCount": 33,
-      "commentsCount ": 1123,
-      "reportsCount": 33,
-      "hash": "hash"
-    },
-    {
-      "source": {
-        "address": "1HZwkjkeaoZfTSaJxDw6aKkxp45agDiEzN_001",
-        "name": "Name1",
-        "updated": "1617630271111",
-        "avatar": {
-          "contentType": "image/jpeg",
-          "content": {
-            "url": "filename.jpeg",
-            "hash": "f433c21fe3c6c7475f7be0017294547e93d7fcd44617f62bf7f369a13b48e764"
-          }
-        },
-        "hosts": [],
-        "hash": "keaoZfTSaJxDw6aKkxp45"
-      },
-      "uniqueKey": "1111",
-      "type": "post",
-      "created": "1617630271111",
-      "updated": "1617630271111",
-      "text": "Одним из важных факторов ранжирования в Google является скорость загрузки страниц сайта, которую измеряют ",
-      "attachments": [
-        {
-          "contentType": "image/jpeg",
-          "content": {
-            "url": "filename.jpeg",
-            "hash": "f433c21fe3c6c7475f7be0017294547e93d7fcd44617f62bf7f369a13b48e764"
-          }
-        }
-      ],
-      "replyToSource": "replyToSource",
-      "replyToPost": "replyToSource",
-      "signatures": "",
-      "likesCount": 1123,
-      "repostsCount": 1123,
-      "commentsCount ": 1123,
+      "commentsCount": 1123,
       "reportsCount": 33,
       "hash": "hash"
     },
@@ -80,7 +44,7 @@
       "source": {
         "address": "1HZwkjkeaoZfTSaJxDw6aKkxp45agDiEzN_002",
         "name": "Name2",
-        "updated": "1617630271111",
+        "updatedAt": "1617630271112",
         "avatar": {
           "contentType": "image/jpeg",
           "content": {
@@ -91,10 +55,10 @@
         "hosts": [],
         "hash": "keaoZfTSaJxDw6aKkxp45"
       },
-      "uniqueKey": "1111",
+      "id": "112",
       "type": "post",
-      "created": "1617630271111",
-      "updated": "1617630271111",
+      "createdAt": "1617630271112",
+      "updatedAt": "1617630271112",
       "text": "Одним из важных факторов ранжирования в Google является скорость загрузки страниц сайта, которую измеряют ",
       "attachments": [
         {
@@ -105,12 +69,14 @@
           }
         }
       ],
-      "replyToSource": "replyToSource",
-      "replyToPost": "replyToSource",
+      "target": {
+        "sourceHash": "",
+        "postHash": ""
+      },
       "signatures": "",
-      "likesCount": 231,
-      "repostsCount": 55,
-      "commentsCount ": 1123,
+      "likesCount": 222,
+      "repostsCount": 33,
+      "commentsCount": 1123,
       "reportsCount": 33,
       "hash": "hash"
     }
