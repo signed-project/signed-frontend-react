@@ -15,8 +15,7 @@ const sendPosts = async (axios, post) => {
 
 export function* workerSendPost(action) {
     console.log('postActions', action);
-    console.log('postActions');
-    console.log('postActions');
+
     const axios = yield select((state) => state.axios.axios);
     const posts = yield call(sendPosts, axios, action);
     yield put({ type: ACTIONS.ADD_POST_TO_STREAM, payload: action });

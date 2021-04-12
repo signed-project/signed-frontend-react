@@ -10,7 +10,18 @@ export const ACTIONS = {
 
 const initialState = {
   isAuth: true,
-  sourceAddress: '1HZwkjkeaoZfTSaJxDw6aKkxp45agDiEzN_002',
+  source: {
+    address: "19FRhaywUUpvMxUMSxgpTvc44Bj9VFd3BT",
+    name: "Name1",
+    avatar: {
+      contentType: "image/jpeg",
+      content: {
+        url: "filename.jpeg",
+        hash: "f433c21fe3c6c7475f7be0017294547e93d7fcd44617f62bf7f369a13b48e764"
+      }
+    },
+  },
+  wfi: 'Kx7DQ8DtiTaEYut5f85jAG3bhPNJUB6neER3yQaVgueeLDT7Ax8e',
   isLoginError: false,
   isLoginProcess: false,
   token: "",

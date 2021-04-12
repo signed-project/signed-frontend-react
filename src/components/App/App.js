@@ -11,12 +11,48 @@ import CryptoENC from 'crypto-js/enc-utf8';
 import { post as postsDummy } from '../../dummyData';
 import stringify from 'fast-json-stable-stringify';
 import sortKeys from 'sort-keys';
+import * as   bitcoin from 'bitcoinjs-lib';
+import * as   bitcoinMessage from 'bitcoinjs-message';
+
 
 const App = () => {
   const [themeVal, setThemeVal] = useState(layoutType.showLayout);
-  const isAuth = useSelector(state => state.user.isAuth)
+  const isAuth = useSelector(state => state.user.isAuth);
   console.log('is', isAuth);
 
+
+
+  const keyPairRundom = bitcoin.ECPair.makeRandom();
+  // const keyPairRun = bitcoin.ECPair.fromPrivateKey();
+  const { address } = bitcoin.payments.p2pkh({ pubkey: keyPairRundom.publicKey });
+  // console.log('keyPair__________________________________________________________', address);
+  const privateKeyBuffer = Buffer.from(keyPairRundom.privateKey)
+  const privateKeyRun = privateKeyBuffer.toString('hex')
+  var wif = keyPairRundom.toWIF();
+
+  console.log('_______________privateKeyRun________________', privateKeyRun);
+  console.log('keyPair________________', keyPairRundom.privateKey);
+  console.log('address________________', address);
+  console.log('wif________________', wif);
+
+
+  // var keyPair = bitcoin.ECPair.fromWIF('L4rK1yDtCWekvXuE6oXD9jCYfFNV2cWRpVuPLBcCU2z8TrisoyY1');
+  var keyPair = bitcoin.ECPair.fromWIF('Kx7DQ8DtiTaEYut5f85jAG3bhPNJUB6neER3yQaVgueeLDT7Ax8e');
+  var privateKey = keyPair.privateKey;
+  var message = 'This is an example of a signed message.';
+
+  var signature = bitcoinMessage.sign(message, privateKey, keyPair.compressed);
+  console.log("signature.toString('base64')");
+  console.log(signature.toString('base64'));
+
+  // 1F3sAm6ZtwLAUnj7d38pGFxtP3RVEvtsbV
+  var addressTest = '19FRhaywUUpvMxUMSxgpTvc44Bj9VFd3BT';
+  console.log('verify____');
+  console.log(bitcoinMessage.verify(message, addressTest, signature))
+
+  // const val = Base58.encode(Buffer.from(signature.toString()));
+  // console.log('val________________58', val);
+  // console.log('val________________58', val);
 
   let firstPost = postsDummy.posts[0];
   firstPost = sortKeys(firstPost);

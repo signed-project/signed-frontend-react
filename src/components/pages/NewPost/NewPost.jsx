@@ -1,16 +1,31 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import icon from '../../../assets/svg/icon';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import icon from '../../../assets/svg/icon';
 import Avatar from '../../utils/Avatar/Avatar';
 import style from './newPost.module.scss';
 import Button from '../../utils/Button/Button';
 import { postActions } from '../../../api/storage/post';
+import { Post } from '../../../api/models/post';
+
+
 
 const NewPost = ({ toggleTheme }) => {
   const history = useHistory();
   const dispatch = useDispatch();
   const [message, setMessage] = useState('');
+  const user = useSelector(state => state.user);
+
+  const post = new Post({
+    source: user.source,
+    type: 'post',
+    test: message,
+    wfi: user.wfi
+  });
+
+  const newPost = post.newPost;
+
+  console.log('_____newPost_____', newPost);
 
   useEffect(() => {
     toggleTheme(false);
