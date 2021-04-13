@@ -16,17 +16,6 @@ const NewPost = ({ toggleTheme }) => {
   const [message, setMessage] = useState('');
   const user = useSelector(state => state.user);
 
-  const post = new Post({
-    source: user.source,
-    type: 'post',
-    test: message,
-    wfi: user.wfi
-  });
-
-  const newPost = post.newPost;
-
-  console.log('_____newPost_____', newPost);
-
   useEffect(() => {
     toggleTheme(false);
   }, [toggleTheme]);
@@ -38,9 +27,17 @@ const NewPost = ({ toggleTheme }) => {
   }
 
   const handleSendMessage = () => {
-    console.log('handleSendMessage');
-    const post = {};
-    dispatch(postActions.sendPost({ text: '2i2jjfdalksdfjkl;sfd;jklsfdjkl' }));
+    const post = new Post({
+      source: user.source,
+      type: 'post',
+      text: message,
+      wfi: user.wfi
+    });
+
+    const newPost = post.newPost;
+    console.log('newPost', newPost);
+    dispatch(postActions.sendPost(newPost));
+    history.goBack();
   }
 
   return (

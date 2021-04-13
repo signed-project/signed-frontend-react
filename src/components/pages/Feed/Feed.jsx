@@ -39,24 +39,7 @@ const Feed = ({ toggleTheme }) => {
     setPosts(stream);
   }, [stream])
 
-  const handleLike = (postId, type = 'like',) => {
-
-    const renewedPost = posts.slice();
-    renewedPost.push({
-      "sourceAddress": user.sourceAddress,
-      "uniqueKey": getUniqId(),
-      "type": type,
-      "createdAt": new Date().getTime(),
-      "text": "",
-      "source": '',
-      "attachments": [],
-      "replyTo": postId,
-      "signatures": "",
-      "likesCount": "",
-      "reportsCount": ""
-    });
-    setPosts(renewedPost);
-  }
+ 
 
   const renderPosts = posts.map((p, i) => {
 
@@ -76,7 +59,7 @@ const Feed = ({ toggleTheme }) => {
         date={date}
         likesCount={p.likesCount}
         reportsCount={p.reportsCount}
-        handleLike={() => handleLike(p)}
+        // handleLike={() => handleLike(p)}
       />
     )
   })

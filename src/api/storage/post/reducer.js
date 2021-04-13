@@ -14,10 +14,16 @@ const initialState = {
 const postReducer = (state = initialState, action) => {
     switch (action.type) {
         case ACTIONS.SET_POST_STREAM:
-            console.log('ACTIONS.SET_STREAM_______________________');
             return {
                 ...state,
                 stream: action.payload,
+            };
+        case ACTIONS.ADD_POST_TO_STREAM:
+            const newStream = state.stream;
+            newStream.push(action.payload);
+            return {
+                ...state,
+                stream: newStream
             };
         default:
             return state;

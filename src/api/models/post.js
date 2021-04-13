@@ -14,6 +14,7 @@ import * as   bitcoinMessage from 'bitcoinjs-message';
 
 export class Post {
     constructor(data) {
+        console.log('___________________data___________________', data);
         this.data = {
             source: data.source,
             id: data.id ? data.id : '',
@@ -48,16 +49,18 @@ export class Post {
     }
 
     getSignatures(post) {
+        // const postJson = this.getJsonStringFromObj(post);
         const postJson = this.getJsonStringFromObj(post);
+        console.log('postJson', postJson);
+        // const postJson = 'This is an example of a signed message.';
         const keyPair = bitcoin.ECPair.fromWIF(this.data.wfi);
         const privateKey = keyPair.privateKey;
         let signature = bitcoinMessage.sign(postJson, privateKey, keyPair.compressed);
-        const signatureNext = signature.toString('hex');
-        console.log('(((((((((((((((((((((((((signature))))))))))))))))))))))', signatureNext);
-        const bytes = Buffer.from(signature, 'hex')
-        const address = bs58.encode(bytes)
-        return address;
-        return signature.toString('base64')
+        // const signatureNext = signature.toString('hex');
+        // const bytes = Buffer.from(signature, 'hex')
+        // const code = bs58.encode(bytes)
+        return signature.toString('base64');
+        // return signature.toString('base64')
     }
 
 
@@ -74,13 +77,14 @@ export class Post {
         return nanoid();
     }
 
+    getIsValid() {
+
+    }
 
     get newPost() {
 
         const id = this.generateId();
         const date = new Date().getTime();
-
-
 
         const newPost = {
             source: this.data.source,
@@ -90,8 +94,6 @@ export class Post {
             updatedAt: date,
             text: this.data.text ? this.data.text : '',
             attachments: this.data.attachments ? this.data.attachments : [],
-            // TODO: 
-            // target: this.data.target,
             likesCount: 0,
             repostsCount: 0,
             commentsCount: 0,
@@ -101,24 +103,19 @@ export class Post {
         const hash = this.getHash(newPost);
         const signature = this.getSignatures(newPost);
 
-
-        console.log('hash', hash);
-        // console.log('signatures', signatures);
         return {
             source: this.data.source,
-            id: this.generateId(),
+            id: id,
             type: 'post',
             createdAt: date,
             updatedAt: date,
             text: this.data.text ? this.data.text : '',
-            attachments: this.data.attachments ? this.data.attachments : '',
-            // TODO: 
-            // target: this.data.target,
-            signatures: signature,
+            attachments: this.data.attachments ? this.data.attachments : [],
             likesCount: 0,
             repostsCount: 0,
             commentsCount: 0,
             reportsCount: 0,
+            signatures: signature,
             hash: hash
         }
     }

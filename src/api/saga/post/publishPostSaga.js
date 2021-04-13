@@ -5,7 +5,9 @@ import { ACTIONS } from '../../storage/post';
 
 const sendPosts = async (axios, post) => {
     try {
-        let res = await axios.get(postApi.SEND_POST, post);
+        console.log('post________saga!!!!!!!!!!!!!!!!', post);
+        const data = { post: post }
+        let res = await axios.post(postApi.SEND_POST, data);
         return res;
     } catch (error) {
         console.log("[getUserInfo][error]", error);
@@ -17,8 +19,9 @@ export function* workerSendPost(action) {
     console.log('postActions', action);
 
     const axios = yield select((state) => state.axios.axios);
-    const posts = yield call(sendPosts, axios, action);
-    yield put({ type: ACTIONS.ADD_POST_TO_STREAM, payload: action });
+    const posts = yield call(sendPosts, axios, action.payload);
+    console.log('___________________action.payload___________________', action.payload);
+    yield put({ type: ACTIONS.ADD_POST_TO_STREAM, payload: action.payload });
 }
 
 export default function* watchSendPost() {

@@ -8,6 +8,8 @@ import { layoutType } from '../layout/LayoutProvider.jsx';
 // import sha256 from 'crypto-js/sha256';
 import CryptoAES from 'crypto-js/aes';
 import CryptoENC from 'crypto-js/enc-utf8';
+import bs58 from 'bs58';
+
 import { post as postsDummy } from '../../dummyData';
 import stringify from 'fast-json-stable-stringify';
 import sortKeys from 'sort-keys';
@@ -42,13 +44,17 @@ const App = () => {
   var message = 'This is an example of a signed message.';
 
   var signature = bitcoinMessage.sign(message, privateKey, keyPair.compressed);
-  console.log("signature.toString('base64')");
-  console.log(signature.toString('base64'));
 
+  // const bytes = Buffer.from(signature, 'hex')
+  // const code = bs58.encode(bytes);
+
+  // const bytesRecode = bs58.decode(address)
+  // const hex = bytesRecode.toString('hex')
   // 1F3sAm6ZtwLAUnj7d38pGFxtP3RVEvtsbV
   var addressTest = '19FRhaywUUpvMxUMSxgpTvc44Bj9VFd3BT';
-  console.log('verify____');
-  console.log(bitcoinMessage.verify(message, addressTest, signature))
+  // console.log('verify____', code);
+  const isValid = bitcoinMessage.verify(message, addressTest, signature.toString('base64'));
+  // console.log('verify____!!!!!!!!!!!!!!!!', bitcoinMessage.verify(message, addressTest, 'HyevO7YXuJVEmBp+WqhU1uQgH8Y8G4A7RlYr413wjFs6Em8BVq6ypTonydwcQMjm3ysKhWynFGkpxUsRLY+TbgA='));
 
   // const val = Base58.encode(Buffer.from(signature.toString()));
   // console.log('val________________58', val);
@@ -56,16 +62,16 @@ const App = () => {
 
   let firstPost = postsDummy.posts[0];
   firstPost = sortKeys(firstPost);
-  console.log('firstPostSort____________', firstPost);
+  // console.log('firstPostSort____________', firstPost);
 
   firstPost = stringify(firstPost);
 
-  console.log('firstPost____json________', firstPost);
+  // console.log('firstPost____json________', firstPost);
 
 
   var ciphertext = CryptoAES.encrypt(firstPost, 'secret key 123');
   var _ciphertext = CryptoAES.decrypt(ciphertext.toString(), 'secret key 123');
-  console.log("+++++++++++++++++++++++++ono", _ciphertext);
+  // console.log("+++++++++++++++++++++++++ono", _ciphertext);
 
 
 
@@ -76,7 +82,7 @@ const App = () => {
   // console.log(crypto.SHA256("password").toString());
   // const crypto = sha256('nonce' + 'message');
 
-  console.log('CryptoJS_______', ciphertext.toString());
+  // console.log('CryptoJS_______', ciphertext.toString());
 
 
 
@@ -89,11 +95,7 @@ const App = () => {
 
   const API_HOST = process.env.REACT_APP_API_HOST;
 
-  console.log('API_HOST___________333__', process.env.REACT_APP_API_HOST);
-  console.log('process.env.NODE_ENV_____________', process.env.NODE_ENV);
-  console.log('process.env_____________', process.env);
-  console.log('API_HOST_____________', API_HOST);
-  console.log('API_HOST_____________', API_HOST);
+ 
 
   const state = {
     theme: themeVal,
