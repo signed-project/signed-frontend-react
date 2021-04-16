@@ -95,7 +95,7 @@ const App = () => {
 
   const API_HOST = process.env.REACT_APP_API_HOST;
 
- 
+
 
   const state = {
     theme: themeVal,
@@ -103,7 +103,7 @@ const App = () => {
   };
   return (
     <BrowserRouter basename={'/'}>
-      <LayoutProvider.Provider value={state}  >
+      <LayoutProvider.Provider value={state}>
         <BrowserRouter>
           <MainRouts />
         </BrowserRouter>

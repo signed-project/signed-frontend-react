@@ -6,7 +6,10 @@ import { ACTIONS } from '../../storage/post';
 const sendPosts = async (axios, post) => {
     try {
         console.log('post________saga!!!!!!!!!!!!!!!!', post);
-        const data = { post: post }
+        const data = {
+            post: post,
+            addToIndex: true
+        };
         let res = await axios.post(postApi.SEND_POST, data);
         return res;
     } catch (error) {

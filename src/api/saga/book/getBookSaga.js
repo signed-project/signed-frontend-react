@@ -3,13 +3,13 @@ import { postApi } from '../../../config/http.config';
 import { ACTIONS as POST_ACTIONS } from '../../storage/post';
 import { post as postsDummy, sources as sourcesDummy } from '../../../dummyData';
 import { stringify, parseJson } from '../../../libs/json';
+import { getCashData } from './aggregationPost';
 
 
-
-const getPosts = async (axios) => {
+const getMyPosts = async (axios) => {
     try {
         let res = await axios.get(postApi.GET_POST);
-        return res;
+        return res.data.posts;
     } catch (error) {
         console.log("[getUserInfo][error]", error);
     }
@@ -22,31 +22,24 @@ export function* workerLogin(action) {
 
 export default function* watchGetBook() {
     const axios = yield select((state) => state.axios.axios);
-    // TODO: add initial host
+    const hosts = '';
+    let hostsPost;
+    const myPosts = yield call(getMyPosts, axios);
 
-    console.log(' TODO: add initial host');
-    const hostData = '';
-    if (hostData) {
-        const posts = yield call(getPosts, axios);
+    if (hosts) {
+        hostsPost = yield call(getMyPosts, axios);
     }
     else {
-        const dummyStreamPosts = parseJson(stringify(postsDummy.posts));
-        console.log('dummyStreamPosts', dummyStreamPosts);
-        console.log('postsDummy.posts', postsDummy.posts);
-        yield put({ type: POST_ACTIONS.SET_POST_STREAM, payload: dummyStreamPosts });
+        hostsPost = parseJson(stringify(postsDummy.posts));
     }
 
+    hostsPost = Array.isArray(hostsPost) ? hostsPost : [hostsPost];
+    const arrPosts = [...myPosts, ...hostsPost];
 
-    // while (true) {
-    //     try {
-    //         yield take('setAxios', workerLogin);
 
-    //     } catch (err) {
-    //         console.error(err);
-    //     }
-    // }
+    const bookData = getCashData(arrPosts)
 
-    // yield takeEvery(ACTIONS.TEST, workerLogin);
+    // yield put({ type: POST_ACTIONS.SET_POST_STREAM, payload: dummyStreamPosts });
 }
 
 
@@ -57,3 +50,5 @@ export default function* watchGetBook() {
 //             console.error(err);
 //         }
 //     }
+
+// yield takeEvery(ACTIONS.TEST, workerLogin);

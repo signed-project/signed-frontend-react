@@ -10,7 +10,7 @@ const Layout = ({ children, theme }) => {
   return (
     <div>
       { theme && <Header title='KUKU' />}
-      <main>
+      <main >
         {children}
       </main>
       { theme && <Navigation />}

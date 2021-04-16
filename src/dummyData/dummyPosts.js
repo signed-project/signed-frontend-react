@@ -37,7 +37,6 @@ export const post = {
       "likesCount": 222,
       "repostsCount": 33,
       "commentsCount": 1123,
-      "reportsCount": 33,
       "hash": "hash"
     },
     {
@@ -77,8 +76,32 @@ export const post = {
       "likesCount": 222,
       "repostsCount": 33,
       "commentsCount": 1123,
-      "reportsCount": 33,
       "hash": "hash"
+    },
+    {
+      "attachments": [],
+      "commentsCount": 0,
+      "createdAt": 1618488026709,
+      "hash": "FiDXCAWXL4wZFAtLYVRiRe5ac1dQUB8GWLTiDoVnhKmX",
+      "id": "9NidlfqfUWxh1itFzu1ds",
+      "likesCount": 0,
+      "reportsCount": 0,
+      "repostsCount": 0,
+      "signatures": "IHuI0mqoEUfzzJUqvfDbehZeCf5+iZsYBaIly9VzVKZTdTpXNJRN5ZXnumou5XRy4FYpDS4iTl9BfpyjYw/kFXs=",
+      "source": {
+        "address": "19FRhaywUUpvMxUMSxgpTvc44Bj9VFd3BT",
+        "avatar": {
+          "content": {
+            "hash": "f433c21fe3c6c7475f7be0017294547e93d7fcd44617f62bf7f369a13b48e764",
+            "url": "filename.jpeg"
+          },
+          "contentType": "image/jpeg"
+        },
+        "name": "Name1"
+      },
+      "text": "mock post",
+      "type": "post",
+      "updatedAt": 1618488026707
     }
   ]
 }

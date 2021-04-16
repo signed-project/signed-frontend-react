@@ -1,20 +1,9 @@
-import CryptoAES from 'crypto-js/aes';
-import stringify from 'fast-json-stable-stringify';
-import { object } from 'joi';
-import sortKeys from 'sort-keys';
-import { nanoid } from 'nanoid';
-import { useSelect } from 'react-redux';
-// import sha256 from 'crypto-js/sha256';
-import CryptoJS from 'crypto-js';
-import { add } from 'date-fns';
-import bs58 from 'bs58';
-import * as   bitcoin from 'bitcoinjs-lib';
-import * as   bitcoinMessage from 'bitcoinjs-message';
+import { generateId, getHash, getSignatures } from '../../libs/signature';
+
 
 
 export class Post {
     constructor(data) {
-        console.log('___________________data___________________', data);
         this.data = {
             source: data.source,
             id: data.id ? data.id : '',
@@ -38,52 +27,12 @@ export class Post {
         }
     }
 
-    getJsonStringFromObj(postObj) {
-        let postCopy = JSON.parse(JSON.stringify(postObj));
-        if (postCopy.hash || postCopy.signatures) {
-            delete postCopy.hash;
-            delete postCopy.signatures;
-        }
-        postCopy = sortKeys(postCopy);
-        return stringify(postCopy);
-    }
-
-    getSignatures(post) {
-        // const postJson = this.getJsonStringFromObj(post);
-        const postJson = this.getJsonStringFromObj(post);
-        console.log('postJson', postJson);
-        // const postJson = 'This is an example of a signed message.';
-        const keyPair = bitcoin.ECPair.fromWIF(this.data.wfi);
-        const privateKey = keyPair.privateKey;
-        let signature = bitcoinMessage.sign(postJson, privateKey, keyPair.compressed);
-        // const signatureNext = signature.toString('hex');
-        // const bytes = Buffer.from(signature, 'hex')
-        // const code = bs58.encode(bytes)
-        return signature.toString('base64');
-        // return signature.toString('base64')
-    }
 
 
-    getHash(post) {
-        const postJson = this.getJsonStringFromObj(post);
-        let hash = CryptoJS.SHA256(postJson)
-        hash = hash.toString(CryptoJS.enc.Hex);
-        const bytes = Buffer.from(hash, 'hex')
-        const address = bs58.encode(bytes)
-        return address;
-    }
 
-    generateId() {
-        return nanoid();
-    }
-
-    getIsValid() {
-
-    }
 
     get newPost() {
-
-        const id = this.generateId();
+        const id = generateId();
         const date = new Date().getTime();
 
         const newPost = {
@@ -100,8 +49,8 @@ export class Post {
             reportsCount: 0,
         };
 
-        const hash = this.getHash(newPost);
-        const signature = this.getSignatures(newPost);
+        const hash = getHash(newPost);
+        const signature = getSignatures(newPost, this.data.wfi);
 
         return {
             source: this.data.source,
