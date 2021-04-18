@@ -1,0 +1,15 @@
+.post {
+  margin-top: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+.post:first-child {
+  margin-top: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.post:last-child {
+  border-bottom: none;
+  margin-bottom: 40px;
+}

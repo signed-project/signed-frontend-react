@@ -1,0 +1,23 @@
+@import "/src/assets/css/index.scss";
+
+.name {
+  color: $textColorMain;
+  font-family: Roboto, sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 20px;
+}
+.nameBlock {
+  margin-bottom: 1px;
+}
+
+.tickOne {
+  margin-right: 5px;
+}
+
+.date {
+  font-weight: 500;
+  font-size: 13px;
+  color: $colorGrey100;
+}

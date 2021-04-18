@@ -1,0 +1,99 @@
+// @import "../../../assets/css/index.scss";
+@import "/src/assets/css/index.scss";
+// use colorPrimary100
+
+.button,
+input[type="submit"] {
+  min-width: 158px;
+  height: 40px;
+  padding: 14px 18px;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 14px;
+  text-align: center;
+  letter-spacing: 0.05em;
+  // text-transform: uppercase;
+  border: none;
+  border-radius: 4px;
+  transition: background 0.2s, color 0.2s;
+  text-decoration: none;
+  display: inline-block;
+  outline: none;
+}
+
+.button.withIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-height: 50px;
+}
+
+.button .iconBtn {
+  padding: 4px;
+  transition: fill 0.2s, border-color 0.2s;
+  margin-right: 8px;
+}
+
+.iconWhite {
+  border: 1px solid #fff;
+  fill: #fff;
+}
+.iconRed {
+  border: 1px solid #ff4b4b;
+  fill: #ff4b4b;
+}
+
+button.cancel:hover .iconRed,
+button.agree:hover .iconGreen {
+  border-color: #ffffff;
+  fill: #ffffff;
+}
+
+.button.primary {
+  background: $colorPrimary100;
+}
+
+.button:not([disabled]) {
+  cursor: pointer;
+}
+.button[disabled] {
+  color: #bbb;
+  background: #828282 !important;
+}
+.button.clean {
+  background: #fff;
+  color: $colorPrimary100;
+  border: 1px solid $colorPrimary100;
+}
+
+.button.clean:disabled,
+.button.clean_white:disabled {
+  background-color: transparent !important;
+  opacity: 0.6;
+}
+.button.clean_white {
+  background: none;
+  border: none;
+  // border: 1px solid #ffffff;
+  color: $colorPrimary100;
+  height: 0;
+  padding: 0;
+  min-width: 0;
+  text-transform: capitalize;
+}
+
+.button + .button {
+  margin-left: 30px;
+}
+
+.disabled {
+  color: #1fbd4b !important;
+  border: 1px solid #1fbd4b !important;
+  background: #1fbd4b !important;
+  color: #fff !important;
+  cursor: default !important;
+  border-color: #ffffff;
+  fill: #ffffff;
+  outline: none;
+}

@@ -1,0 +1,55 @@
+@import "/src/assets/css/index.scss";
+
+.reactionHistory {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.like {
+  margin-right: 25px;
+}
+
+.reaction {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.actionReaction {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-right: 3px;
+  //   max-width: 120px;
+}
+
+.actionReaction a {
+  margin-left: 40px;
+  text-decoration: none;
+  color: $colorPrimary100;
+  font-family: Roboto, sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.action {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.reactionHistoryData {
+  color: $colorGrey100;
+  font-family: Roboto, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.reactionHistoryIcon {
+  margin-right: 5px;
+}
