@@ -18,7 +18,7 @@ export const getJsonStringFromObj = (postObj) => {
         postCopy = sortKeys(postCopy);
         jsonPost = stringify(postCopy);
     } catch (e) {
-        console.error('[signature][getJsonStringFromObj]', e);
+        // console.error('[signature][getJsonStringFromObj]', e);
         jsonPost = ''
     }
     return jsonPost;
@@ -42,23 +42,26 @@ export const getSignatures = (post, wfi) => {
 
 export const getHash = (post) => {
     const postJson = getJsonStringFromObj(post);
-    let address;
+    let resHash;
     try {
-        let hash = CryptoJS.SHA256(postJson)
-        hash = hash.toString(CryptoJS.enc.Hex);
-        const bytes = Buffer.from(hash, 'hex')
-        address = bs58.encode(bytes)
+        const hash = CryptoJS.SHA256(postJson)
+        const hashString = hash.toString(CryptoJS.enc.Hex);
+        const bytes = Buffer.from(hashString, 'hex')
+        resHash = bs58.encode(bytes)
     } catch (e) {
         console.error('[getHash]', e);
     }
-    return address;
+    return resHash;
 }
+
+
+
 
 export const generateId = () => {
     return nanoid();
 }
 
-export const isPostValid = (post) => {
+export const isSignatureValid = (post) => {
     const { address } = post.source;
     const { signatures } = post;
     const message = getJsonStringFromObj(post);

@@ -13,13 +13,20 @@ const initialState = {
   source: {
     address: "19FRhaywUUpvMxUMSxgpTvc44Bj9VFd3BT",
     name: "Name1",
+    updatedAt: 1312321321,
     avatar: {
       contentType: "image/jpeg",
       content: {
         url: "filename.jpeg",
         hash: "f433c21fe3c6c7475f7be0017294547e93d7fcd44617f62bf7f369a13b48e764"
-      }
+      },
     },
+    hosts: [{
+      fileStores: ['jdjjdj'],
+      index: "url"
+    }],
+    signatures: 'fjdjd343243jkdfjdk343',
+    hash: 'fjdjd343243jkdfjdk343',
   },
   wfi: 'Kx7DQ8DtiTaEYut5f85jAG3bhPNJUB6neER3yQaVgueeLDT7Ax8e',
   isLoginError: false,

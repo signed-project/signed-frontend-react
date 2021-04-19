@@ -10,7 +10,7 @@
 //   },
 // };
 
-export const postApi = {
+export const bookApi = {
   SEND_POST: "/post",
-  GET_POST: "/post",
+  GET_BOOK: "/book",
 };

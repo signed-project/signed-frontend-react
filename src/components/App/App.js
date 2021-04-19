@@ -10,7 +10,7 @@ import CryptoAES from 'crypto-js/aes';
 import CryptoENC from 'crypto-js/enc-utf8';
 import bs58 from 'bs58';
 
-import { post as postsDummy } from '../../dummyData';
+import { dummyBook } from '../../dummyData/dummyIndex';
 import stringify from 'fast-json-stable-stringify';
 import sortKeys from 'sort-keys';
 import * as   bitcoin from 'bitcoinjs-lib';
@@ -56,22 +56,7 @@ const App = () => {
   const isValid = bitcoinMessage.verify(message, addressTest, signature.toString('base64'));
   // console.log('verify____!!!!!!!!!!!!!!!!', bitcoinMessage.verify(message, addressTest, 'HyevO7YXuJVEmBp+WqhU1uQgH8Y8G4A7RlYr413wjFs6Em8BVq6ypTonydwcQMjm3ysKhWynFGkpxUsRLY+TbgA='));
 
-  // const val = Base58.encode(Buffer.from(signature.toString()));
-  // console.log('val________________58', val);
-  // console.log('val________________58', val);
 
-  let firstPost = postsDummy.posts[0];
-  firstPost = sortKeys(firstPost);
-  // console.log('firstPostSort____________', firstPost);
-
-  firstPost = stringify(firstPost);
-
-  // console.log('firstPost____json________', firstPost);
-
-
-  var ciphertext = CryptoAES.encrypt(firstPost, 'secret key 123');
-  var _ciphertext = CryptoAES.decrypt(ciphertext.toString(), 'secret key 123');
-  // console.log("+++++++++++++++++++++++++ono", _ciphertext);
 
 
 

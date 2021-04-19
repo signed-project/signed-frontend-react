@@ -1,5 +1,5 @@
 import { takeEvery, call, select, put } from 'redux-saga/effects';
-import { postApi } from '../../../config/http.config';
+import { bookApi } from '../../../config/http.config';
 import { ACTIONS } from '../../storage/post';
 
 
@@ -10,7 +10,7 @@ const sendPosts = async (axios, post) => {
             post: post,
             addToIndex: true
         };
-        let res = await axios.post(postApi.SEND_POST, data);
+        let res = await axios.post(bookApi.SEND_POST, data);
         return res;
     } catch (error) {
         console.log("[getUserInfo][error]", error);
