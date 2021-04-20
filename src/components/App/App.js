@@ -20,10 +20,6 @@ import * as   bitcoinMessage from 'bitcoinjs-message';
 const App = () => {
   const [themeVal, setThemeVal] = useState(layoutType.showLayout);
   const isAuth = useSelector(state => state.user.isAuth);
-  console.log('is', isAuth);
-
-
-
   const keyPairRundom = bitcoin.ECPair.makeRandom();
   // const keyPairRun = bitcoin.ECPair.fromPrivateKey();
   const { address } = bitcoin.payments.p2pkh({ pubkey: keyPairRundom.publicKey });
@@ -32,12 +28,8 @@ const App = () => {
   const privateKeyRun = privateKeyBuffer.toString('hex')
   var wif = keyPairRundom.toWIF();
 
-  console.log('_______________privateKeyRun________________', privateKeyRun);
-  console.log('keyPair________________', keyPairRundom.privateKey);
-  console.log('address________________', address);
-  console.log('wif________________', wif);
 
-
+  // TODO: to clean component!!!
   // var keyPair = bitcoin.ECPair.fromWIF('L4rK1yDtCWekvXuE6oXD9jCYfFNV2cWRpVuPLBcCU2z8TrisoyY1');
   var keyPair = bitcoin.ECPair.fromWIF('Kx7DQ8DtiTaEYut5f85jAG3bhPNJUB6neER3yQaVgueeLDT7Ax8e');
   var privateKey = keyPair.privateKey;
@@ -59,17 +51,10 @@ const App = () => {
 
 
 
-
-
-
-
-
   // console.log(crypto.SHA256("password").toString());
   // const crypto = sha256('nonce' + 'message');
 
   // console.log('CryptoJS_______', ciphertext.toString());
-
-
 
 
   // var privateKey = new bitcore.PrivateKey('L23PpjkBQqpAF4vbMHNfTZAb3KFPBSawQ7KinFTzz7dxq6TZX8UA');
@@ -79,7 +64,6 @@ const App = () => {
   // console.log('signature', signature);
 
   const API_HOST = process.env.REACT_APP_API_HOST;
-
 
 
   const state = {

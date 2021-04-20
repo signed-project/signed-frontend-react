@@ -7,6 +7,7 @@ import info from './info.svg';
 import tickOne from './tickOne.svg';
 import menu from './menu.svg';
 import like from './like.svg';
+import likeMark from './likeMark.svg';
 import comment from './comment.svg';
 import arrowBack from './arrowBack.svg';
 import messageSend from './messageSend.svg';
@@ -21,6 +22,7 @@ export default {
     tickOne,
     menu,
     like,
+    likeMark,
     comment,
     arrowBack,
     messageSend

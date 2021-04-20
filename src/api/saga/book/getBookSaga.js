@@ -25,35 +25,29 @@ export default function* watchGetBook() {
     const axios = yield select((state) => state.axios.axios);
     const hosts = '';
     let hostsPost;
+
     // TODO: change myPost to book.post
     const myPosts = yield call(getMyBook, axios);
-    const incomingBook = {
-        post: [],
-        source: []
-    }
     if (hosts) {
         hostsPost = yield call(getMyBook, axios);
     }
     else {
-        hostsPost = parseJson(stringify(dummyBook.posts));
+        // hostsPost = parseJson(stringify(dummyBook.posts));
+        hostsPost = dummyBook.posts;
     }
-    const hostsSources = parseJson(stringify(dummyBook.source));
+    const hostsSources = dummyBook.source;
 
     hostsPost = Array.isArray(hostsPost) ? hostsPost : [hostsPost];
     const arrPosts = [...myPosts, ...hostsPost];
     const arrSources = [...hostsSources];
 
-    const bookData = yield call(getCashData, arrPosts, arrSources);
-    console.log('++++++++++++++++++bookData++++++++++++++++++', bookData);
+    const book = yield call(getCashData, arrPosts, arrSources);
 
-    if (bookData) {
-        yield put({ type: POST_ACTIONS.SET_POST_STREAM, payload: bookData.stream });
-        yield put({ type: POST_ACTIONS.SET_POST_HASH, payload: bookData.hashedPost });
-        yield put({ type: POST_ACTIONS.SET_POST_LATEST, payload: bookData.latestPost });
-
-        yield put({ type: SOURCE_ACTIONS.SET_SOURCE_LATEST, payload: bookData.latestSource });
-        yield put({ type: SOURCE_ACTIONS.SET_SOURCE_HASH, payload: bookData.hashedSource });
-    }
+    yield put({ type: POST_ACTIONS.SET_POST_STREAM, payload: book.stream });
+    yield put({ type: POST_ACTIONS.SET_POST_HASH, payload: book.hashedPost });
+    yield put({ type: POST_ACTIONS.SET_POST_LATEST, payload: book.latestPost });
+    yield put({ type: SOURCE_ACTIONS.SET_SOURCE_LATEST, payload: book.latestSource });
+    yield put({ type: SOURCE_ACTIONS.SET_SOURCE_HASH, payload: book.latestSource });
 }
 
 

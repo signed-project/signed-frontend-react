@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Post from '../../utils/Post/Post';
 import style from './feed.module.scss';
-// import dummyPosts from '../../../dummyData/dummyPosts';
-// import dummySources from '../../../dummyData/dummySources';
+import { postActions } from '../../../api/storage/post';
 import fromUnixTime from 'date-fns/fromUnixTime';
 import format from 'date-fns/format';
-import getUniqId from '../../../libs/UniqueIdGenerator';
+import { Post as PostModel } from '../../../api/models/post';
+
 
 const Feed = ({ toggleTheme }) => {
 
@@ -15,10 +15,9 @@ const Feed = ({ toggleTheme }) => {
   const [user, setUser] = useState('');
   const userStore = useSelector(state => state.user);
   const stream = useSelector(state => state.post.stream);
+  const dispatch = useDispatch();
 
-  console.log('userStore', stream);
-
-  console.log('________________posts__________________', posts);
+  console.log('posts_____________________________', posts);
 
   useEffect(() => {
     toggleTheme(true);
@@ -28,27 +27,30 @@ const Feed = ({ toggleTheme }) => {
     setUser(userStore)
   }, [userStore]);
 
-
-  const getPost = (id) => {
-    const res = posts.find(post => post.uniqueKey === id);
-    return res;
-  }
-
   useEffect(() => {
-    console.log('stream____________________________', stream);
     setPosts(stream);
   }, [stream])
 
- 
+
+  const handleLike = (p) => {
+    const post = new PostModel({
+      source: user.source,
+      type: 'like',
+      wfi: user.wfi,
+      target: {
+        "sourceHash": p.source.hash,
+        "postHash": p.hash
+      }
+    });
+    const likePost = post.getLikePost;
+    dispatch(postActions.sendPost(likePost));
+  }
 
   const renderPosts = posts.map((p, i) => {
-
-    console.log('p', p);
-
     let date = '';
     if (p.createdAt && Number(p.createdAt) !== NaN) {
       date = format(new Date(fromUnixTime(p.createdAt / 1000).toString()), 'PPpp')
-    }
+    };
 
     return (
       <Post
@@ -58,8 +60,8 @@ const Feed = ({ toggleTheme }) => {
         text={p.text}
         date={date}
         likesCount={p.likesCount}
-        reportsCount={p.reportsCount}
-        // handleLike={() => handleLike(p)}
+        repostsCount={p.repostsCount}
+        handleLike={() => handleLike(p)}
       />
     )
   })

@@ -1,16 +1,18 @@
 
 export const ACTIONS = {
     SEND_POST: 'POST::SEND_POST',
+    ADD_POST_TO_STREAM: 'POST::ADD_POST_TO_STREAM',
+    ADD_POST_TO_HASH: 'POST::ADD_POST_TO_HASH',
+    ADD_POST_TO_LATEST: 'POST::ADD_POST_TO_LATEST',
     SET_POST_STREAM: 'POST::SET_POST_STREAM',
-    SET_POST_HASH: 'POST::ADD_POST_TO_STREAM',
-    SET_POST_LATEST: 'POST::ADD_POST_TO_STREAM',
+    SET_POST_HASH: 'POST::SET_POST_HASH',
+    SET_POST_LATEST: 'POST::SET_POST_LATEST',
 };
-
 
 const initialState = {
     stream: [],
-    latestPost: new Map(),
-    hashedPost: new Map()
+    latest: {},
+    hashed: {}
 };
 
 const postReducer = (state = initialState, action) => {
@@ -23,19 +25,35 @@ const postReducer = (state = initialState, action) => {
         case ACTIONS.SET_POST_LATEST:
             return {
                 ...state,
-                latestPost: action.payload,
+                latest: action.payload,
             };
         case ACTIONS.SET_POST_HASH:
             return {
                 ...state,
-                hashedPost: action.payload,
+                hashed: action.payload,
             };
         case ACTIONS.ADD_POST_TO_STREAM:
-            const newStream = state.stream;
-            newStream.push(action.payload);
             return {
                 ...state,
-                stream: newStream
+                stream: [...state.stream, action.payload]
+            };
+        case ACTIONS.ADD_POST_TO_HASH:
+
+            return {
+                ...state,
+                hashed: {
+                    ...state.hashed,
+                    [action.payload.hash]: action.payload
+                }
+            };
+        case ACTIONS.ADD_POST_TO_LATEST:
+            const compositeKey = action.payload.source.address + '*' + action.payload.hash;
+            return {
+                ...state,
+                latest: {
+                    ...state.latest,
+                    [compositeKey]: action.payload
+                }
             };
         default:
             return state;

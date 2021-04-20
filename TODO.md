@@ -1,7 +1,13 @@
 # TODO
 
 ## new Post
- - [ ] validation before send post
+ - [ ] validation before send post ?
 
 ## Clean package.json
-- [] is neen joy ?
+ 
+
+ ## scss
+- [ ] add object for text 
+
+## reducer
+ - [] add check in Map() when add new post in hashes

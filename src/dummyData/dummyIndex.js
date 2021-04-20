@@ -85,7 +85,6 @@ export const dummyBook = {
       "hash": "FiDXCAWXL4wZFAtLYVRiRe5ac1dQUB8GWLTiDoVnhKmX",
       "id": "9NidlfqfUWxh1itFzu1ds",
       "likesCount": 0,
-      "reportsCount": 0,
       "repostsCount": 0,
       "signatures": "IHuI0mqoEUfzzJUqvfDbehZeCf5+iZsYBaIly9VzVKZTdTpXNJRN5ZXnumou5XRy4FYpDS4iTl9BfpyjYw/kFXs=",
       "source": {
@@ -110,7 +109,6 @@ export const dummyBook = {
       "hash": "AymqAdRMJHLXjVsQqdAPLKQwV6kH3fwFvun4sfqNW7oi",
       "id": "Sbdcdx7-DLECLBZ93Lwkh",
       "likesCount": 0,
-      "reportsCount": 0,
       "repostsCount": 0,
       "signatures": "H+gsU3y8hjk+hxIyy7nMZYSSFVphTKgm9F21cqsLpmRIczuXqlyiv8yB2GutCHEeIubsLcFAwhyx+4+bn+DWwhQ=",
       "source": {
@@ -139,7 +137,6 @@ export const dummyBook = {
       "hash": "AymqAdRMJHLXjVsQqdAPLKQwV6kH3fwFvun4sfqNW7oi",
       "id": "Sbdcdx7-DLECLBZ93Lwkh",
       "likesCount": 0,
-      "reportsCount": 0,
       "repostsCount": 0,
       "signatures": "H+gsU3y8hjk+hxIyy7nMZYSSFVphTKgm9F21cqsLpmRIczuXqlyiv8yB2GutCHEeIubsLcFAwhyx+4+bn+DWwhQ=",
       "source": {
@@ -168,7 +165,6 @@ export const dummyBook = {
       "hash": "AymqAdRMJHLXjVsQqdAPLKQwV6kH3fwFvun4sfqNW7oi",
       "id": "Sbdcdx7-DLECLBZ93Lwkh",
       "likesCount": 0,
-      "reportsCount": 0,
       "repostsCount": 0,
       "signatures": "H+gsU3y8hjk+hxIyy7nMZYSSFVphTKgm9F21cqsLpmRIczuXqlyiv8yB2GutCHEeIubsLcFAwhyx+4+bn+DWwhQ=",
       "source": {

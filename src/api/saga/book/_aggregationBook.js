@@ -1,14 +1,13 @@
 
 import getPostStream from './_getPostStream';
-// import getHashedPost from './_getHashedPost';
 import { getHash } from '../../../libs/signature';
 
 
 
 const getHashedData = (arr) => {
     let hashMap = new Map();
-    arr.map(val => { hashMap.set(val.hash, val); });
-    return hashMap;
+    arr.map(val => { hashMap.set(val.hash, val); return });
+    return Object.fromEntries(hashMap);
 }
 
 const getPostsHashValid = (arr) => {
@@ -19,22 +18,26 @@ const getPostsHashValid = (arr) => {
 const getLatestPost = (arr) => {
     let latestPost = new Map();
     arr.map(post => {
-        const key = post.source.address + '&' + post.hash;
+        const key = post.source.address + '*' + post.hash;
         latestPost.set(key, post)
+        return
     });
-    return latestPost;
+    return Object.fromEntries(latestPost);
 };
 
 const getLatestSource = (arr) => {
     let hashMap = new Map();
-    arr.map(val => { hashMap.set(val.address, val); });
-    return hashMap;
+    arr.map(val => {
+        hashMap.set(val.address, val)
+        return
+    });
+    return Object.fromEntries(hashMap);
 }
 
 export const getCashData = (posts, sources) => {
     const postHashValid = getPostsHashValid(posts);
-    // TOOD: check 
-    const sourcesHashValid = sources
+    // TOOD: check sourcesHashValid add react signatures to source
+    const sourcesHashValid = sources;
     return {
         latestSource: getLatestSource(sourcesHashValid),
         hashedSource: getHashedData(sourcesHashValid),

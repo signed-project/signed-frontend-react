@@ -1,0 +1,56 @@
+@import "/src/assets/css/index.scss";
+
+.likeMarkWrapper {
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: row;
+  justify-content: space-between;
+}
+.likeRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  // align-items: center;
+}
+
+.name {
+  color: $textColorMain;
+  font-family: Roboto, sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.descriptionLike {
+  margin-left: 4px;
+  color: $colorGrey100;
+  font-family: Roboto sans-serif;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+  letter-spacing: 0em;
+  text-align: left;
+}
+
+.date {
+  color: $colorGrey100;
+
+  font-weight: 500;
+  font-size: 13px;
+  color: $colorGrey100;
+
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: 0em;
+  text-align: left;
+}
+
+
+.menuIcon {
+    height: 15px;
+    margin-right: 10px;
+  }

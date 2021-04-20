@@ -3,22 +3,26 @@ import styles from './reaction.module.scss';
 import icon from '../../../assets/svg/icon';
 import Button from '../Button/Button';
 
-const Reaction = ({ likesCount, reportsCount, handleLike }) => {
+const Reaction = ({ likesCount, repostsCount, handleLike }) => {
+
+    const isNotNull = (num) => {
+        return Number(num) > 0 ? num : ''
+    }
 
     return (
         <>
             <div className={styles.reaction}>
                 <div className={styles.reactionHistory}>
                     <div className={styles.like}>
-                        <img src={icon.likeIcon} alt="" className={styles.reactionHistoryIcon} />
+                        <img src={icon.like} alt="" className={styles.reactionHistoryIcon} />
                         <span className={styles.reactionHistoryData}>
-                            {likesCount}
+                            {isNotNull(likesCount)}
                         </span>
                     </div>
                     <div className={styles.like}>
-                        <img src={icon.commentIcon} alt="" className={styles.reactionHistoryIcon} />
+                        <img src={icon.comment} alt="" className={styles.reactionHistoryIcon} />
                         <span className={styles.reactionHistoryData}>
-                            {reportsCount}
+                            {isNotNull(repostsCount)}
                         </span>
                     </div>
                 </div>

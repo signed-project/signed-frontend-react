@@ -7,8 +7,8 @@ export const ACTIONS = {
 
 
 const initialState = {
-    latest: new Map(),
-    hashed: new Map()
+    latest: [],
+    hashed: []
 };
 
 const sourceReducer = (state = initialState, action) => {
