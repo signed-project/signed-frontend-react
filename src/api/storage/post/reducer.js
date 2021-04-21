@@ -38,7 +38,6 @@ const postReducer = (state = initialState, action) => {
                 stream: [...state.stream, action.payload]
             };
         case ACTIONS.ADD_POST_TO_HASH:
-
             return {
                 ...state,
                 hashed: {

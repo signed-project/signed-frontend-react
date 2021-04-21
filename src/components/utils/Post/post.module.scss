@@ -27,4 +27,13 @@
   justify-content: space-between;
   width: 100%;
 }
- 
+
+.repostBlock {
+  padding: 8px;
+  // min-height: 50px;
+  // margin-left: 50px;
+  border: 1px solid $colorGrey300;
+  background: $colorGrey400;
+  // min-width: 288px;
+  margin-bottom: 16px;
+}

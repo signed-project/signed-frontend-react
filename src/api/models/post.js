@@ -23,38 +23,7 @@ export class Post {
     }
 
 
-
-
-
     get newPost() {
-        const id = generateId();
-        const date = new Date().getTime();
-
-        const newPost = {
-            source: this.data.source,
-            id: id,
-            type: 'post',
-            createdAt: date,
-            updatedAt: date,
-            text: this.data.text,
-            attachments: this.data.attachments,
-            likesCount: 0,
-            repostsCount: 0,
-            commentsCount: 0,
-        };
-
-        const hash = getHash(newPost);
-        const signature = getSignatures(newPost, this.data.wfi);
-
-        return {
-            ...newPost,
-            signatures: signature,
-            hash: hash
-        }
-    }
-
-
-    get getLikePost() {
         const id = generateId();
         const date = new Date().getTime();
 
@@ -81,5 +50,6 @@ export class Post {
             hash: hash
         }
     }
+
 
 }

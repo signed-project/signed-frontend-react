@@ -2,7 +2,7 @@
 import styles from './infoAuthor.module.scss';
 import icon from '../../../assets/svg/icon';
 
-const InfoAuthor = ({ name, date }) => {
+const InfoAuthor = ({ name, createdAt }) => {
     return (
         <>
             <div className={styles.info}>
@@ -12,7 +12,7 @@ const InfoAuthor = ({ name, date }) => {
                         <span className={styles.name}>{name}</span>
                     </div>
                     <div className={styles.date}>
-                        <span>{date}</span>
+                        <span>{createdAt}</span>
                     </div>
                 </div>
             </div>

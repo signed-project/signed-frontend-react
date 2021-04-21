@@ -3,7 +3,7 @@ import styles from './reaction.module.scss';
 import icon from '../../../assets/svg/icon';
 import Button from '../Button/Button';
 
-const Reaction = ({ likesCount, repostsCount, handleLike }) => {
+const Reaction = ({ likesCount, repostsCount, handleLike, handleRepost }) => {
 
     const isNotNull = (num) => {
         return Number(num) > 0 ? num : ''
@@ -29,10 +29,7 @@ const Reaction = ({ likesCount, repostsCount, handleLike }) => {
                 <div className={styles.actionReaction}>
                     <Button className='clean_white' onClick={() => handleLike()}>Like</Button>
                     <Button className='clean_white'>Reply</Button>
-                    <Button className='clean_white'>Repost</Button>
-                    {/* <a href="" >Like</a>
-                    <a href="">Reply</a>
-                    <a href="">Repost </a> */}
+                    <Button className='clean_white' onClick={() => handleRepost()}>Repost</Button>
                 </div>
             </div>
 

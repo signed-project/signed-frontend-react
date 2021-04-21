@@ -1,13 +1,18 @@
 # TODO
-
+ - [ ] use show/open render 
 ## new Post
  - [ ] validation before send post ?
-
-## Clean package.json
  
+ 
+ ## Avatar
+- [ ] Avatar add maintain img, download or link to img
 
  ## scss
 - [ ] add object for text 
 
 ## reducer
- - [] add check in Map() when add new post in hashes
+ - [ ] add check in Map() when add new post in hashes
+
+
+## PropTypes add !
+- [ ] split into, and write plan for cover

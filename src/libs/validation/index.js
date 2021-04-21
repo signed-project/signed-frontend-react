@@ -134,19 +134,7 @@ const postSchema = {
   additionalProperties: true
 }
 
-// const validate = ajv.compile(schema)
+
 export const isSource = ajv.compile(sourceSchema);
 export const isPostFieldValid = ajv.compile(postSchema);
 
-const data = {
-  next: {
-    one: 'jkk',
-  },
-  two: 23232,
-  foo: 1,
-  bar: "abc"
-}
-
-// const valid = validate(data)
-// console.log('valid', valid);
-// if (!valid) console.log(validate.errors)

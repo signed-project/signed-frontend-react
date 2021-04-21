@@ -4,12 +4,12 @@ import InfoAuthor from '../InfoAuthor/InfoAuthor';
 
 import styles from './authorBlock.module.scss';
 
-const AuthorBlock = ({ name, date }) => {
+const AuthorBlock = ({ name, createdAt }) => {
     return (
         <>
             <div className={styles.author}>
                 <Avatar />
-                <InfoAuthor date={date} name={name} />
+                <InfoAuthor createdAt={createdAt} name={name} />
             </div>
         </>
     )

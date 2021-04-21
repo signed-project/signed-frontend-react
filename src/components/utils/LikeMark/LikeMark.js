@@ -2,7 +2,7 @@ import styles from './likeMark.module.scss';
 import icon from '../../../assets/svg/icon';
 
 
-const LikeMark = ({ date, name }) => {
+const LikeMark = ({ createdAt, name }) => {
     return (
         <div className={styles.likeMarkWrapper}>
             <div className={styles.likeMark}>
@@ -12,7 +12,7 @@ const LikeMark = ({ date, name }) => {
                     <span className={styles.descriptionLike}>Like this post</span>
                 </div>
                 <div>
-                    <span className={styles.date}>{date}</span>
+                    <span className={styles.date}>{createdAt}</span>
                 </div>
             </div>
             <img src={icon.menu} alt="menu icon" className={styles.menuIcon} />
