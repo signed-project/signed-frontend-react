@@ -15,6 +15,7 @@
 * likesCount - int
 * repostsCount - int
 * commentsCount - int
+* mentions - [source]
 * hash - string, every post shall be stored as a separate file in the fileStore
 
 ## source
