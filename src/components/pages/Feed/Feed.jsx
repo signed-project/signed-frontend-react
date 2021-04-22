@@ -41,11 +41,10 @@ const Feed = ({ toggleTheme }) => {
   }, [stream]);
 
   const handleLike = (p) => {
-    let data;
+    let data, postLikeData;
     if (p.type === 'post') {
-
-
-      console.log('OOOOOOOOOOOOOOOOOOOOOPPPPPPPPPPPPPPPPSSSS');
+      console.log('OOOOOOOOOOOOOOOOOOOOOPPPPPPPPPPPPPPPPSSSS', p);
+      console.log('OOOOOOOOOOOOOOOOOOOOOPPPPPPPPPPPPPPPPSSSS', p);
 
       data = {
         source: user.source,
@@ -58,12 +57,20 @@ const Feed = ({ toggleTheme }) => {
       }
     }
     else {
-      console.log('LLLLLLLLLLLLLLLLLLLLLLLLLLLLLIIIIIIIIIIIIIIIIIIIIIIIIKKKKKKKKKKKKEEEEEEEEEEEEEEEE');
       console.log('p?.target?.postHash_________________', p?.target?.postHash);
       console.log('postHash_________________', postHash);
-      data = postHash[p?.target?.postHash];
+      const postData = postHash[p?.target?.postHash];
+      console.log('data_________________!!!111', data);
+      data = {
+        ...postData,
+        type: 'like',
+        wfi: user.wfi,
+        target: {
+          sourceHash: postData.source.hash,
+          postHash: postData.hash
+        }
+      }
       console.log('data_________________', data);
-      debugger;
     };
     const post = new PostModel(data);
     const likePost = post.newPost;
