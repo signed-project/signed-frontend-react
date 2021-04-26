@@ -4,6 +4,7 @@
   margin-top: 24px;
   padding-bottom: 16px;
   border-bottom: 1px solid #f0f0f0;
+  word-wrap: break-word;
 }
 .post:first-child {
   margin-top: 16px;
@@ -36,4 +37,32 @@
   background: $colorGrey400;
   // min-width: 288px;
   margin-bottom: 16px;
+}
+
+.commentBlock {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.verticalLine {
+  border-left: 1px solid green;
+  height: 110%;
+  margin: -3px 0 -3px -25px;
+}
+
+.avatarBlock {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  // padding-bottom: 102px;
+}
+
+.bodyWrapper {
+  margin: 8px 8px;
+}
+
+.postBody {
+  padding-bottom: 30px;
 }

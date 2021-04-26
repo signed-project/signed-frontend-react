@@ -41,7 +41,7 @@ const Navigation = (props) => {
       />
 
       <NavItem
-        to={routes.newPost}
+        to={`${routes.newPost}?type=post`}
         icon={icons.addNew}
         alt={'New post icon'}
         title={''}

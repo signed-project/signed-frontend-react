@@ -11,74 +11,119 @@ import queryString from "query-string";
 import { useLocation } from "react-router-dom";
 import Post from '../../utils/Post/Post';
 import RepostBlock from '../../utils/Post/RepostBlock';
-
+import CommentBlock from '../../utils/Post/CommentBlock';
+import { Link, Element, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
 
 const NewPost = ({ toggleTheme }) => {
   const history = useHistory();
   const dispatch = useDispatch();
   const [message, setMessage] = useState('');
   const user = useSelector(state => state.user);
+  const hashedPost = useSelector(state => state.post.hashed);
   const location = useLocation();
-  const { post: hash, user: sourceHash } = queryString.parse(location.search);
+  const { post: hash, user: source, type } = queryString.parse(location.search);
 
-  const [postHash, setPostHash] = useState('')
+  const [post, setPost] = useState({
+    type: 'post',
+    hash: '',
+    source: '',
+    isComment: false
+  });
+
+  const [previousComments, setPreviousComments] = useState('')
+
+  useEffect(() => {
+    scroll.scrollToBottom();
+  }, []);
 
   useEffect(() => {
     toggleTheme(false);
   }, [toggleTheme]);
 
   useEffect(() => {
-    setPostHash(hash);
-  }, [hash]);
+    setPost(prev => ({
+      ...prev,
+      type,
+      hash,
+      source,
+    }))
+
+  }, [hash, source, type]);
 
 
   /**
-   * use line @param e.target.style.height = 0, - to stop 
+   *   @param  e.target.style.height = 0, - to stop 
    *  growth  height when add text in one row
      */
   const handleChangeMessage = (e) => {
     const value = e.target.value;
     e.target.style.height = 0;
-    e.target.style.height = `${e.target.scrollHeight}px`
+    e.target.style.height = `${e.target.scrollHeight}px`;
+    scroll.scrollToBottom();
     setMessage(value);
-  }
+  };
+
   const handleSendMessage = () => {
-    const post = new PostModel({
+    const postInstance = new PostModel({
       source: user.source,
-      type: postHash ? 'repost' : 'post',
+      type: post.type,
       text: message,
-      target: postHash ? { postHash, sourceHash } : '',
+      target: post.hash ? { postHash: post.hash, sourceHash: post.source } : '',
       wfi: user.wfi
     });
 
-    const newPost = post.newPost;
-    console.log('newPost', newPost);
+    const newPost = postInstance.newPost;
     dispatch(postActions.sendPost(newPost));
     history.goBack();
   }
 
+  const renderComments = () => {
+    const filterComment = Object.values(hashedPost).filter(p => p.target?.postHash === post.hash && p.type === 'reply');
+    return (
+      filterComment.map(post => {
+        return (
+
+          <CommentBlock
+            img={post?.source?.avatar?.hash}
+            name={post.source?.name}
+            text={post.text}
+            createdAt={post.createdAt}
+            mentions={post.mentions}
+          />
+        )
+      })
+
+    )
+  }
 
   return (
     <>
       <div className={style.backBlock}>
         <img src={icon.arrowBack} onClick={() => history.goBack()} alt="arrow back icon" />
       </div>
+      <div className={style.bodyBlock}>
+        {post.type === 'reply' &&
+          <div >
+            {renderComments()}
+          </div>}
+        <div className={style.messageBlock}>
+          <Avatar />
+          <textarea
+            style={{ overflow: 'hidden', outline: 'none' }}
+            name='newPost'
+            value={message}
+            onChange={handleChangeMessage}
+            placeholder='Enter text...'
+            className={style.textarea}
+          ></textarea>
+        </div>
+        {post?.type === 'repost' &&
+          <div className={style.repostBlockWrapper}>
+            <RepostBlock postHash={post.hash} />
+          </div>}
 
-      <div className={style.messageBlock}>
-        <Avatar />
-        <textarea
-          style={{ overflow: 'hidden', outline: 'none' }}
-          name='newPost'
-          value={message}
-          onChange={handleChangeMessage}
-          placeholder='Enter text...'
-          className={style.textarea}
-        ></textarea>
+
       </div>
-      { postHash &&
-        < div className={style.repostBlockWrapper}>
-          <RepostBlock postHash={postHash} />
-        </div>}
       <div className={style.toolsBlock}>
         <div>
         </div>
@@ -87,10 +132,8 @@ const NewPost = ({ toggleTheme }) => {
             <img src={icon.messageSend} alt="send message icon" style={{ marginRight: '8px' }} />
             Public</Button>
         </div>
-
-
-
       </div>
+
     </>
   );
 };

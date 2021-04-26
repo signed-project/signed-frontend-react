@@ -1,10 +1,8 @@
 import Ajv, { ErrorObject } from 'ajv';
-import { array, object } from 'joi';
-import { post } from '../../dummyData/dummyIndex';
 const ajv = new Ajv({ allErrors: true, async: true });
 
 /**
- * for combining schemas in docs use this way
+ * @tutorial combining schemas in docs use this way
  * @example 
  *    ajv.addSchema({
         "$id": 'parent.schema',
@@ -106,8 +104,6 @@ const targetSchema = {
   additionalProperties: false
 };
 
-
-
 const postSchema = {
   $id: schemaId.post,
   type: "object",
@@ -119,13 +115,27 @@ const postSchema = {
     "updatedAt": { type: "integer" },
     "text": { type: "string" },
     "attachments": { type: "array", items: mediaSchema },
-    "target": targetSchema,
     "signatures": { type: "string" },
     "likesCount": { type: "integer" },
     "repostsCount": { type: "integer" },
     "commentsCount": { type: "integer" },
     "hash": { type: "string" }
   },
+  anyOf: [
+    {
+      properties: {
+        target: targetSchema
+      }
+    },
+    {
+      properties: {
+        target: {
+          "type": "string",
+          "maxLength": 0
+        }
+      }
+    }
+  ],
   required: [
     "source", "id", "type", "createdAt", "updatedAt",
     "text", "signatures", "likesCount",

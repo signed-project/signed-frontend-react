@@ -1,6 +1,9 @@
 @import "/src/assets/css/index.scss";
 
 .backBlock {
+  top: 0;
+  background: white;
+  position: fixed;
   height: 48px;
   width: 100%;
   border-bottom: 1px solid #f0f0f0;
@@ -16,7 +19,6 @@
 }
 
 .messageBlock {
-  padding: 16px 12px;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -29,7 +31,7 @@
 }
 
 .toolsBlock {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   height: 54px;
   border-top: 1px solid #f0f0f0;
@@ -38,6 +40,7 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  background: white;
 }
 
 .buttonWrapper {
@@ -47,4 +50,14 @@
 .repostBlockWrapper {
   margin-left: 50px;
   margin-right: 12px;
+}
+
+ 
+
+.bodyBlock {
+  box-sizing: border-box;
+  padding-top: 70px;
+  padding-left: 12px;
+  width: 100%;
+  margin-bottom: 100px;
 }

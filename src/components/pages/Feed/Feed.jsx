@@ -6,13 +6,11 @@ import { postActions } from '../../../api/storage/post';
 import { useHistory } from "react-router-dom";
 import routes from '../../../config/routes.config.js';
 import { Post as PostModel } from '../../../api/models/post';
-import { useTargetPost } from '../../utils/Post/Post';
+
 
 const Feed = ({ toggleTheme }) => {
-
   const hashedPost = useSelector(state => state.post.hashed);
   const [posts, setPosts] = useState([]);
-  const [sources, setSources] = useState([]);
   const [postHash, setPostHash] = useState();
   const [user, setUser] = useState('');
   const userStore = useSelector(state => state.user);
@@ -21,12 +19,9 @@ const Feed = ({ toggleTheme }) => {
   let history = useHistory();
 
 
-  console.log('postHash', postHash);
-
   useEffect(() => {
     toggleTheme(true);
   }, [toggleTheme]);
-
 
   useEffect(() => {
     setUser(userStore)
@@ -41,11 +36,8 @@ const Feed = ({ toggleTheme }) => {
   }, [stream]);
 
   const handleLike = (p) => {
-    let data, postLikeData;
+    let data;
     if (p.type === 'post') {
-      console.log('OOOOOOOOOOOOOOOOOOOOOPPPPPPPPPPPPPPPPSSSS', p);
-      console.log('OOOOOOOOOOOOOOOOOOOOOPPPPPPPPPPPPPPPPSSSS', p);
-
       data = {
         source: user.source,
         type: 'like',
@@ -57,10 +49,7 @@ const Feed = ({ toggleTheme }) => {
       }
     }
     else {
-      console.log('p?.target?.postHash_________________', p?.target?.postHash);
-      console.log('postHash_________________', postHash);
       const postData = postHash[p?.target?.postHash];
-      console.log('data_________________!!!111', data);
       data = {
         ...postData,
         type: 'like',
@@ -70,24 +59,28 @@ const Feed = ({ toggleTheme }) => {
           postHash: postData.hash
         }
       }
-      console.log('data_________________', data);
     };
     const post = new PostModel(data);
     const likePost = post.newPost;
     dispatch(postActions.sendPost(likePost));
   };
 
-
-
   const handleRepost = (p) => {
     const sourcePost = p.type === 'post' ? p.hash : p.target.postHash;
     const sourceAddress = p.type === 'post' ? p.source.address : p.target.sourceHash;
-    // .hash, p.source.address
-    history.push(`${routes.repost}?post=${sourcePost}&user=${sourceAddress}`);
+    const type = 'repost';
+    history.push(`${routes.repost}?post=${sourcePost}&user=${sourceAddress}&type=${type}`);
   };
 
-  const renderPosts = posts.slice().reverse().map((p, i) => {
+  const handleReply = (p) => {
+    const sourcePost = p.type === 'post' ? p.hash : p.target.postHash;
+    const sourceAddress = p.type === 'post' ? p.source.address : p.target.sourceHash;
+    const type = 'reply';
+    history.push(`${routes.repost}?post=${sourcePost}&user=${sourceAddress}&type=${type}`);
+  }
 
+
+  const renderPosts = posts.slice().reverse().map((p, i) => {
     return (
       <Post
         key={i}
@@ -100,6 +93,7 @@ const Feed = ({ toggleTheme }) => {
         repostsCount={p.repostsCount}
         handleLike={() => handleLike(p)}
         handleRepost={() => handleRepost(p)}
+        handleReply={() => handleReply(p)}
       />
     )
   })
