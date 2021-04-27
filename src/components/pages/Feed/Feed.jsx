@@ -37,7 +37,7 @@ const Feed = ({ toggleTheme }) => {
 
   const handleLike = (p) => {
     let data;
-    if (p.type === 'post') {
+    if (p.type === 'post' || p.type === 'reply') {
       data = {
         source: user.source,
         type: 'like',
@@ -66,23 +66,41 @@ const Feed = ({ toggleTheme }) => {
   };
 
   const handleRepost = (p) => {
-    const sourcePost = p.type === 'post' ? p.hash : p.target.postHash;
-    const sourceAddress = p.type === 'post' ? p.source.address : p.target.sourceHash;
+    let sourcePost
+    let sourceAddress
+    if (p.type === 'post' || p.type === 'reply') {
+      sourcePost = p.hash;
+      sourceAddress = p.source.address;
+    } else {
+      sourcePost = p.target.postHash;
+      sourceAddress = p.target.sourceHash;
+    }
+
+
     const type = 'repost';
     history.push(`${routes.repost}?post=${sourcePost}&user=${sourceAddress}&type=${type}`);
   };
 
   const handleReply = (p) => {
-    const sourcePost = p.type === 'post' ? p.hash : p.target.postHash;
-    const sourceAddress = p.type === 'post' ? p.source.address : p.target.sourceHash;
+    console.log('RRRRRRRRRRRRREEEEEEEEEEPPPPPPPPPPPPPPLLLLLLLLLLLLLLYYYYYYYYYYYYYYYYYY', p);
+    let sourcePost
+    let sourceAddress
+    if (p.type === 'post' || p.type === 'reply' || p.type === 'repost') {
+      sourcePost = p.hash;
+      sourceAddress = p.source.address;
+    } else {
+      sourcePost = p.target.postHash;
+      sourceAddress = p.target.sourceHash;
+    }
     const type = 'reply';
     history.push(`${routes.repost}?post=${sourcePost}&user=${sourceAddress}&type=${type}`);
   }
 
-
+  // TODO : refactor change less signature 
   const renderPosts = posts.slice().reverse().map((p, i) => {
     return (
       <Post
+        post={p}
         key={i}
         type={p.type}
         name={p.source.name}
@@ -91,12 +109,13 @@ const Feed = ({ toggleTheme }) => {
         createdAt={p.createdAt}
         likesCount={p.likesCount}
         repostsCount={p.repostsCount}
-        handleLike={() => handleLike(p)}
-        handleRepost={() => handleRepost(p)}
-        handleReply={() => handleReply(p)}
+        handleLike={handleLike}
+        handleRepost={handleRepost}
+        handleReply={handleReply}
+        hash={p.hash}
       />
     )
-  })
+  });
 
   return (
     <>

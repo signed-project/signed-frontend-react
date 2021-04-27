@@ -7,21 +7,33 @@ import Avatar from '../Avatar/Avatar';
 import InfoAuthor from '../InfoAuthor/InfoAuthor';
 import PostContent from '../PostContent/PostContent';
 import { getReadFormat } from '../../../libs/date.js';
+import Reaction from '../Reaction/Reaction';
 
-const CommentBlock = ({ img, name, text, createdAt, mention }) => {
+const CommentBlock = ({ key, img, name, text, createdAt, mention,
+    removeLastLine = false, showReactionBlock = false, likesCount, repostsCount,
+    handleLike, handleRepost, handleReply }) => {
 
     return (
-        <div className={styles.commentBlock}>
+        <div key={+key + 1} className={styles.commentBlock}>
             <div className={styles.avatarBlock}>
                 <Avatar />
-                <div className={styles.verticalLine}></div>
+                <div className={`${styles.verticalLine} ${removeLastLine && styles.verticalLineRemove}`}></div>
+                <div className={`${styles.dotsVerticalLine}`}></div>
             </div>
             <div className={styles.postBody}>
-                <InfoAuthor createdAt={createdAt} name={name} />
+                <InfoAuthor createdAt={getReadFormat(createdAt)} name={name} />
                 <div className={styles.bodyWrapper}>
                     <PostContent text={text} />
                 </div>
                 {/* TODO: replying to */}
+                {showReactionBlock &&
+                    <Reaction
+                        likesCount={likesCount}
+                        repostsCount={repostsCount}
+                        handleLike={handleLike}
+                        handleRepost={handleRepost}
+                        handleReply={handleReply} />
+                }
             </div>
         </div>
     )

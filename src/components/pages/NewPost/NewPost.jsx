@@ -34,6 +34,7 @@ const NewPost = ({ toggleTheme }) => {
 
   useEffect(() => {
     scroll.scrollToBottom();
+    scroll.scrollMore(1000);
   }, []);
 
   useEffect(() => {
@@ -60,8 +61,11 @@ const NewPost = ({ toggleTheme }) => {
     e.target.style.height = 0;
     e.target.style.height = `${e.target.scrollHeight}px`;
     scroll.scrollToBottom();
+
     setMessage(value);
   };
+
+  // A7SL425X5dP8XEhC7CMsDYz9XEwfwWrP6BwZud28vgrr
 
   const handleSendMessage = () => {
     const postInstance = new PostModel({
@@ -72,17 +76,44 @@ const NewPost = ({ toggleTheme }) => {
       wfi: user.wfi
     });
 
+    // const postInstanceLevel = new PostModel({
+    //   source: user.source,
+    //   type: 'reply',
+    //   text: 'test test test',
+    //   target: { postHash: 'GRYxN5VrnH11sv8LKGZJ8ZRacDM9CAFQVRrPdzEatD4G', sourceHash: '19FRhaywUUpvMxUMSxgpTvc44Bj9VFd3BT' },
+    //   wfi: user.wfi
+    // });
+
     const newPost = postInstance.newPost;
+    // const newPostLevel = postInstanceLevel.newPost;
     dispatch(postActions.sendPost(newPost));
+    // dispatch(postActions.sendPost(newPostLevel));
     history.goBack();
   }
 
-  const renderComments = () => {
-    const filterComment = Object.values(hashedPost).filter(p => p.target?.postHash === post.hash && p.type === 'reply');
-    return (
-      filterComment.map(post => {
-        return (
 
+  const renderComments = () => {
+    let commentWay = [];
+    const recursion = (hash, level) => {
+      if (!level) return;
+      console.log('level', level);
+      const filterComment = Object.values(hashedPost).find(p => p.hash === hash);
+      console.log('filterComment', filterComment);
+      if (filterComment.type === 'reply' && !commentWay.find(p => p.hash === filterComment.hash)) {
+        commentWay.push(filterComment);
+        recursion(filterComment.target.postHash, level - 1)
+      } else {
+        console.log('filterComment.type', filterComment.type);
+        commentWay.push(filterComment);
+        return;
+      }
+    }
+    recursion(post.hash, 30);
+    console.log('commentWay', commentWay);
+
+    return (
+      commentWay.slice().reverse().map(post => {
+        return (
           <CommentBlock
             img={post?.source?.avatar?.hash}
             name={post.source?.name}

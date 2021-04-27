@@ -28,6 +28,7 @@ const initialState = {
     signatures: 'fjdjd343243jkdfjdk343',
     hash: 'fjdjd343243jkdfjdk343',
   },
+  subscribed: ['19FRhaywUUpvMxUMSxgpTvc44Bj9VFd3BT'],
   wfi: 'Kx7DQ8DtiTaEYut5f85jAG3bhPNJUB6neER3yQaVgueeLDT7Ax8e',
   isLoginError: false,
   isLoginProcess: false,
