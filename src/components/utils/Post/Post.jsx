@@ -27,7 +27,7 @@ export const useTargetPost = (postHash) => {
 
 
 // TODO rewrite signature functions to leave less parametrs
-const Post = ({ key, post, name, text, createdAt, likesCount, repostsCount,
+const Post = ({ renderKey, post, name, text, createdAt, likesCount, repostsCount,
     handleLike, type, postHash, handleRepost, handleReply, hash }) => {
 
     let targetPost = useTargetPost(postHash);
@@ -38,12 +38,37 @@ const Post = ({ key, post, name, text, createdAt, likesCount, repostsCount,
     const [comments, setComments] = useState([]);
     const hashedPostState = useSelector(state => state.post.hashed);
 
+
+
+
+
     useEffect(() => {
         setPostHashed(hashedPostState);
-        console.log('hash++++++++++++++++++++++++', hash);
-        console.log('hash++++++++++++++++++++++++', type);
+    }, [hashedPostState, postHash]);
+
+
+    const getCommentTreas = (hashMap, currentPostHash) => {
+        const hashArr = Object.values(hashedPostState);
+        const comments = [];
+
+        const recursion = (hash) => {
+            hashArr.map(post => {
+                if (post.target.postHash === hash) {
+                    comments.push(post);
+                    recursion(post.hash);
+                }
+            })
+        }
+        recursion(currentPostHash);
+        return comments;
+    }
+
+    useEffect(() => {
         const filterComment = Object.values(hashedPostState).filter(p => p.target?.postHash === hash && p.type === 'reply');
-        setComments(filterComment);
+        const commentsTrees = getCommentTreas(postHashed, postHash);
+        const commentsDateFilter = commentsTrees.sort((a, b) => a.createdAt - b.createdAt)
+        console.log('commentsTrees', commentsTrees);
+        setComments(commentsDateFilter);
     }, [hashedPostState, postHash]);
 
     useEffect(() => {
@@ -59,11 +84,11 @@ const Post = ({ key, post, name, text, createdAt, likesCount, repostsCount,
 
 
     const renderComments = comments.map((c, i) => {
-        console.log('!!!!!!!!!!!!!!!!!c', c);
-        if (subscribed.includes(c.source.address)) {
-            return (<>
+        if (subscribed.includes(c.source.address) && i !== 3) {
+            return (
                 <CommentBlock
                     key={i}
+                    renderKey={i}
                     removeLastLine={(+i + 1) === comments.length}
                     dotsLine={true}
                     name={c.source?.name}
@@ -73,37 +98,47 @@ const Post = ({ key, post, name, text, createdAt, likesCount, repostsCount,
                     handleLike={() => handleLike(c)}
                     handleRepost={() => handleRepost(c)}
                     handleReply={() => handleReply(c)}
+                    hash={c.hash}
                 />
-            </>)
+            )
+        } else if (i === 3) {
+            // TODO: clear this mock 
+            return (
+                <div key={i} className={styles.gap}>
+                    <div className={styles.gapBlockLine}></div>
+                    <span className={styles.gapTitle}>Show this thread</span>
+                </div>
+            )
+            // TODO: add three dots! 
         }
-
-
     });
 
+    console.log('hash&&&&&&&&&&7777777777777777777777777', hash);
 
     return (
-        <>
-            <div key={key} className={styles.post}>
+        <div key={renderKey} >
+            <div className={styles.post}>
 
                 {type === 'post' && <>
                     <div className={styles.wrapperContent}>
                         <AuthorBlock name={name} createdAt={getReadFormat(createdAt)} />
                         <img src={icon.menu} alt="menu icon" className={styles.menuIcon} />
                     </div>
-                    <PostContent text={text} />
+                    <PostContent sourceAddress={hash} text={text} />
                 </>}
                 {type === 'like' && targetPost && <> <LikeMark createdAt={getReadFormat(createdAt)} name={name} />
                     <div className={styles.wrapperContent}>
                         <AuthorBlock name={targetPost?.source?.name} createdAt={getReadFormat(targetPost.createdAt)} />
                     </div>
-                    <PostContent text={targetPost?.text} />
+                    <PostContent sourceAddress={hash} text={targetPost?.text} />
                 </>}
                 {type === 'repost' && targetPost && <> <div className={styles.wrapperContent}>
                     <AuthorBlock name={name} createdAt={getReadFormat(createdAt)} />
                     <img src={icon.menu} alt="menu icon" className={styles.menuIcon} />
                 </div>
-                    <PostContent text={text} />
-                    <RepostBlock postHash={postHash} /> </>}
+                    <PostContent sourceAddress={hash} text={text} />
+                    <RepostBlock postHash={postHash} />
+                </>}
 
                 <Reaction
                     likesCount={targetPost?.likesCount}
@@ -113,15 +148,11 @@ const Post = ({ key, post, name, text, createdAt, likesCount, repostsCount,
                     handleReply={() => handleReply(post)} />
             </div>
             {comments &&
-                <>
-                    <div className={styles.commentsWrapper}>
-                        {renderComments}
-                        {comments.length > 2 &&
-                            <Button className='clean_white' onClick={() => handleLike()} > Show more</Button>}
-                    </div>
-                </>
+                <div className={styles.commentsWrapper}>
+                    {renderComments}
+                </div>
             }
-        </>
+        </div>
     )
 }
 

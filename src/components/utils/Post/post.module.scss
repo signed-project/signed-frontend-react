@@ -52,12 +52,8 @@
 }
 .verticalLine {
   border-left: 1px solid $colorGrey200;
-  height: 15px;
+  height: 100%;
   margin: -3px 0 -3px -25px;
-}
-
-.verticalLineRemove {
-  border-left: none;
 }
 
 .avatarBlock {
@@ -77,5 +73,29 @@
 }
 
 .commentsWrapper {
-  margin: 16px 0 16px 16px;
+  margin: 16px 0 16px;
+}
+
+.gapTitle {
+  font-family: $mainFont;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  line-height: 20px;
+  /* identical to box height, or 154% */
+  /* Daybreak Blue/6 */
+  color: $colorPrimary100;
+  margin-left: 40px;
+}
+
+.gap {
+  height: 20px;
+  margin: 5px 0 20px 18px;
+  display: flex;
+  flex-direction: fow;
+  justify-content: flex-start;
+}
+
+.gapBlockLine {
+  border-left: 1px dashed $colorGrey200;
 }

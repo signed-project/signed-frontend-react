@@ -6,6 +6,7 @@ import Feed from '../pages/Feed/Feed';
 import SingUp from '../pages/SingUp/SingUp';
 import Search from '../pages/Search/Search';
 import NewPost from '../pages/NewPost/NewPost';
+import PostPage from '../pages/PostPage/PostPage';
 import Profile from '../pages/Profile/Profile';
 import Notification from '../pages/Notification/Notification';
 // import PageNotFound from '../pages/PageNotFound/PageNotFound';
@@ -31,6 +32,9 @@ const MainRouts = () => {
                                 />
                                 <Route path={routes.repost}
                                     component={() => <NewPost theme={theme} toggleTheme={toggleTheme} />}
+                                />
+                                <Route path={routes.post}
+                                    component={() => <PostPage theme={theme} toggleTheme={toggleTheme} />}
                                 />
                                 <Route path={routes.profile} exact
                                     component={() => <Profile theme={theme} toggleTheme={toggleTheme} />}

@@ -17,6 +17,7 @@ export class Post {
             likesCount: data.likesCount ? data.likesCount : 0,
             repostsCount: data.repostsCount ? data.repostsCount : 0,
             commentsCount: data.commentsCount ? data.commentsCount : 0,
+            mentions: data.mentions ? data.mentions : '',
             hash: data.hash ? data.hash : '',
             wfi: data.wfi
         }
@@ -39,6 +40,7 @@ export class Post {
             likesCount: this.data.likesCount,
             repostsCount: this.data.repostsCount,
             commentsCount: this.data.commentsCount,
+            mentions: this.data.mentions,
         };
 
         const hash = getHash(post);

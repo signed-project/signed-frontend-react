@@ -3,6 +3,7 @@ export default {
   search: '/search',
   newPost: '/new',
   repost: '/repost',
+  post: '/post',
   profile: '/profile',
   notification: '/notification',
   signUp: '/sign-up',

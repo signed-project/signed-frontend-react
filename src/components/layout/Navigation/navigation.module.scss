@@ -1,3 +1,4 @@
+@import "/src/assets/css/index.scss";
 .bar {
   position: fixed;
   height: 47px;
@@ -21,7 +22,7 @@
 .titleNav {
   text-decoration: none;
   display: block;
-  font-family: Roboto, sans-serif;
+  font-family: $mainFont;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;

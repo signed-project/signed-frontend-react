@@ -9,21 +9,21 @@ import PostContent from '../PostContent/PostContent';
 import { getReadFormat } from '../../../libs/date.js';
 import Reaction from '../Reaction/Reaction';
 
-const CommentBlock = ({ key, img, name, text, createdAt, mention,
+const CommentBlock = ({ img, name, text, createdAt, mention,
     removeLastLine = false, showReactionBlock = false, likesCount, repostsCount,
-    handleLike, handleRepost, handleReply }) => {
+    handleLike, handleRepost, handleReply, hash }) => {
 
     return (
-        <div key={+key + 1} className={styles.commentBlock}>
+        <div className={styles.commentBlock}>
             <div className={styles.avatarBlock}>
                 <Avatar />
                 <div className={`${styles.verticalLine} ${removeLastLine && styles.verticalLineRemove}`}></div>
-                <div className={`${styles.dotsVerticalLine}`}></div>
+                {/* <div className={`${styles.dotsVerticalLine}`}></div> */}
             </div>
             <div className={styles.postBody}>
                 <InfoAuthor createdAt={getReadFormat(createdAt)} name={name} />
                 <div className={styles.bodyWrapper}>
-                    <PostContent text={text} />
+                    <PostContent sourceAddress={hash} text={text} />
                 </div>
                 {/* TODO: replying to */}
                 {showReactionBlock &&

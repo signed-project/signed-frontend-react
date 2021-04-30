@@ -82,7 +82,6 @@ const Feed = ({ toggleTheme }) => {
   };
 
   const handleReply = (p) => {
-    console.log('RRRRRRRRRRRRREEEEEEEEEEPPPPPPPPPPPPPPLLLLLLLLLLLLLLYYYYYYYYYYYYYYYYYY', p);
     let sourcePost
     let sourceAddress
     if (p.type === 'post' || p.type === 'reply' || p.type === 'repost') {
@@ -102,6 +101,7 @@ const Feed = ({ toggleTheme }) => {
       <Post
         post={p}
         key={i}
+        renderKey={i}
         type={p.type}
         name={p.source.name}
         text={p.text}
