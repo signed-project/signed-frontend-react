@@ -13,7 +13,6 @@ import { getReadFormat } from '../../../libs/date.js';
 import styles from './post.module.scss';
 import Button from '../Button/Button';
 
-
 export const useTargetPost = (postHash) => {
     const hashedPostState = useSelector(state => state.post.hashed);
     const [targetPost, setTargetPost] = useState('');
@@ -34,26 +33,22 @@ const Post = ({ renderKey, post, name, text, createdAt, likesCount, repostsCount
     const subscribedState = useSelector(state => state.user.subscribed)
 
     const [subscribed, setSubscribed] = useState([]);
-    const [postHashed, setPostHashed] = useState({});
+    const [postMap, setPostMap] = useState({});
     const [comments, setComments] = useState([]);
-    const hashedPostState = useSelector(state => state.post.hashed);
-
-
-
-
+    const postMapState = useSelector(state => state.post.hashed);
 
     useEffect(() => {
-        setPostHashed(hashedPostState);
-    }, [hashedPostState, postHash]);
+        setPostMap(postMapState);
+    }, [postMapState, postHash]);
 
-
-    const getCommentTreas = (hashMap, currentPostHash) => {
-        const hashArr = Object.values(hashedPostState);
+    const getCommentTreas = (currentPostHash) => {
+        const postArr = Object.values(postMap);
         const comments = [];
 
         const recursion = (hash) => {
-            hashArr.map(post => {
-                if (post.target.postHash === hash) {
+            postArr.map(post => {
+                if (post.target.postHash === hash && post.type === 'reply') {
+                    console.log('post$$$$$$$$$$$$$$$$$$$$$$$$$$$$$', post);
                     comments.push(post);
                     recursion(post.hash);
                 }
@@ -64,12 +59,11 @@ const Post = ({ renderKey, post, name, text, createdAt, likesCount, repostsCount
     }
 
     useEffect(() => {
-        const filterComment = Object.values(hashedPostState).filter(p => p.target?.postHash === hash && p.type === 'reply');
-        const commentsTrees = getCommentTreas(postHashed, postHash);
+        const commentsTrees = getCommentTreas(hash);
         const commentsDateFilter = commentsTrees.sort((a, b) => a.createdAt - b.createdAt)
         console.log('commentsTrees', commentsTrees);
         setComments(commentsDateFilter);
-    }, [hashedPostState, postHash]);
+    }, [postMap, hash]);
 
     useEffect(() => {
         setSubscribed(subscribedState)
@@ -85,11 +79,12 @@ const Post = ({ renderKey, post, name, text, createdAt, likesCount, repostsCount
 
     const renderComments = comments.map((c, i) => {
         if (subscribed.includes(c.source.address) && i !== 3) {
+
             return (
                 <CommentBlock
                     key={i}
                     renderKey={i}
-                    removeLastLine={(+i + 1) === comments.length}
+                    removeLastLine={(i + 1) === comments.length}
                     dotsLine={true}
                     name={c.source?.name}
                     text={c.text}

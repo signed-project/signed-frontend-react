@@ -13,12 +13,12 @@ const CommentBlock = ({ img, name, text, createdAt, mention,
     removeLastLine = false, showReactionBlock = false, likesCount, repostsCount,
     handleLike, handleRepost, handleReply, hash }) => {
 
+    console.log('removeLastLine', removeLastLine);
     return (
         <div className={styles.commentBlock}>
             <div className={styles.avatarBlock}>
                 <Avatar />
                 <div className={`${styles.verticalLine} ${removeLastLine && styles.verticalLineRemove}`}></div>
-                {/* <div className={`${styles.dotsVerticalLine}`}></div> */}
             </div>
             <div className={styles.postBody}>
                 <InfoAuthor createdAt={getReadFormat(createdAt)} name={name} />

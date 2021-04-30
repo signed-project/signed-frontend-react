@@ -153,7 +153,7 @@ const NewPost = ({ toggleTheme }) => {
     // const newPostLevel = postInstanceLevel.newPost;
     dispatch(postActions.sendPost(newPost));
     // dispatch(postActions.sendPost(newPostLevel));
-    history.goBack();
+    history.push(routes.feed);
   }
 
 

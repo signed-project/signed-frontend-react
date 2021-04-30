@@ -22,3 +22,7 @@
 - [ ] key refactoring to put inner component `module NewPost, Post etc...`
 - [ ] textAria when comeback  height change - need fix this
 - [ ] component `NewPost.jsx`   too mach long need to split up it!
+
+
+- [ ] component `Feed.jsx` and `PostPage.jsx`  refactor common function `handleLike, handleRepost, handleReply`
+- [ ] component `Post.jsx` and `PostPage.jsx`  refactor common function `getCommentTreas` check `type` in recursion

@@ -7,9 +7,39 @@ import { useHistory } from "react-router-dom";
 import routes from '../../../config/routes.config.js';
 import { Post as PostModel } from '../../../api/models/post';
 
+/* const handleLike = ({ p, user, hashMap, dispatch, action }) => {
+  let data;
+  if (p.type === 'post' || p.type === 'reply') {
+    data = {
+      source: user.source,
+      type: 'like',
+      wfi: user.wfi,
+      target: {
+        "sourceHash": p.source.hash,
+        "postHash": p.hash
+      }
+    }
+  }
+  else {
+    const postData = hashMap[p?.target?.postHash];
+    data = {
+      ...postData,
+      type: 'like',
+      wfi: user.wfi,
+      target: {
+        sourceHash: postData.source.hash,
+        postHash: postData.hash
+      }
+    }
+  };
+  const post = new PostModel(data);
+  const likePost = post.newPost;
+  dispatch(postActions.sendPost(likePost));
+};
+*/
 
 const Feed = ({ toggleTheme }) => {
-  const hashedPost = useSelector(state => state.post.hashed);
+  const hashedPostMap = useSelector(state => state.post.hashed);
   const [posts, setPosts] = useState([]);
   const [postHash, setPostHash] = useState();
   const [user, setUser] = useState('');
@@ -28,8 +58,8 @@ const Feed = ({ toggleTheme }) => {
   }, [userStore]);
 
   useEffect(() => {
-    setPostHash(hashedPost)
-  }, [hashedPost]);
+    setPostHash(hashedPostMap)
+  }, [hashedPostMap]);
 
   useEffect(() => {
     setPosts(stream);
@@ -49,7 +79,7 @@ const Feed = ({ toggleTheme }) => {
       }
     }
     else {
-      const postData = postHash[p?.target?.postHash];
+      const postData = hashedPostMap[p?.target?.postHash];
       data = {
         ...postData,
         type: 'like',
@@ -75,8 +105,6 @@ const Feed = ({ toggleTheme }) => {
       sourcePost = p.target.postHash;
       sourceAddress = p.target.sourceHash;
     }
-
-
     const type = 'repost';
     history.push(`${routes.repost}?post=${sourcePost}&user=${sourceAddress}&type=${type}`);
   };
@@ -95,6 +123,7 @@ const Feed = ({ toggleTheme }) => {
     history.push(`${routes.repost}?post=${sourcePost}&user=${sourceAddress}&type=${type}`);
   }
 
+
   // TODO : refactor change less signature 
   const renderPosts = posts.slice().reverse().map((p, i) => {
     return (
@@ -112,6 +141,9 @@ const Feed = ({ toggleTheme }) => {
         handleLike={handleLike}
         handleRepost={handleRepost}
         handleReply={handleReply}
+        // handleLike={() => handleLike({ p: p, user, hashMap: hashedPostMap, dispatch, action: postActions.sendPost })}
+        // handleRepost={() => handleRepost({ p, history })}
+        // handleReply={() => handleReply({ p, history })}
         hash={p.hash}
       />
     )
