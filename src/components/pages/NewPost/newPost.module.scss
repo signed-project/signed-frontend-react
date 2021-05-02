@@ -1,6 +1,9 @@
 @import "/src/assets/css/index.scss";
 
 .backBlock {
+  top: 0;
+  background: white;
+  position: fixed;
   height: 48px;
   width: 100%;
   border-bottom: 1px solid #f0f0f0;
@@ -16,7 +19,6 @@
 }
 
 .messageBlock {
-  padding: 16px 12px;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -25,11 +27,13 @@
 .textarea {
   width: 100%;
   border: none;
-  // min-height: 30px;
+  margin-right: 10px;
+  overflow: "hidden";
+  outline: "none";
 }
 
 .toolsBlock {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   height: 54px;
   border-top: 1px solid #f0f0f0;
@@ -38,6 +42,7 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  background: white;
 }
 
 .buttonWrapper {
@@ -47,4 +52,72 @@
 .repostBlockWrapper {
   margin-left: 50px;
   margin-right: 12px;
+}
+
+.bodyBlock {
+  box-sizing: border-box;
+  padding-top: 50px;
+  padding-left: 12px;
+  width: 100%;
+  margin-bottom: 100px;
+}
+
+.backButtonText {
+  margin-left: 26px;
+  font-family: $mainFont;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 24px;
+
+  color: rgba(0, 0, 0, 0.85);
+
+  /* Inside Auto Layout */
+  flex: none;
+  order: 0;
+  flex-grow: 0;
+  margin: 0px 12px;
+}
+
+.newPostPage {
+  margin-top: 20px;
+}
+
+/* module Author linde */
+
+.replyingBlock {
+  padding: 5px;
+}
+
+.authorInfoBlock {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.authorRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+  border-bottom: 1px solid $colorGrey500;
+}
+
+.checkboxWrapper {
+  margin-bottom: -15px;
+  margin-right: 8px;
+}
+
+.otherCheckBox {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 40px 0 12px 0;
+  border-bottom: 1px solid $colorGrey500;
+}
+
+.checkbox_wrapper {
+  margin-right: 8px;
 }

@@ -1,0 +1,18 @@
+.checkbox {
+  margin-bottom: 20px;
+}
+.checkbox input {
+  display: none;
+}
+.checkbox input:not(:disabled) ~ label {
+  cursor: pointer;
+}
+.checkbox label::before {
+  content: url("/src/assets/svg/icon/checkbox.svg");
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.checkbox input:checked + label::before {
+  content: url("/src/assets/svg/icon/checked.svg");
+}

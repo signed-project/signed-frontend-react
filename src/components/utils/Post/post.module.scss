@@ -1,13 +1,15 @@
 @import "/src/assets/css/index.scss";
 
 .post {
-  margin-top: 24px;
+  // margin-top: 24px;
+  // padding: 24px 16px 16px 16px;
   padding-bottom: 16px;
   border-bottom: 1px solid #f0f0f0;
+  word-wrap: break-word;
 }
 .post:first-child {
-  margin-top: 16px;
-  padding-bottom: 16px;
+  // margin-top: 16px;
+  // padding-bottom: 16px;
   border-bottom: 1px solid #f0f0f0;
 }
 
@@ -18,7 +20,6 @@
 
 .menuIcon {
   height: 15px;
-  margin-right: 10px;
 }
 
 .wrapperContent {
@@ -36,4 +37,71 @@
   background: $colorGrey400;
   // min-width: 288px;
   margin-bottom: 16px;
+}
+
+.commentBlock {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.dotsVerticalLine {
+  border-left: 1px dashed $colorGrey200;
+  height: 110%;
+  margin: -3px 0 -3px -25px;
+}
+
+.verticalLine {
+  border-left: 1px solid $colorGrey200;
+  height: 100%;
+  margin: -3px 0 -3px -25px;
+}
+
+.verticalLineRemove {
+  // border-left: none;
+  height: 50%;
+}
+
+.avatarBlock {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  // padding-bottom: 102px;
+}
+
+.bodyWrapper {
+  margin: 8px 8px;
+}
+
+.postBody {
+  padding-bottom: 26px;
+}
+
+.commentsWrapper {
+  margin: 16px 0 16px;
+}
+
+.gapTitle {
+  font-family: $mainFont;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  line-height: 20px;
+  /* identical to box height, or 154% */
+  /* Daybreak Blue/6 */
+  color: $colorPrimary100;
+  margin-left: 40px;
+}
+
+.gap {
+  height: 20px;
+  margin: 5px 0 20px 18px;
+  display: flex;
+  flex-direction: fow;
+  justify-content: flex-start;
+}
+
+.gapBlockLine {
+  border-left: 1px dashed $colorGrey200;
 }

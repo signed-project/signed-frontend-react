@@ -1,3 +1,18 @@
+@import "/src/assets/css/index.scss";
+
 .postContent {
   margin-bottom: 16px;
+  word-wrap: break-word;
+}
+
+.postContent span {
+  font-family: $mainFont;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 13px;
+  color: $textColorMain;
+}
+
+.navLink {
+  text-decoration: none;
 }

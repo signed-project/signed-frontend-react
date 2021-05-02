@@ -1,11 +1,14 @@
-import style from './postContent.module.scss';
-
-const PostContent = ({ text }) => {
+import styles from './postContent.module.scss';
+import { Link, NavLink } from 'react-router-dom';
+import routes from '../../../config/routes.config.js';
+const PostContent = ({ text, sourceAddress }) => {
     return (
         <>
-            <div className={style.postContent}>
-                <span>{text}</span>
-            </div>
+            <NavLink className={styles.navLink} to={`post/${sourceAddress}`}>
+                <div className={styles.postContent}>
+                    <span>{text}</span>
+                </div>
+            </NavLink>
         </>
     )
 }
