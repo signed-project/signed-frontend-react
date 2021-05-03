@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types'
-
 import AuthorBlock from '../AuthorBlock/AuthorBlock';
+import InfoAuthor from '../InfoAuthor/InfoAuthor';
+import Avatar from '../Avatar/Avatar';
 import PostContent from '../PostContent/PostContent';
 import Reaction from '../Reaction/Reaction';
 import LikeMark from '../LikeMark/LikeMark';
@@ -16,6 +17,7 @@ import Button from '../Button/Button';
 export const useTargetPost = (postHash) => {
     const hashedPostState = useSelector(state => state.post.hashed);
     const [targetPost, setTargetPost] = useState('');
+
     useEffect(() => {
         if (postHash) {
             setTargetPost(hashedPostState[postHash])
@@ -31,6 +33,8 @@ const Post = ({ renderKey, post, name, text, createdAt, likesCount, repostsCount
 
     let targetPost = useTargetPost(postHash);
     const subscribedState = useSelector(state => state.user.subscribed)
+
+    console.log('targetPost', targetPost);
 
     const [subscribed, setSubscribed] = useState([]);
     const [postMap, setPostMap] = useState({});
@@ -94,6 +98,7 @@ const Post = ({ renderKey, post, name, text, createdAt, likesCount, repostsCount
                     handleRepost={() => handleRepost(c)}
                     handleReply={() => handleReply(c)}
                     hash={c.hash}
+                    type={c.type}
                 />
             )
         } else if (i === 3) {
@@ -110,44 +115,135 @@ const Post = ({ renderKey, post, name, text, createdAt, likesCount, repostsCount
 
     console.log('hash&&&&&&&&&&7777777777777777777777777', hash);
 
-    return (
-        <div key={renderKey} >
-            <div className={styles.post}>
-
-                {type === 'post' && <>
-                    <div className={styles.wrapperContent}>
-                        <AuthorBlock name={name} createdAt={getReadFormat(createdAt)} />
-                        <img src={icon.menu} alt="menu icon" className={styles.menuIcon} />
+    /*
+      <div className={styles.commentBlock}>
+                <div className={styles.avatarBlock}>
+                    <Avatar />
+                    <div className={`${styles.verticalLine} ${removeLastLine && styles.verticalLineRemove}`}></div>
+                </div>
+                <div className={styles.postBody}>
+                    <InfoAuthor createdAt={getReadFormat(createdAt)} name={name} />
+                    <div className={styles.bodyWrapper}>
+                        <PostContent sourceAddress={hash} text={text} type={type} />
                     </div>
-                    <PostContent sourceAddress={hash} text={text} />
-                </>}
-                {type === 'like' && targetPost && <> <LikeMark createdAt={getReadFormat(createdAt)} name={name} />
+    
+    {
+        showReactionBlock &&
+        <Reaction
+            likesCount={likesCount}
+            repostsCount={repostsCount}
+            handleLike={handleLike}
+            handleRepost={handleRepost}
+            handleReply={handleReply} />
+    }
+                </div >
+            </div >
+    
+    */
+
+
+    const isShowLine = () => {
+        let res = false;
+        if (comments.length > 1 && type !== 'like') {
+            res = true;
+        }
+        return res
+    }
+
+    const isHideLine = comments.length < 1;
+
+    console.log('comments', comments.length);
+    console.log('isHideLine', targetPost?.type);
+    console.log('type', targetPost?.type);
+
+    return (
+        <div key={renderKey} className={styles.post} >
+            {type === 'post' && <>
+                {/*  ${removeLastLine && styles.verticalLineRemove} */}
+                <div className={styles.typePost}>
+                    <div className={styles.avatarBlock}>
+                        <Avatar />
+                        <div className={`${styles.verticalLine}  ${isHideLine && styles.verticalLineRemove}
+                          ${type === 'like' && styles.verticalLineRemove}
+                       
+                          `}></div>
+                    </div>
+                    <div className={styles.postMain}>
+                        <div className={styles.hover}>
+                            <InfoAuthor createdAt={getReadFormat(createdAt)} name={name} />
+                            <img src={icon.menu} alt="menu icon" className={styles.menuIcon} />
+                        </div>
+                        <div className={styles.bodyWrapper}>
+                            <PostContent sourceAddress={hash} text={text} type={type} />
+                        </div>
+                        <Reaction
+                            likesCount={targetPost?.likesCount}
+                            repostsCount={targetPost?.repostsCount}
+                            handleLike={() => handleLike(post)}
+                            handleRepost={() => handleRepost(post)}
+                            handleReply={() => handleReply(post)} />
+                    </div>
+                </div>
+            </>}
+
+            {type === 'like' && targetPost && <>
+                <div className={styles.typeLike}>
+                    <LikeMark createdAt={getReadFormat(createdAt)} name={name} />
+                    <div className={styles.avatarWrapper}>
+                        <div className={styles.avatarBlock}>
+                            <Avatar />
+                            <div className={`${styles.verticalLine}    ${type === 'like' && styles.verticalLineRemove}`}></div>
+                        </div>
+                        <div className={styles.postBody}>
+                            <div className={styles.hover}>
+                                <InfoAuthor createdAt={getReadFormat(createdAt)} name={name} />
+                            </div>
+                            <div className={styles.bodyWrapper}>
+                                <PostContent sourceAddress={hash} text={targetPost?.text} type={type} />
+                            </div>
+                            <Reaction
+                                likesCount={targetPost?.likesCount}
+                                repostsCount={targetPost?.repostsCount}
+                                handleLike={() => handleLike(post)}
+                                handleRepost={() => handleRepost(post)}
+                                handleReply={() => handleReply(post)} />
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+
+                {/*             <LikeMark createdAt={getReadFormat(createdAt)} name={name} />
                     <div className={styles.wrapperContent}>
                         <AuthorBlock name={targetPost?.source?.name} createdAt={getReadFormat(targetPost.createdAt)} />
                     </div>
-                    <PostContent sourceAddress={hash} text={targetPost?.text} />
-                </>}
+                    <PostContent sourceAddress={hash} text={targetPost?.text} type={type} /> */}
+            </>}
+            {/*
                 {type === 'repost' && targetPost && <> <div className={styles.wrapperContent}>
                     <AuthorBlock name={name} createdAt={getReadFormat(createdAt)} />
                     <img src={icon.menu} alt="menu icon" className={styles.menuIcon} />
                 </div>
-                    <PostContent sourceAddress={hash} text={text} />
+                    <PostContent sourceAddress={hash} text={text} type={type} />
                     <RepostBlock postHash={postHash} />
-                </>}
+                </>} */}
 
-                <Reaction
+            {/* <Reaction
                     likesCount={targetPost?.likesCount}
                     repostsCount={targetPost?.repostsCount}
                     handleLike={() => handleLike(post)}
                     handleRepost={() => handleRepost(post)}
-                    handleReply={() => handleReply(post)} />
-            </div>
-            {comments &&
+                    handleReply={() => handleReply(post)} /> */}
+
+            {
+                comments &&
                 <div className={styles.commentsWrapper}>
                     {renderComments}
                 </div>
             }
-        </div>
+        </div >
     )
 }
 

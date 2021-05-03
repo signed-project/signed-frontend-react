@@ -3,19 +3,40 @@
 .post {
   // margin-top: 24px;
   // padding: 24px 16px 16px 16px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid #f0f0f0;
+
   word-wrap: break-word;
-}
-.post:first-child {
-  // margin-top: 16px;
-  // padding-bottom: 16px;
+
+  margin-top: 16px;
+  margin-bottom: 16px;
   border-bottom: 1px solid #f0f0f0;
 }
+// .post:first-child {
+//   // margin-top: 16px;
+//   // padding-bottom: 16px;
+//   border-bottom: 1px solid #f0f0f0;
+// }
 
 .post:last-child {
   border-bottom: none;
   margin-bottom: 40px;
+}
+
+.typeLike {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.typePost {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.avatarWrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
 }
 
 .menuIcon {
@@ -58,7 +79,7 @@
 }
 
 .verticalLineRemove {
-  // border-left: none;
+  border-left: none;
   height: 50%;
 }
 
@@ -76,10 +97,22 @@
 
 .postBody {
   padding-bottom: 26px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.postMain {
+  padding-bottom: 26px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
 .commentsWrapper {
-  margin: 16px 0 16px;
+  // margin: 16px 0 16px;
 }
 
 .gapTitle {
@@ -104,4 +137,10 @@
 
 .gapBlockLine {
   border-left: 1px dashed $colorGrey200;
+}
+
+.hover {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }

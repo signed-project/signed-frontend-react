@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
 import { Link, Element, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
 import icon from '../../../assets/svg/icon';
 import Avatar from '../../utils/Avatar/Avatar';
@@ -9,7 +8,7 @@ import Button from '../../utils/Button/Button';
 import { postActions } from '../../../api/storage/post';
 import { Post as PostModel } from '../../../api/models/post';
 import queryString from "query-string";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams, useHistory } from "react-router-dom";
 import Post from '../../utils/Post/Post';
 import RepostBlock from '../../utils/Post/RepostBlock';
 import CommentBlock from '../../utils/Post/CommentBlock';
@@ -20,7 +19,7 @@ import AuthorBlock from '../../utils/AuthorBlock/AuthorBlock';
 import { getReadFormat } from '../../../libs/date.js';
 import Reaction from '../../utils/Reaction/Reaction';
 import PostContent from '../../utils/PostContent/PostContent';
-
+import useReaction from '../customHooks/useReaction';
 
 const PostPage = ({ toggleTheme }) => {
     const user = useSelector(state => state.user);
@@ -30,6 +29,7 @@ const PostPage = ({ toggleTheme }) => {
     let { hash } = useParams();
     const history = useHistory();
     const dispatch = useDispatch();
+    const reaction = useReaction();
 
     const [post, setPost] = useState('');
 
@@ -55,7 +55,7 @@ const PostPage = ({ toggleTheme }) => {
 
         const recursion = (hash) => {
             postArr.map(post => {
-                if (post.target.postHash === hash && post.type !== 'like') {
+                if (post.target.postHash === hash && post.type === 'reply') {
                     console.log('post$$$$$$$$$$$$$$$$$$$$$$$$$$$$$', post);
                     comments.push(post);
                     recursion(post.hash);
@@ -72,19 +72,6 @@ const PostPage = ({ toggleTheme }) => {
         console.log('commentsTrees', commentsTrees);
         setComments(commentsDateFilter);
     }, [postMapState, hash]);
-
-
-
-    const getMentions = () => {
-        const mentions = [];
-        comments.map(post => {
-            if (post.isMention) {
-                mentions.push(post.source)
-            }
-        })
-        console.log('mentions))))))))))))))))))))))', mentions);
-        return mentions;
-    }
 
 
     const handleLike = (p) => {
@@ -151,6 +138,7 @@ const PostPage = ({ toggleTheme }) => {
     const renderComments = comments.slice().reverse().map((post, i) =>
     (
         <CommentBlock
+            type={post.type}
             key={i}
             img={post?.source?.avatar?.hash}
             name={post.source?.name}
@@ -170,14 +158,18 @@ const PostPage = ({ toggleTheme }) => {
                         <AuthorBlock name={post.name} createdAt={getReadFormat(post.createdAt)} />
                         <img src={icon.menu} alt="menu icon" className={styles.menuIcon} />
                     </div>
-                    <PostContent sourceAddress={hash} text={post.text} />
+                    <PostContent sourceAddress={hash} text={post.text} type={post.type} />
                     <Reaction
                         likesCount={post.likesCount}
                         repostsCount={post.repostsCount}
-                        handleLike={() => handleLike(post)}
+                        handleLike={() => reaction.handleLike(post)}
                         handleRepost={() => handleRepost(post)}
-                        handleReply={() => handleReply(post)} />
+                        handleReply={() => reaction.handleReply(post)} />
 
+                    {post?.type === 'repost' &&
+                        <div className={styles.repostBlockWrapper}>
+                            <RepostBlock postHash={post.target.postHash} />
+                        </div>}
                     {comments.length > 0 &&
                         <div className={styles.commentsWrapper}>
                             {renderComments}

@@ -8,8 +8,9 @@ import InfoAuthor from '../InfoAuthor/InfoAuthor';
 import PostContent from '../PostContent/PostContent';
 import { getReadFormat } from '../../../libs/date.js';
 import Reaction from '../Reaction/Reaction';
+import icon from '../../../assets/svg/icon';
 
-const CommentBlock = ({ img, name, text, createdAt, mention,
+const CommentBlock = ({ img, name, type, text, createdAt, mention,
     removeLastLine = false, showReactionBlock = false, likesCount, repostsCount,
     handleLike, handleRepost, handleReply, hash }) => {
 
@@ -21,9 +22,12 @@ const CommentBlock = ({ img, name, text, createdAt, mention,
                 <div className={`${styles.verticalLine} ${removeLastLine && styles.verticalLineRemove}`}></div>
             </div>
             <div className={styles.postBody}>
-                <InfoAuthor createdAt={getReadFormat(createdAt)} name={name} />
+                <div className={styles.hover}>
+                    <InfoAuthor createdAt={getReadFormat(createdAt)} name={name} />
+                    <img src={icon.menu} alt="menu icon" className={styles.menuIcon} />
+                </div>
                 <div className={styles.bodyWrapper}>
-                    <PostContent sourceAddress={hash} text={text} />
+                    <PostContent sourceAddress={hash} text={text} type={type} />
                 </div>
                 {/* TODO: replying to */}
                 {showReactionBlock &&
@@ -35,6 +39,7 @@ const CommentBlock = ({ img, name, text, createdAt, mention,
                         handleReply={handleReply} />
                 }
             </div>
+
         </div>
     )
 };

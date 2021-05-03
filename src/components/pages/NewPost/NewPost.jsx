@@ -161,6 +161,7 @@ const NewPost = ({ toggleTheme }) => {
   (
     <CommentBlock
       key={i}
+      type={post.type}
       img={post?.source?.avatar?.hash}
       name={post.source?.name}
       text={post.text}
