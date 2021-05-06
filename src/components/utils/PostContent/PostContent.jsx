@@ -4,14 +4,10 @@ import routes from '../../../config/routes.config.js';
 
 
 const PostContent = ({ text, type, sourceAddress }) => {
-
     let history = useHistory();
-
     const handleDirect = () => {
-        console.log('RRRRRRRRRRRRRRRRRRRRRRRR', type);
         if (type === 'post' || type === 'repost' || type === 'like') {
-            console.log('RRRRRRRRRRRRRRRRRRRRRRRR', type);
-            history.push(`post/${sourceAddress}`)
+            history.push(`${routes.post}/${sourceAddress}`);
         }
     }
 

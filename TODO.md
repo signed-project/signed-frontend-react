@@ -26,3 +26,5 @@
 
 - [ ] component `Feed.jsx` and `PostPage.jsx`  refactor common function `handleLike, handleRepost, handleReply`
 - [ ] component `Post.jsx` and `PostPage.jsx`  refactor common function `getCommentTreas` check `type` in recursion
+
+- [ ] check is exist way to upload img arr into server

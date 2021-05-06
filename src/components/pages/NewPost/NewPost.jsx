@@ -8,6 +8,7 @@ import style from './newPost.module.scss';
 import Button from '../../utils/Button/Button';
 import { postActions } from '../../../api/storage/post';
 import { Post as PostModel } from '../../../api/models/post';
+import { Media } from '../../../api/models/media';
 import queryString from "query-string";
 import { useLocation } from "react-router-dom";
 import Post from '../../utils/Post/Post';
@@ -17,6 +18,17 @@ import routes from '../../../config/routes.config.js';
 import InfoAuthor from '../../utils/InfoAuthor/InfoAuthor';
 import Checkbox from '../../utils/Checkbox/Checkbox';
 import ReplyingUser from './ReplyingUser';
+import useFiles from '../../customHooks/useFiles';
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/swiper.min.css";
+import "swiper/components/pagination/pagination.min.css"
+import "swiper/components/navigation/navigation.min.css"
+import "./swiper.css";
+import SwiperCore, {
+  Pagination, Navigation
+} from 'swiper/core';
+
+SwiperCore.use([Pagination, Navigation]);
 
 // TOTO: this component too mach long need to split up it!
 /**
@@ -32,14 +44,15 @@ const NewPost = ({ toggleTheme }) => {
   const location = useLocation();
   const { post: hash, user: source, type } = queryString.parse(location.search);
 
+  const { uploadFile } = useFiles();
 
   const history = useHistory();
   const dispatch = useDispatch();
   const [message, setMessage] = useState('');
   const [replyingPage, setReplyingPage] = useState(false);
   const [comments, setComments] = useState([]);
+  const [uploadedImg, setUploadedImg] = useState([]);
   const [others, setOthers] = useState(false);
-
 
   const [post, setPost] = useState({
     type: 'post',
@@ -110,27 +123,30 @@ const NewPost = ({ toggleTheme }) => {
   };
 
   const getMentions = () => {
-
     const mentions = [];
-
     comments.map(post => {
       if (post.isMention) {
         mentions.push(post.source)
       }
     })
-    console.log('mentions))))))))))))))))))))))', mentions);
     return mentions;
   }
 
-  const handlePublicPost = () => {
-
+  const handlePublicPost = async () => {
     if (post.type === 'reply' && !replyingPage) {
       setReplyingPage(true)
       return;
     }
-
     const mentions = getMentions();
 
+
+    const attachments = await Promise.all(uploadedImg.map(async (val) => {
+      const media = new Media({ type: val.file.type });
+      const newMedia = media.newMedia;
+      const type = newMedia.contentType
+      await uploadFile(val.file, newMedia.hash);
+      return newMedia
+    }));
 
     const postInstance = new PostModel({
       source: user.source,
@@ -138,21 +154,12 @@ const NewPost = ({ toggleTheme }) => {
       text: message,
       target: post.hash ? { postHash: post.hash, sourceHash: post.source } : '',
       mentions: mentions?.length ? mentions : '',
+      attachments: attachments.length > 0 ? attachments : '',
       wfi: user.wfi
     });
 
-    // const postInstanceLevel = new PostModel({
-    //   source: user.source,
-    //   type: 'reply',
-    //   text: 'test test test',
-    //   target: { postHash: 'GRYxN5VrnH11sv8LKGZJ8ZRacDM9CAFQVRrPdzEatD4G', sourceHash: '19FRhaywUUpvMxUMSxgpTvc44Bj9VFd3BT' },
-    //   wfi: user.wfi
-    // });
-
     const newPost = postInstance.newPost;
-    // const newPostLevel = postInstanceLevel.newPost;
     dispatch(postActions.sendPost(newPost));
-    // dispatch(postActions.sendPost(newPostLevel));
     history.push(routes.feed);
   }
 
@@ -204,6 +211,84 @@ const NewPost = ({ toggleTheme }) => {
   }
   );
 
+  const handleChangeFile = (e) => {
+    // await uploadFile(e.target.files[0]);
+    let reader = new FileReader();
+    let file = e.target.files[0];
+    const newUploadedImg = uploadedImg.slice();
+    reader.onloadend = () => {
+      const filePrev = {
+        file: file,
+        imagePreviewUrl: reader.result
+      }
+
+      newUploadedImg.push(filePrev);
+      setUploadedImg((prev) => {
+        return [...prev, filePrev]
+      }
+      );
+    }
+    reader.readAsDataURL(file);
+  }
+
+
+  const renderImgPrev = () => {
+    let smallPreviewImg = [];
+    if (uploadedImg.length > 1) {
+
+      smallPreviewImg = uploadedImg.slice().map((file, i) => {
+        if (i === 0) {
+          return
+        }
+        if (i === 3 && uploadedImg.length > 4) {
+          return (
+            <div className={style.impPreviewShowMore} key={i}><p>{`+${uploadedImg.length}`}</p></div >
+          )
+        }
+        else if (i <= 3) {
+          return (
+            <img src={file?.imagePreviewUrl} alt="" className={`
+            ${style.imgPreviewSmall} ${style.imgPreviewSmall}`} key={i} />
+          )
+        }
+        else return;
+      })
+    }
+
+    return (
+      <div className={style.imgPreview}>
+        <img src={uploadedImg[0]?.imagePreviewUrl} alt="" className={style.imgPreviewBig} />
+        {  uploadedImg.length > 0 &&
+          <div className={style.smallPreview}>
+            {smallPreviewImg}
+          </div>}
+      </div >
+    )
+  }
+
+
+  console.log('uploadedImg', uploadedImg);
+
+  const renderSlider = () => {
+    return (
+      <Swiper pagination={{
+        "type": "fraction"
+      }} navigation={true} initialSlide='2' >
+        {uploadedImg.map((img, i) => <SwiperSlide key={i}><img src={img.imagePreviewUrl} /></SwiperSlide>)}
+        {/* <SwiperSlide>Slide 1</SwiperSlide>
+        <SwiperSlide>Slide 2</SwiperSlide>
+        <SwiperSlide>Slide 3</SwiperSlide>
+        <SwiperSlide>Slide 4</SwiperSlide>
+        <SwiperSlide>Slide 5</SwiperSlide>
+        <SwiperSlide>Slide 6</SwiperSlide>
+        <SwiperSlide>Slide 7</SwiperSlide>
+        <SwiperSlide>Slide 8</SwiperSlide>
+        <SwiperSlide>Slide 9</SwiperSlide> */}
+      </Swiper>
+    )
+  }
+  console.log('dfs');
+
   return (
     <>
       <div className={style.backBlock}>
@@ -250,18 +335,28 @@ const NewPost = ({ toggleTheme }) => {
                 className={style.textarea}
               ></textarea>
             </div>
+            <div className={style.impPreview}>
+
+            </div>
             {post?.type === 'repost' &&
               <div className={style.repostBlockWrapper}>
                 <RepostBlock postHash={post.hash} />
               </div>}
           </div>
         }
-      </div >
+        {uploadedImg.length > 0 && renderImgPrev()}
+      </div>
 
 
+      { true && renderSlider()}
 
       <div className={style.toolsBlock}>
-        <div>
+        <div className={style.uploadBlock}>
+          <input accept="image/*" id="icon-button-file"
+            type="file" style={{ display: 'none' }} onChange={(e) => handleChangeFile(e)} />
+          <label htmlFor="icon-button-file">
+            <img src={icon.uploadImg} alt="send message icon" style={{ marginRight: '8px' }} />
+          </label>
         </div>
         <div className={style.buttonWrapper}>
           <Button className="primary withIcon " onClick={handlePublicPost}>

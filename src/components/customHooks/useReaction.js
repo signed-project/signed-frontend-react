@@ -1,8 +1,8 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { postActions } from '../../../api/storage/post';
-import { Post as PostModel } from '../../../api/models/post';
-import routes from '../../../config/routes.config.js';
+import { postActions } from '../../api/storage/post';
+import { Post as PostModel } from '../../api/models/post';
+import routes from '../../config/routes.config.js';
 
 
 

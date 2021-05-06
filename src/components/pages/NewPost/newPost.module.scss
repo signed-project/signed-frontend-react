@@ -121,3 +121,69 @@
 .checkbox_wrapper {
   margin-right: 8px;
 }
+
+.uploadBlock {
+  margin-left: 64px;
+}
+
+.imgPreview {
+  margin-top: 16px;
+  margin-left: 62px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.smallPreview {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.imgPreviewBig {
+  max-width: 288px;
+  border-radius: 4px 4px 0px 0px;
+  margin-bottom: 2px;
+}
+
+.imgPreviewSmall {
+  width: 95px;
+  height: 95px;
+  // border-radius: 0 0 0 4px;
+  margin-right: 2px;
+  // border-radius: 4px 4px 0px 0px;
+}
+
+.imgPreviewSmall:first-child {
+  border-radius: 0 0 0 4px;
+}
+
+.imgPreviewSmall:nth-child(3n) {
+  border-radius: 0 0 4px 0;
+  margin-right: none;
+  background-color: wheat;
+}
+
+.impPreviewShowMore {
+  background-color: black;
+  width: 95px;
+  height: 95px;
+  color: $colorGrey400;
+  border-radius: 0 0 4px 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  font-family: $mainFont;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 24px;
+  letter-spacing: 0em;
+  text-align: center;
+}
+
+.impPreviewShowMore > span {
+  margin: auto;
+}

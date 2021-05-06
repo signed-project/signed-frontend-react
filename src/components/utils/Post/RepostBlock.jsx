@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from 'react';
 import styles from './post.module.scss';
-import { useTargetPost } from './Post';
+import useTargetPost from '../../customHooks/useTargetPost';
 import AuthorBlock from '../AuthorBlock/AuthorBlock';
 import PostContent from '../PostContent/PostContent';
 import { getReadFormat } from '../../../libs/date.js';

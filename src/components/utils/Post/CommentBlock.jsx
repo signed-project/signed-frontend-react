@@ -9,12 +9,15 @@ import PostContent from '../PostContent/PostContent';
 import { getReadFormat } from '../../../libs/date.js';
 import Reaction from '../Reaction/Reaction';
 import icon from '../../../assets/svg/icon';
+import useReaction from '../../customHooks/useReaction';
 
-const CommentBlock = ({ img, name, type, text, createdAt, mention,
+// TODO: signature less element ?
+const CommentBlock = ({ post, img, name, type, text, createdAt, mention,
     removeLastLine = false, showReactionBlock = false, likesCount, repostsCount,
     handleLike, handleRepost, handleReply, hash }) => {
 
-    console.log('removeLastLine', removeLastLine);
+    const reaction = useReaction();
+
     return (
         <div className={styles.commentBlock}>
             <div className={styles.avatarBlock}>
@@ -34,9 +37,9 @@ const CommentBlock = ({ img, name, type, text, createdAt, mention,
                     <Reaction
                         likesCount={likesCount}
                         repostsCount={repostsCount}
-                        handleLike={handleLike}
-                        handleRepost={handleRepost}
-                        handleReply={handleReply} />
+                        handleLike={() => reaction.handleLike(post)}
+                        handleRepost={() => reaction.handleRepost(post)}
+                        handleReply={() => reaction.handleReply(post)} />
                 }
             </div>
 

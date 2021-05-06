@@ -11,6 +11,7 @@ import likeMark from './likeMark.svg';
 import comment from './comment.svg';
 import arrowBack from './arrowBack.svg';
 import messageSend from './messageSend.svg';
+import uploadImg from './uploadImg.svg';
 
 export default {
     notification,
@@ -25,5 +26,6 @@ export default {
     likeMark,
     comment,
     arrowBack,
-    messageSend
+    messageSend,
+    uploadImg
 }

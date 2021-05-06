@@ -33,7 +33,7 @@ const MainRouts = () => {
                                 <Route path={routes.repost}
                                     component={() => <NewPost theme={theme} toggleTheme={toggleTheme} />}
                                 />
-                                <Route path={routes.post}
+                                <Route path={routes.postHash}
                                     component={() => <PostPage theme={theme} toggleTheme={toggleTheme} />}
                                 />
                                 <Route path={routes.profile} exact
