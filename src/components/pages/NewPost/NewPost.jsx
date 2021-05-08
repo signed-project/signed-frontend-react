@@ -27,6 +27,8 @@ import "./swiper.scss";
 import SwiperCore, {
   Pagination, Navigation
 } from 'swiper/core';
+import Preview from '../../utils/Preview/Preview';
+import Slider from '../../utils/Slider/Slider';
 
 SwiperCore.use([Pagination, Navigation]);
 
@@ -113,9 +115,25 @@ const NewPost = ({ toggleTheme }) => {
 
 
   /**
+   *    /*   let reader = new FileReader();
+         reader.onloadend = () => {
+             console.log('onloadend', reader.result);
+             const filePrev = {
+               file: file,
+               imagePreviewUrl: reader.result
+             }
+             newUploadedImg.push(filePrev);
+             reader.readAsDataURL(file);
+           }  */
+
+  /**
+   * 
    *   @param  e.target.style.height = 0, - to stop 
    *  growth  height when add text in one row
      */
+
+
+
   const handleChangeMessage = (e) => {
     const value = e.target.value;
     e.target.style.height = 0;
@@ -215,22 +233,34 @@ const NewPost = ({ toggleTheme }) => {
 
   const handleChangeFile = (e) => {
     // await uploadFile(e.target.files[0]);
-    let reader = new FileReader();
-    let file = e.target.files[0];
-    const newUploadedImg = uploadedImg.slice();
-    reader.onloadend = () => {
+
+    setUploadedImg([]);
+    let filesArr = e.target.files;
+
+    console.log('filesArr', typeof [...filesArr]);
+    console.log('filesArr', filesArr[0]);
+    const newUploadedImg = [];
+
+    [...filesArr].map(file => {
+
+      console.log('file', file);
+
+
       const filePrev = {
         file: file,
-        imagePreviewUrl: reader.result
+        imagePreviewUrl: URL.createObjectURL(file)
       }
 
       newUploadedImg.push(filePrev);
-      setUploadedImg((prev) => {
-        return [...prev, filePrev]
-      }
-      );
-    }
-    reader.readAsDataURL(file);
+
+    })
+
+    // setUploadedImg((prev) => {
+    //   return [...prev, filePrev]
+    // });
+
+    console.log('++++++++++++++newUploadedImg++++++++++++++', newUploadedImg);
+    setUploadedImg(newUploadedImg);
   }
 
 
@@ -248,44 +278,6 @@ const NewPost = ({ toggleTheme }) => {
     }
   }
 
-  const renderImgPrev = () => {
-    let smallPreviewImg = [];
-    if (uploadedImg.length > 1) {
-
-      smallPreviewImg = uploadedImg.slice().map((file, i) => {
-        if (i === 0) {
-          return
-        }
-        if (i === 3 && uploadedImg.length > 4) {
-          return (
-            <div className={style.impPreviewShowMore} onClick={() => handleFullSlider(4)} key={i} ><p>{`+${uploadedImg.length}`}</p></div >
-          )
-        }
-        else if (i <= 3) {
-          return (
-            <div className={style.imgSmallWrapper} key={i}>
-              <img src={file?.imagePreviewUrl} onClick={() => handleFullSlider(i)} alt="" className={`${style.imgPreviewSmall}`} />
-              <img src={icon.del} onClick={() => handleDeleteImgPreview(i)} alt="" className={style.delIcon} />
-            </div>
-          )
-        }
-        else return;
-      })
-    }
-
-    return (
-      <div className={style.imgPreview}>
-        <div className={style.imgPreviewWrapper}>
-          <img src={icon.del} onClick={() => handleDeleteImgPreview(0)} alt="" className={style.delIcon} />
-          <img src={uploadedImg[0]?.imagePreviewUrl} className={style.imgPreviewBig} alt="" onClick={() => handleFullSlider(0)} />
-        </div>
-        {uploadedImg.length > 0 &&
-          <div className={style.smallPreview}>
-            {smallPreviewImg}
-          </div>}
-      </div>
-    )
-  }
 
 
   console.log('uploadedImg', uploadedImg);
@@ -302,22 +294,23 @@ const NewPost = ({ toggleTheme }) => {
             <div className={style.sliderItem} >
               <img src={img.imagePreviewUrl} />
             </div>
-
           </SwiperSlide>)}
-
         </Swiper>
-
-
       </div>
 
-
     )
-  }
+  };
 
   return (
 
     isFullImgPrev ?
-      renderSlider()
+      <Slider
+        uploadImgArr={uploadedImg}
+        firstSlide={firstSlide}
+        setIsFullImgPrev={setIsFullImgPrev}
+        handleDeleteImgPreview={handleDeleteImgPreview}
+      />
+      // renderSlider()
       :
       (<div>
 
@@ -372,12 +365,17 @@ const NewPost = ({ toggleTheme }) => {
                 </div>}
             </div>
           }
-          {uploadedImg.length > 0 && renderImgPrev()}
+          {uploadedImg.length > 0 &&
+            <Preview
+              uploadImgArr={uploadedImg}
+              handleFullSlider={handleFullSlider}
+              handleDeleteImgPreview={handleDeleteImgPreview}
+            />}
         </div>
 
         <div className={style.toolsBlock}>
           <div className={style.uploadBlock}>
-            <input accept="image/*" id="icon-button-file"
+            <input accept="image/*" multiple id="icon-button-file"
               type="file" style={{ display: 'none' }} onChange={(e) => handleChangeFile(e)} />
             <label htmlFor="icon-button-file">
               <img src={icon.uploadImg} alt="send message icon" style={{ marginRight: '8px' }} />

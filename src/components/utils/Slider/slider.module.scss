@@ -163,9 +163,9 @@
   border-radius: 0 0 0 4px;
 }
 
- .imgPreviewSmall:first-child {
-   border-radius: 0 0 0 4px;
- }
+.imgPreviewSmall:first-child {
+  border-radius: 0 0 0 4px;
+}
 
 .imgSmallWrapper:nth-child(3n) {
   border-radius: 0 0 4px 0;
@@ -239,7 +239,7 @@
   width: 26px;
   top: 16px;
   right: 16px;
-  z-index: 1000;
+  z-index: 2000;
 }
 
 .fl_row * {
@@ -253,24 +253,4 @@
   width: 100%;
 }
 
-.fl_col {
-  // width: calc(25% - 10px);
-  margin: 5px;
-  // height: calc(25% - 10px);
-  position: relative;
-  overflow: hidden;
-  border: 8px solid #bfe2ff;
-  height: 0px;
-  width: 25%;
-  padding-top: 25%;
-}
-
-.fl_col:after {
-  content: "";
-  padding-top: 100%;
-  float: left;
-}
-
-// .fl_col:first-child {
-//   margin-left: 0;
-// }
+ 
