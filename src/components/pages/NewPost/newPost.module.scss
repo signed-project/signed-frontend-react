@@ -56,8 +56,9 @@
 
 .bodyBlock {
   box-sizing: border-box;
-  padding-top: 50px;
-  padding-left: 12px;
+  padding: 50px 12px 100px 12px;
+  // padding-top: 50px;
+  // padding-left: 12px;
   width: 100%;
   margin-bottom: 100px;
 }
@@ -143,22 +144,31 @@
 .imgPreviewBig {
   max-width: 288px;
   border-radius: 4px 4px 0px 0px;
-  margin-bottom: 2px;
 }
 
 .imgPreviewSmall {
-  width: 95px;
-  height: 95px;
-  // border-radius: 0 0 0 4px;
+  width: 100%;
+  height: 100%;
   margin-right: 2px;
-  // border-radius: 4px 4px 0px 0px;
 }
 
-.imgPreviewSmall:first-child {
+.imgSmallWrapper {
+  width: 95px;
+  height: 95px;
+  margin-right: 2px;
+  position: relative;
+  overflow: hidden;
+}
+
+.imgSmallWrapper:first-child {
   border-radius: 0 0 0 4px;
 }
 
-.imgPreviewSmall:nth-child(3n) {
+// .imgPreviewSmall:first-child {
+//   border-radius: 0 0 0 4px;
+// }
+
+.imgSmallWrapper:nth-child(3n) {
   border-radius: 0 0 4px 0;
   margin-right: none;
   background-color: wheat;
@@ -186,4 +196,48 @@
 
 .impPreviewShowMore > span {
   margin: auto;
+}
+
+.sliderMain {
+  width: 100%;
+  // height: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: $colorGrey600;
+}
+
+.cancelIcon {
+  position: absolute;
+  width: 26px;
+  top: 16px;
+  left: 16px;
+  z-index: 100;
+}
+
+.sliderItem {
+  height: 100%;
+  display: block;
+}
+
+.imgPreviewWrapper {
+  position: relative;
+}
+
+.delIcon {
+  position: absolute;
+  width: 26px;
+  top: 5px;
+  left: 5px;
+  z-index: 1000;
+}
+
+.delIconSlider {
+  position: absolute;
+  width: 26px;
+  top: 16px;
+  right: 16px;
+  z-index: 1000;
 }

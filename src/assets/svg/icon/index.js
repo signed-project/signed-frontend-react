@@ -12,6 +12,8 @@ import comment from './comment.svg';
 import arrowBack from './arrowBack.svg';
 import messageSend from './messageSend.svg';
 import uploadImg from './uploadImg.svg';
+import cancel from './cancel.svg';
+import del from './del.svg';
 
 export default {
     notification,
@@ -27,5 +29,7 @@ export default {
     comment,
     arrowBack,
     messageSend,
-    uploadImg
-}
+    uploadImg,
+    cancel,
+    del
+};

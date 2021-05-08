@@ -23,7 +23,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/swiper.min.css";
 import "swiper/components/pagination/pagination.min.css"
 import "swiper/components/navigation/navigation.min.css"
-import "./swiper.css";
+import "./swiper.scss";
 import SwiperCore, {
   Pagination, Navigation
 } from 'swiper/core';
@@ -53,6 +53,8 @@ const NewPost = ({ toggleTheme }) => {
   const [comments, setComments] = useState([]);
   const [uploadedImg, setUploadedImg] = useState([]);
   const [others, setOthers] = useState(false);
+  const [isFullImgPrev, setIsFullImgPrev] = useState(false);
+  const [firstSlide, setFirstSlide] = useState(false);
 
   const [post, setPost] = useState({
     type: 'post',
@@ -232,6 +234,20 @@ const NewPost = ({ toggleTheme }) => {
   }
 
 
+  const handleFullSlider = (i) => {
+    setIsFullImgPrev(true)
+    setFirstSlide(i)
+  }
+
+
+  const handleDeleteImgPreview = (i) => {
+    const newUploadedImg = uploadedImg.filter((img, index) => index !== i);
+    setUploadedImg(newUploadedImg);
+    if (newUploadedImg.length === 0) {
+      setIsFullImgPrev(false)
+    }
+  }
+
   const renderImgPrev = () => {
     let smallPreviewImg = [];
     if (uploadedImg.length > 1) {
@@ -242,13 +258,15 @@ const NewPost = ({ toggleTheme }) => {
         }
         if (i === 3 && uploadedImg.length > 4) {
           return (
-            <div className={style.impPreviewShowMore} key={i}><p>{`+${uploadedImg.length}`}</p></div >
+            <div className={style.impPreviewShowMore} onClick={() => handleFullSlider(4)} key={i} ><p>{`+${uploadedImg.length}`}</p></div >
           )
         }
         else if (i <= 3) {
           return (
-            <img src={file?.imagePreviewUrl} alt="" className={`
-            ${style.imgPreviewSmall} ${style.imgPreviewSmall}`} key={i} />
+            <div className={style.imgSmallWrapper} key={i}>
+              <img src={file?.imagePreviewUrl} onClick={() => handleFullSlider(i)} alt="" className={`${style.imgPreviewSmall}`} />
+              <img src={icon.del} onClick={() => handleDeleteImgPreview(i)} alt="" className={style.delIcon} />
+            </div>
           )
         }
         else return;
@@ -257,12 +275,15 @@ const NewPost = ({ toggleTheme }) => {
 
     return (
       <div className={style.imgPreview}>
-        <img src={uploadedImg[0]?.imagePreviewUrl} alt="" className={style.imgPreviewBig} />
-        {  uploadedImg.length > 0 &&
+        <div className={style.imgPreviewWrapper}>
+          <img src={icon.del} onClick={() => handleDeleteImgPreview(0)} alt="" className={style.delIcon} />
+          <img src={uploadedImg[0]?.imagePreviewUrl} className={style.imgPreviewBig} alt="" onClick={() => handleFullSlider(0)} />
+        </div>
+        {uploadedImg.length > 0 &&
           <div className={style.smallPreview}>
             {smallPreviewImg}
           </div>}
-      </div >
+      </div>
     )
   }
 
@@ -271,101 +292,106 @@ const NewPost = ({ toggleTheme }) => {
 
   const renderSlider = () => {
     return (
-      <Swiper pagination={{
-        "type": "fraction"
-      }} navigation={true} initialSlide='2' >
-        {uploadedImg.map((img, i) => <SwiperSlide key={i}><img src={img.imagePreviewUrl} /></SwiperSlide>)}
-        {/* <SwiperSlide>Slide 1</SwiperSlide>
-        <SwiperSlide>Slide 2</SwiperSlide>
-        <SwiperSlide>Slide 3</SwiperSlide>
-        <SwiperSlide>Slide 4</SwiperSlide>
-        <SwiperSlide>Slide 5</SwiperSlide>
-        <SwiperSlide>Slide 6</SwiperSlide>
-        <SwiperSlide>Slide 7</SwiperSlide>
-        <SwiperSlide>Slide 8</SwiperSlide>
-        <SwiperSlide>Slide 9</SwiperSlide> */}
-      </Swiper>
+      <div className={style.sliderMain}>
+        <img src={icon.cancel} alt="" className={style.cancelIcon} onClick={() => setIsFullImgPrev(false)} />
+        <img src={icon.del} onClick={() => handleDeleteImgPreview(0)} alt="" className={style.delIconSlider} />
+        <Swiper pagination={{
+          "type": "fraction"
+        }} navigation={true} initialSlide={firstSlide}  >
+          {uploadedImg.map((img, i) => <SwiperSlide key={i}>
+            <div className={style.sliderItem} >
+              <img src={img.imagePreviewUrl} />
+            </div>
+
+          </SwiperSlide>)}
+
+        </Swiper>
+
+
+      </div>
+
+
     )
   }
-  console.log('dfs');
 
   return (
-    <>
-      <div className={style.backBlock}>
-        {replyingPage ?
-          <>
-            <img src={icon.arrowBack} onClick={() => setReplyingPage(false)}
-              alt="arrow back icon" />
-            <span className={style.backButtonText}>Replying to</span>
-          </>
-          : <img src={icon.arrowBack} onClick={() => history.goBack()} alt="arrow back icon" />
-        }
-      </div>
 
-      <div className={style.bodyBlock}>
-        {replyingPage ?
-          <div className={style.replyingBlock}>
-            <ReplyingUser name={comments[0].source.name} checked={comments[0].isMention} checkBoxName={comments[0].hash} onChange={handleMention} />
-            {comments.length > 1 && <div className={style.otherCheckBox}>
-              <span>Others in this conversation</span>
-              <div className={style.checkbox_wrapper}>
-                <Checkbox
-                  onChange={handleOthersMention}
-                  isChecked={others}
-                  name='others'
-                />
-              </div>
-            </div>}
-            {renderReplyingUser}
-          </div>
-          :
-          <div className={style.newPostPage}>
-            {
-              post.type === 'reply' &&
-              <div>
-                {renderComments}
-              </div>
-            }
-            <div className={style.messageBlock}>
-              <Avatar />
-              <textarea
-                value={message}
-                onChange={handleChangeMessage}
-                placeholder='Enter text...'
-                className={style.textarea}
-              ></textarea>
-            </div>
-            <div className={style.impPreview}>
+    isFullImgPrev ?
+      renderSlider()
+      :
+      (<div>
 
-            </div>
-            {post?.type === 'repost' &&
-              <div className={style.repostBlockWrapper}>
-                <RepostBlock postHash={post.hash} />
+        <div className={style.backBlock}>
+          {replyingPage ?
+            <>
+              <img src={icon.arrowBack} onClick={() => setReplyingPage(false)}
+                alt="arrow back icon" />
+              <span className={style.backButtonText}>Replying to</span>
+            </>
+            : <img src={icon.arrowBack} onClick={() => history.goBack()} alt="arrow back icon" />
+          }
+        </div>
+
+        <div className={style.bodyBlock}>
+          {replyingPage ?
+            <div className={style.replyingBlock}>
+              <ReplyingUser name={comments[0].source.name} checked={comments[0].isMention} checkBoxName={comments[0].hash} onChange={handleMention} />
+              {comments.length > 1 && <div className={style.otherCheckBox}>
+                <span>Others in this conversation</span>
+                <div className={style.checkbox_wrapper}>
+                  <Checkbox
+                    onChange={handleOthersMention}
+                    isChecked={others}
+                    name='others'
+                  />
+                </div>
               </div>}
+              {renderReplyingUser}
+            </div>
+            :
+            <div className={style.newPostPage}>
+              {
+                post.type === 'reply' &&
+                <div>
+                  {renderComments}
+                </div>
+              }
+              <div className={style.messageBlock}>
+                <Avatar />
+                <textarea
+                  value={message}
+                  onChange={handleChangeMessage}
+                  placeholder='Enter text...'
+                  className={style.textarea}
+                ></textarea>
+              </div>
+
+              {post?.type === 'repost' &&
+                <div className={style.repostBlockWrapper}>
+                  <RepostBlock postHash={post.hash} />
+                </div>}
+            </div>
+          }
+          {uploadedImg.length > 0 && renderImgPrev()}
+        </div>
+
+        <div className={style.toolsBlock}>
+          <div className={style.uploadBlock}>
+            <input accept="image/*" id="icon-button-file"
+              type="file" style={{ display: 'none' }} onChange={(e) => handleChangeFile(e)} />
+            <label htmlFor="icon-button-file">
+              <img src={icon.uploadImg} alt="send message icon" style={{ marginRight: '8px' }} />
+            </label>
           </div>
-        }
-        {uploadedImg.length > 0 && renderImgPrev()}
-      </div>
-
-
-      { true && renderSlider()}
-
-      <div className={style.toolsBlock}>
-        <div className={style.uploadBlock}>
-          <input accept="image/*" id="icon-button-file"
-            type="file" style={{ display: 'none' }} onChange={(e) => handleChangeFile(e)} />
-          <label htmlFor="icon-button-file">
-            <img src={icon.uploadImg} alt="send message icon" style={{ marginRight: '8px' }} />
-          </label>
-        </div>
-        <div className={style.buttonWrapper}>
-          <Button className="primary withIcon " onClick={handlePublicPost}>
-            <img src={icon.messageSend} alt="send message icon" style={{ marginRight: '8px' }} />
+          <div className={style.buttonWrapper}>
+            <Button className="primary withIcon " onClick={handlePublicPost}>
+              <img src={icon.messageSend} alt="send message icon" style={{ marginRight: '8px' }} />
             Public</Button>
+          </div>
         </div>
-      </div>
 
-    </>
+      </div>)
+
   );
 };
 
