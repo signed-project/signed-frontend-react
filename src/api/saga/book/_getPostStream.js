@@ -4,9 +4,7 @@ import { isSignatureValid } from '../../../libs/signature';
 
 
 
-/**
- *  find out post what hame some id, but different updatedAt, and get new one
- */
+
 const sortPostUpdateAt = (arr) => {
     let uniquePost = [];
     let samesPost = [];
@@ -52,8 +50,7 @@ const getPostStream = (arr) => {
             return post
         }
         else {
-            console.log('');
-
+            console.warn('isPostFieldValid.errors', isPostFieldValid.errors);
         }
     });
     console.log('newArr', newArr);

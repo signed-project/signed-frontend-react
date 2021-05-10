@@ -132,7 +132,7 @@ const NewPost = ({ toggleTheme }) => {
    *  growth  height when add text in one row
      */
 
-
+  console.log('post', post);
 
   const handleChangeMessage = (e) => {
     const value = e.target.value;
@@ -223,7 +223,6 @@ const NewPost = ({ toggleTheme }) => {
 
   const renderReplyingUser = comments.map((post, i) => {
     if (i > 0) {
-      console.log('renderReplyingUser');
       return (
         <ReplyingUser key={i} name={post.source.name} checked={post.isMention} checkBoxName={post.hash} onChange={handleMention} />
       )
@@ -232,25 +231,15 @@ const NewPost = ({ toggleTheme }) => {
   );
 
   const handleChangeFile = (e) => {
-    // await uploadFile(e.target.files[0]);
-
     setUploadedImg([]);
     let filesArr = e.target.files;
-
-    console.log('filesArr', typeof [...filesArr]);
-    console.log('filesArr', filesArr[0]);
     const newUploadedImg = [];
 
     [...filesArr].map(file => {
-
-      console.log('file', file);
-
-
       const filePrev = {
         file: file,
         imagePreviewUrl: URL.createObjectURL(file)
       }
-
       newUploadedImg.push(filePrev);
 
     })
@@ -258,8 +247,6 @@ const NewPost = ({ toggleTheme }) => {
     // setUploadedImg((prev) => {
     //   return [...prev, filePrev]
     // });
-
-    console.log('++++++++++++++newUploadedImg++++++++++++++', newUploadedImg);
     setUploadedImg(newUploadedImg);
   }
 
@@ -279,30 +266,10 @@ const NewPost = ({ toggleTheme }) => {
   }
 
 
-
   console.log('uploadedImg', uploadedImg);
 
-  const renderSlider = () => {
-    return (
-      <div className={style.sliderMain}>
-        <img src={icon.cancel} alt="" className={style.cancelIcon} onClick={() => setIsFullImgPrev(false)} />
-        <img src={icon.del} onClick={() => handleDeleteImgPreview(0)} alt="" className={style.delIconSlider} />
-        <Swiper pagination={{
-          "type": "fraction"
-        }} navigation={true} initialSlide={firstSlide}  >
-          {uploadedImg.map((img, i) => <SwiperSlide key={i}>
-            <div className={style.sliderItem} >
-              <img src={img.imagePreviewUrl} />
-            </div>
-          </SwiperSlide>)}
-        </Swiper>
-      </div>
-
-    )
-  };
 
   return (
-
     isFullImgPrev ?
       <Slider
         uploadImgArr={uploadedImg}
@@ -310,10 +277,8 @@ const NewPost = ({ toggleTheme }) => {
         setIsFullImgPrev={setIsFullImgPrev}
         handleDeleteImgPreview={handleDeleteImgPreview}
       />
-      // renderSlider()
       :
-      (<div>
-
+      <>
         <div className={style.backBlock}>
           {replyingPage ?
             <>
@@ -365,12 +330,15 @@ const NewPost = ({ toggleTheme }) => {
                 </div>}
             </div>
           }
-          {uploadedImg.length > 0 &&
-            <Preview
-              uploadImgArr={uploadedImg}
-              handleFullSlider={handleFullSlider}
-              handleDeleteImgPreview={handleDeleteImgPreview}
-            />}
+          {uploadedImg.length > 0 && !replyingPage &&
+            <div className={style.wrapperPreview}>
+              <Preview
+                uploadImgArr={uploadedImg}
+                handleFullSlider={handleFullSlider}
+                handleDeleteImgPreview={handleDeleteImgPreview}
+              />
+            </div>
+          }
         </div>
 
         <div className={style.toolsBlock}>
@@ -388,7 +356,7 @@ const NewPost = ({ toggleTheme }) => {
           </div>
         </div>
 
-      </div>)
+      </>
 
   );
 };

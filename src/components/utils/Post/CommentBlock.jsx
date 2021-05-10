@@ -41,6 +41,7 @@ const CommentBlock = ({ post, img, name, type, text, createdAt, mention,
                         handleRepost={() => reaction.handleRepost(post)}
                         handleReply={() => reaction.handleReply(post)} />
                 }
+
             </div>
 
         </div>

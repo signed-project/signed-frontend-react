@@ -1,6 +1,7 @@
 import styles from './preview.module.scss';
 import icon from '../../../assets/svg/icon';
 
+// TODO move to this module calculate  uploadImgArr 
 
 const Preview = ({ uploadImgArr, handleFullSlider, handleDeleteImgPreview }) => {
     let smallPreviewImg = [];
@@ -19,7 +20,7 @@ const Preview = ({ uploadImgArr, handleFullSlider, handleDeleteImgPreview }) => 
                 return (
                     <div className={styles.imgSmallWrapper} key={i}>
                         <img src={file?.imagePreviewUrl} onClick={() => handleFullSlider(i)} alt="" className={`${styles.imgPreviewSmall}`} />
-                        <img src={icon.del} onClick={() => handleDeleteImgPreview(i)} alt="" className={styles.delIcon} />
+                        { handleDeleteImgPreview && <img src={icon.del} onClick={() => handleDeleteImgPreview(i)} alt="" className={styles.delIcon} />}
                     </div>
                 )
             }
@@ -28,15 +29,18 @@ const Preview = ({ uploadImgArr, handleFullSlider, handleDeleteImgPreview }) => 
     }
 
     return (
-        <div className={styles.imgPreview}>
+        uploadImgArr?.length > 0 &&
+        <div className={styles.imgPreview} >
             <div className={styles.img_preview_big_img_wrapper}>
-                <img src={icon.del} onClick={() => handleDeleteImgPreview(0)} alt="" className={styles.delIcon} />
+                {handleDeleteImgPreview && <img src={icon.del} onClick={() => handleDeleteImgPreview(0)} alt="" className={styles.delIcon} />}
                 <img src={uploadImgArr[0]?.imagePreviewUrl} className={styles.imgPreviewBig} alt="" onClick={() => handleFullSlider(0)} />
             </div>
-            {uploadImgArr.length > 0 &&
+            {
+                uploadImgArr.length > 0 &&
                 <div className={styles.smallPreview}>
                     {smallPreviewImg}
-                </div>}
+                </div>
+            }
         </div>
     )
 }

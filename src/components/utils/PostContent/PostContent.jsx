@@ -6,9 +6,10 @@ import routes from '../../../config/routes.config.js';
 const PostContent = ({ text, type, sourceAddress }) => {
     let history = useHistory();
     const handleDirect = () => {
-        if (type === 'post' || type === 'repost' || type === 'like') {
-            history.push(`${routes.post}/${sourceAddress}`);
-        }
+        // if (type === 'post' || type === 'repost' || type === 'like') {
+        //     history.push(`${routes.post}/${sourceAddress}`);
+        // }
+        history.push(`${routes.post}/${sourceAddress}`);
     }
 
     return (

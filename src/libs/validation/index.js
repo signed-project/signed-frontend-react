@@ -59,10 +59,10 @@ const mediaSchema = {
   properties: {
     contentType: { type: "string" },
     hash: { type: "string" },
-    width: { type: "integer" },
-    height: { type: "integer" }
+    width: { type: "string" },
+    height: { type: "string" }
   },
-  required: ["contentType", "content"],
+  required: ["contentType", "hash"],
   additionalProperties: true,
 }
 

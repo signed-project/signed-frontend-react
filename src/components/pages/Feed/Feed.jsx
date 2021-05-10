@@ -31,6 +31,7 @@ const Feed = ({ toggleTheme }) => {
         createdAt={p.createdAt}
         likesCount={p.likesCount}
         repostsCount={p.repostsCount}
+        attachments={p.attachments}
         hash={p.hash}
       />
     )

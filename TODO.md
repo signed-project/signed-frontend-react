@@ -28,3 +28,4 @@
 - [ ] component `Post.jsx` and `PostPage.jsx`  refactor common function `getCommentTreas` check `type` in recursion
 
 - [ ] check is exist way to upload img arr into server
+- [ ] rename component `Preview` to `PreviewImg`

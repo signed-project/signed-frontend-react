@@ -54,7 +54,7 @@ const useReaction = () => {
             sourceAddress = p.target.sourceHash;
         }
         const type = 'repost';
-        history.push(`${routes.repost}?post=${sourcePost}&user=${sourceAddress}&type=${type}`);
+        history.push(`${routes.newPost}?post=${sourcePost}&user=${sourceAddress}&type=${type}`);
     };
 
     const handleReply = (p) => {
@@ -68,7 +68,7 @@ const useReaction = () => {
             sourceAddress = p.target.sourceHash;
         }
         const type = 'reply';
-        history.push(`${routes.repost}?post=${sourcePost}&user=${sourceAddress}&type=${type}`);
+        history.push(`${routes.newPost}?post=${sourcePost}&user=${sourceAddress}&type=${type}`);
     }
 
 

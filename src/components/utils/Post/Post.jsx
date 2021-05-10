@@ -14,11 +14,13 @@ import styles from './post.module.scss';
 import useReaction from '../../customHooks/useReaction';
 import useTargetPost from '../../customHooks/useTargetPost';
 import getCommentTrees from '../../customHooks/getCommentTrees';
-
+import Preview from '../Preview/Preview';
+import { filesApi } from '../../../config/http.config';
+import getImgArr from '../../customHooks/getImgSources';
 
 // TODO rewrite signature functions to leave less parametrs
 const Post = ({ renderKey, post, name, text, createdAt, likesCount, repostsCount,
-    type, postHash, hash }) => {
+    type, postHash, hash, attachments }) => {
 
     let targetPost = useTargetPost(postHash);
     const reaction = useReaction();
@@ -27,6 +29,7 @@ const Post = ({ renderKey, post, name, text, createdAt, likesCount, repostsCount
     const [subscribed, setSubscribed] = useState([]);
     const [postMap, setPostMap] = useState({});
     const [comments, setComments] = useState([]);
+    const [imgPreview, setImgPreview] = useState([]);
     const postMapState = useSelector(state => state.post.hashed);
 
     useEffect(() => {
@@ -40,9 +43,20 @@ const Post = ({ renderKey, post, name, text, createdAt, likesCount, repostsCount
 
     useEffect(() => {
         setSubscribed(subscribedState)
-    }, [])
+    }, []);
 
 
+    useEffect(() => {
+        const imgSources = getImgArr(attachments)
+        setImgPreview(imgSources);
+    }, [attachments]);
+
+    useEffect(() => {
+        if (targetPost?.attachments?.length > 0) {
+            const imgSources = getImgArr(targetPost.attachments)
+            setImgPreview(imgSources);
+        }
+    }, [targetPost]);
 
     if (!postHash) {
         targetPost = {
@@ -51,9 +65,10 @@ const Post = ({ renderKey, post, name, text, createdAt, likesCount, repostsCount
         }
     }
 
+
+
     const renderComments = comments.map((c, i) => {
         if (subscribed.includes(c.source.address) && i !== 3) {
-
             return (
                 <CommentBlock
                     key={i}
@@ -107,6 +122,7 @@ const Post = ({ renderKey, post, name, text, createdAt, likesCount, repostsCount
                         </div>
                         <div className={styles.bodyWrapper}>
                             <PostContent sourceAddress={hash} text={text} type={type} />
+                            <Preview uploadImgArr={imgPreview} />
                         </div>
                         {reactionBlock()}
                     </div>
@@ -127,6 +143,7 @@ const Post = ({ renderKey, post, name, text, createdAt, likesCount, repostsCount
                             </div>
                             <div className={styles.bodyWrapper}>
                                 <PostContent sourceAddress={hash} text={targetPost?.text} type={type} />
+                                <Preview uploadImgArr={imgPreview} />
                             </div>
                             {reactionBlock()}
                         </div>
@@ -143,6 +160,7 @@ const Post = ({ renderKey, post, name, text, createdAt, likesCount, repostsCount
                     <div className={styles.postMain}>
                         <div className={styles.hover}>
                             <InfoAuthor createdAt={getReadFormat(createdAt)} name={name} />
+                            <img src={icon.menu} alt="menu icon" className={styles.menuIcon} />
                             <img src={icon.menu} alt="menu icon" className={styles.menuIcon} />
                         </div>
                         <div className={styles.bodyWrapper}>

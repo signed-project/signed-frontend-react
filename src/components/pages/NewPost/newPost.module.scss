@@ -128,10 +128,13 @@
 
 .imgPreview {
   margin-top: 16px;
-  margin-left: 62px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+}
+
+.wrapperPreview {
+  margin-left: 62px;
 }
 
 .smallPreview {
@@ -163,9 +166,9 @@
   border-radius: 0 0 0 4px;
 }
 
- .imgPreviewSmall:first-child {
-   border-radius: 0 0 0 4px;
- }
+.imgPreviewSmall:first-child {
+  border-radius: 0 0 0 4px;
+}
 
 .imgSmallWrapper:nth-child(3n) {
   border-radius: 0 0 4px 0;

@@ -24,4 +24,5 @@ export const filesApi = {
   FILES_LIST: "/files/list",
   FILES_TYPE: "/files/types",
   FILE_SIGNATURE: "/files/signatures",
+  GET_FILE_PATH: 'http://localhost:4000/static/'
 };
