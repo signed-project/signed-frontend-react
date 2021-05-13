@@ -16,21 +16,18 @@ const RepostBlock = ({ postHash, type }) => {
     useEffect(() => {
         setCurrentPost(targetPost);
         if (targetPost?.attachments?.length > 0) {
-            console.log('fjjfjfasdas');
             const imgSourceArr = getImgArr(targetPost.attachments)
             setImgSources(imgSourceArr);
         }
     }, [targetPost])
-
-    console.log('---', imgSources);
 
     return (
         <div className={styles.repostBlock}>
             <div className={styles.wrapperContent}>
                 {currentPost && <AuthorBlock name={currentPost?.source?.name} imgSmall={true} createdAt={getReadFormat(currentPost?.createdAt)} />}
             </div>
-            <PostContent text={targetPost.text} />
-            { imgSources && <Preview uploadImgArr={imgSources} />}
+            <PostContent text={targetPost.text} sourceAddress={targetPost.hash} />
+            { imgSources && <Preview uploadImgArr={imgSources} postHash={targetPost.hash} />}
         </div>
     )
 }

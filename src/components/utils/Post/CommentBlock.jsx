@@ -10,13 +10,22 @@ import { getReadFormat } from '../../../libs/date.js';
 import Reaction from '../Reaction/Reaction';
 import icon from '../../../assets/svg/icon';
 import useReaction from '../../customHooks/useReaction';
+import getImgSources from '../../customHooks/getImgSources';
 
 // TODO: signature less element ?
 const CommentBlock = ({ post, img, name, type, text, createdAt, mention,
     removeLastLine = false, showReactionBlock = false, likesCount, repostsCount,
     handleLike, handleRepost, handleReply, hash }) => {
 
+    const [imgPreview, setImgPreview] = useState([]);
+
     const reaction = useReaction();
+    useEffect(() => {
+        if (post?.attachments?.length > 0) {
+            const imgArrSources = getImgSources(post.attachments);
+            setImgPreview(imgArrSources);
+        }
+    }, [post])
 
     return (
         <div className={styles.commentBlock}>
@@ -29,18 +38,16 @@ const CommentBlock = ({ post, img, name, type, text, createdAt, mention,
                     <InfoAuthor createdAt={getReadFormat(createdAt)} name={name} />
                     <img src={icon.menu} alt="menu icon" className={styles.menuIcon} />
                 </div>
-                <div className={styles.bodyWrapper}>
-                    <PostContent sourceAddress={hash} text={text} type={type} />
+                <div className={styles.commentBodyWrapper}>
+                    {/* {imgPreview.length > 0 && <img src={imgPreview[0]?.imagePreviewUrl} alt="" className={styles.imgCommentPreview} />} */}
+                    <PostContent sourceAddress={hash} text={text} type={type} imgPrevSrc={imgPreview[0]?.imagePreviewUrl} />
                 </div>
-                {/* TODO: replying to */}
-                {showReactionBlock &&
-                    <Reaction
-                        likesCount={likesCount}
-                        repostsCount={repostsCount}
-                        handleLike={() => reaction.handleLike(post)}
-                        handleRepost={() => reaction.handleRepost(post)}
-                        handleReply={() => reaction.handleReply(post)} />
-                }
+                <Reaction
+                    likesCount={likesCount}
+                    repostsCount={repostsCount}
+                    handleLike={() => reaction.handleLike(post)}
+                    handleRepost={() => reaction.handleRepost(post)}
+                    handleReply={() => reaction.handleReply(post)} />
 
             </div>
 

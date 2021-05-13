@@ -17,11 +17,12 @@ import getCommentTrees from '../../customHooks/getCommentTrees';
 import Preview from '../Preview/Preview';
 import { filesApi } from '../../../config/http.config';
 import getImgArr from '../../customHooks/getImgSources';
+import MenuPost from '../MenuPost/MenuPost';
+
 
 // TODO rewrite signature functions to leave less parametrs
 const Post = ({ renderKey, post, name, text, createdAt, likesCount, repostsCount,
     type, postHash, hash, attachments }) => {
-
     let targetPost = useTargetPost(postHash);
     const reaction = useReaction();
     const subscribedState = useSelector(state => state.user.subscribed)
@@ -66,7 +67,6 @@ const Post = ({ renderKey, post, name, text, createdAt, likesCount, repostsCount
     }
 
 
-
     const renderComments = comments.map((c, i) => {
         if (subscribed.includes(c.source.address) && i !== 3) {
             return (
@@ -106,6 +106,7 @@ const Post = ({ renderKey, post, name, text, createdAt, likesCount, repostsCount
         )
     }
 
+
     const isHideLine = comments.length < 1;
     return (
         <div key={renderKey} className={styles.post} >
@@ -113,16 +114,17 @@ const Post = ({ renderKey, post, name, text, createdAt, likesCount, repostsCount
                 <div className={styles.typePost}>
                     <div className={styles.avatarBlock}>
                         <Avatar />
-                        <div className={`${styles.verticalLine}  ${isHideLine && styles.verticalLineRemove}`}></div>
+                        <div className={`${styles.verticalLine}  ${comments.length === 0 && styles.verticalLineRemove}`}></div>
                     </div>
                     <div className={styles.postMain}>
                         <div className={styles.hover}>
                             <InfoAuthor createdAt={getReadFormat(createdAt)} name={name} />
                             <img src={icon.menu} alt="menu icon" className={styles.menuIcon} />
+                            {/* <MenuPost /> */}
                         </div>
                         <div className={styles.bodyWrapper}>
                             <PostContent sourceAddress={hash} text={text} type={type} />
-                            <Preview uploadImgArr={imgPreview} />
+                            <Preview uploadImgArr={imgPreview} postHash={hash} />
                         </div>
                         {reactionBlock()}
                     </div>
@@ -142,8 +144,8 @@ const Post = ({ renderKey, post, name, text, createdAt, likesCount, repostsCount
                                 <InfoAuthor createdAt={getReadFormat(createdAt)} name={name} />
                             </div>
                             <div className={styles.bodyWrapper}>
-                                <PostContent sourceAddress={hash} text={targetPost?.text} type={type} />
-                                <Preview uploadImgArr={imgPreview} />
+                                <PostContent sourceAddress={targetPost.hash} text={targetPost?.text} type={type} />
+                                <Preview uploadImgArr={imgPreview} postHash={targetPost.hash} />
                             </div>
                             {reactionBlock()}
                         </div>
@@ -155,18 +157,18 @@ const Post = ({ renderKey, post, name, text, createdAt, likesCount, repostsCount
                 <div className={styles.typePost}>
                     <div className={styles.avatarBlock}>
                         <Avatar />
-                        <div className={`${styles.verticalLine}  ${isHideLine && styles.verticalLineRemove}`}></div>
+                        <div className={`${styles.verticalLine}  ${comments.length === 0 && styles.verticalLineRemove}`}></div>
                     </div>
                     <div className={styles.postMain}>
                         <div className={styles.hover}>
                             <InfoAuthor createdAt={getReadFormat(createdAt)} name={name} />
                             <img src={icon.menu} alt="menu icon" className={styles.menuIcon} />
-                            <img src={icon.menu} alt="menu icon" className={styles.menuIcon} />
+
                         </div>
                         <div className={styles.bodyWrapper}>
                             <PostContent sourceAddress={hash} text={text} type={type} />
                         </div>
-                        <RepostBlock postHash={postHash} />
+                        <RepostBlock postHash={postHash} postHash={targetPost.hash} />
                         {reactionBlock()}
                     </div>
                 </div>

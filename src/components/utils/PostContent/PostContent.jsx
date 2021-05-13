@@ -3,7 +3,7 @@ import { Link, NavLink, useHistory } from 'react-router-dom';
 import routes from '../../../config/routes.config.js';
 
 
-const PostContent = ({ text, type, sourceAddress }) => {
+const PostContent = ({ text, type, sourceAddress, imgPrevSrc }) => {
     let history = useHistory();
     const handleDirect = () => {
         // if (type === 'post' || type === 'repost' || type === 'like') {
@@ -12,13 +12,14 @@ const PostContent = ({ text, type, sourceAddress }) => {
         history.push(`${routes.post}/${sourceAddress}`);
     }
 
+    console.log('imgPrevSrc', imgPrevSrc);
+
     return (
         <>
-            {/* <NavLink className={styles.navLink} to={`post/${sourceAddress}`}> */}
             <div onClick={() => handleDirect()} className={styles.postContent}>
+                {imgPrevSrc && <img src={imgPrevSrc} alt="" className={styles.imgCommentPreview} />}
                 <span>{text}</span>
             </div>
-            {/* </NavLink> */}
         </>
     )
 }

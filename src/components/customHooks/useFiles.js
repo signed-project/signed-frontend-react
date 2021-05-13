@@ -15,12 +15,12 @@ const useFiles = () => {
   });
 
 
-  const uploadFile = (file, hash) => {
+  const uploadFile = (file) => {
     // mime.getExtension('text/plain');
     const type = mime.getExtension(file.type);
-    const fileName = `${hash}.${type}`;
+    // const fileName = `${hash}.${type}`;
     const formData = new FormData();
-    formData.append("File", file, fileName);
+    formData.append("File", file, file.name);
     // formData.append("File", file, file.name);
     // formData.append("FileType", fileType);
 

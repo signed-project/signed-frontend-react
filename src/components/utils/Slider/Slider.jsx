@@ -20,7 +20,7 @@ const Slider = ({ uploadImgArr, firstSlide, setIsFullImgPrev, handleDeleteImgPre
     return (
         <div className={styles.sliderMain}>
             <img src={icon.cancel} alt="" className={styles.cancelIcon} onClick={() => setIsFullImgPrev(false)} />
-            <img src={icon.del} onClick={() => handleDeleteImgPreview(currentSlider)} alt="" className={styles.delIconSlider} />
+            {handleDeleteImgPreview && <img src={icon.del} onClick={() => handleDeleteImgPreview(currentSlider)} alt="" className={styles.delIconSlider} />}
             <Swiper pagination={{
                 "type": "fraction"
             }} navigation={true} initialSlide={firstSlide}

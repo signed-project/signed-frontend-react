@@ -11,26 +11,15 @@ import { Post as PostModel } from '../../../api/models/post';
 import { Media } from '../../../api/models/media';
 import queryString from "query-string";
 import { useLocation } from "react-router-dom";
-import Post from '../../utils/Post/Post';
 import RepostBlock from '../../utils/Post/RepostBlock';
 import CommentBlock from '../../utils/Post/CommentBlock';
 import routes from '../../../config/routes.config.js';
-import InfoAuthor from '../../utils/InfoAuthor/InfoAuthor';
 import Checkbox from '../../utils/Checkbox/Checkbox';
 import ReplyingUser from './ReplyingUser';
 import useFiles from '../../customHooks/useFiles';
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/swiper.min.css";
-import "swiper/components/pagination/pagination.min.css"
-import "swiper/components/navigation/navigation.min.css"
-import "./swiper.scss";
-import SwiperCore, {
-  Pagination, Navigation
-} from 'swiper/core';
 import Preview from '../../utils/Preview/Preview';
 import Slider from '../../utils/Slider/Slider';
 
-SwiperCore.use([Pagination, Navigation]);
 
 // TOTO: this component too mach long need to split up it!
 /**
@@ -132,7 +121,6 @@ const NewPost = ({ toggleTheme }) => {
    *  growth  height when add text in one row
      */
 
-  console.log('post', post);
 
   const handleChangeMessage = (e) => {
     const value = e.target.value;
@@ -161,10 +149,19 @@ const NewPost = ({ toggleTheme }) => {
 
 
     const attachments = await Promise.all(uploadedImg.map(async (val) => {
-      const media = new Media({ type: val.file.type });
-      const newMedia = media.newMedia;
-      const type = newMedia.contentType
-      await uploadFile(val.file, newMedia.hash);
+
+      let data, newMedia;
+      try {
+        ({ data } = await uploadFile(val.file));
+        console.log('data%$#@=========================', data);
+        const media = new Media({ type: data.type, hash: data.hash });
+        newMedia = media.newMedia;
+
+        console.log('newMedia^^^^^^^^^^^^^^^^^^^^^^^^^^^^^', newMedia);
+      }
+      catch (e) {
+        console.warn('[NewPost][attachments]', e);
+      }
       return newMedia
     }));
 
@@ -193,11 +190,11 @@ const NewPost = ({ toggleTheme }) => {
       name={post.source?.name}
       text={post.text}
       createdAt={post.createdAt}
+      post={post}
     />
   ));
 
   const handleOthersMention = (e) => {
-    console.log('handleOthersMention');
     const isChecked = e.target.checked;
     const newComments = comments.map((post, i) => {
       if (i > 0) {
@@ -231,9 +228,10 @@ const NewPost = ({ toggleTheme }) => {
   );
 
   const handleChangeFile = (e) => {
+
     setUploadedImg([]);
     let filesArr = e.target.files;
-    const newUploadedImg = [];
+    const newUploadedImg = uploadedImg.slice();
 
     [...filesArr].map(file => {
       const filePrev = {
@@ -243,10 +241,6 @@ const NewPost = ({ toggleTheme }) => {
       newUploadedImg.push(filePrev);
 
     })
-
-    // setUploadedImg((prev) => {
-    //   return [...prev, filePrev]
-    // });
     setUploadedImg(newUploadedImg);
   }
 

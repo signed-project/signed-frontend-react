@@ -28,6 +28,7 @@
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
+  position: relative;
 }
 
 .avatarWrapper {
@@ -37,6 +38,7 @@
 }
 
 .menuIcon {
+  margin-right: 14px;
   height: 15px;
 }
 
@@ -91,6 +93,9 @@
 .bodyWrapper {
   margin: 8px 8px;
 }
+.commentBodyWrapper {
+  margin: 12px 0 12px 0;
+}
 
 .postBody {
   padding-bottom: 26px;
@@ -141,3 +146,5 @@
   flex-direction: row;
   justify-content: space-between;
 }
+
+

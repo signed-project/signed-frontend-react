@@ -3,6 +3,9 @@
 .postContent {
   margin-bottom: 16px;
   word-wrap: break-word;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
 }
 
 .postContent span {
@@ -16,3 +19,12 @@
 .navLink {
   text-decoration: none;
 }
+
+.imgCommentPreview {
+  width: 56px;
+  height: 56px;
+  border-radius: 4px;
+  margin-right: 8px;
+}
+
+
