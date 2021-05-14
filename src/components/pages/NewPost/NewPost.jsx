@@ -153,11 +153,9 @@ const NewPost = ({ toggleTheme }) => {
       let data, newMedia;
       try {
         ({ data } = await uploadFile(val.file));
-        console.log('data%$#@=========================', data);
         const media = new Media({ type: data.type, hash: data.hash });
         newMedia = media.newMedia;
 
-        console.log('newMedia^^^^^^^^^^^^^^^^^^^^^^^^^^^^^', newMedia);
       }
       catch (e) {
         console.warn('[NewPost][attachments]', e);
