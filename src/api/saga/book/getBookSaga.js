@@ -26,17 +26,21 @@ export default function* watchGetBook() {
     const hosts = '';
     let hostsPost;
 
-    // TODO: change myPost to book.post
-    const myPosts = yield call(getMyBook, axios);
-    if (hosts) {
-        hostsPost = yield call(getMyBook, axios);
+    let myPosts;
+    try {
+        myPosts = yield call(getMyBook, axios);
+        if (hosts) {
+            hostsPost = yield call(getMyBook, axios);
+        }
+        else {
+            // hostsPost = parseJson(stringify(dummyBook.posts));
+            hostsPost = dummyBook.posts;
+        }
+    } catch {
+        myPosts = [];
     }
-    else {
-        // hostsPost = parseJson(stringify(dummyBook.posts));
-        hostsPost = dummyBook.posts;
-    }
-    const hostsSources = dummyBook.source;
 
+    const hostsSources = dummyBook.source;
     hostsPost = Array.isArray(hostsPost) ? hostsPost : [hostsPost];
     const arrPosts = [...myPosts, ...hostsPost];
     const arrSources = [...hostsSources];

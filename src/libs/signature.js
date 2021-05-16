@@ -91,17 +91,15 @@ export const getHash = (post) => {
     const postJson = getJsonStringFromObj(post);
     let resHash;
     try {
-        const hash = CryptoJS.SHA256(postJson)
+        const hash = CryptoJS.SHA256(postJson);
         const hashString = hash.toString(CryptoJS.enc.Hex);
-        const bytes = Buffer.from(hashString, 'hex')
-        resHash = bs58.encode(bytes)
+        const bytes = Buffer.from(hashString, 'hex');
+        resHash = bs58.encode(bytes);
     } catch (e) {
         console.error('[getHash]', e);
     }
     return resHash;
 }
-
-
 
 
 export const generateId = () => {

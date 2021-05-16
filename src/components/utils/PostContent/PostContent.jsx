@@ -1,14 +1,25 @@
 import styles from './postContent.module.scss';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useHistory } from 'react-router-dom';
 import routes from '../../../config/routes.config.js';
-const PostContent = ({ text, sourceAddress }) => {
+
+
+const PostContent = ({ text, type, sourceAddress, imgPrevSrc }) => {
+    let history = useHistory();
+    const handleDirect = () => {
+        // if (type === 'post' || type === 'repost' || type === 'like') {
+        //     history.push(`${routes.post}/${sourceAddress}`);
+        // }
+        history.push(`${routes.post}/${sourceAddress}`);
+    }
+
+    console.log('imgPrevSrc', imgPrevSrc);
+
     return (
         <>
-            <NavLink className={styles.navLink} to={`post/${sourceAddress}`}>
-                <div className={styles.postContent}>
-                    <span>{text}</span>
-                </div>
-            </NavLink>
+            <div onClick={() => handleDirect()} className={styles.postContent}>
+                {imgPrevSrc && <img src={imgPrevSrc} alt="" className={styles.imgCommentPreview} />}
+                <span>{text}</span>
+            </div>
         </>
     )
 }

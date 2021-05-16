@@ -1,192 +1,142 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
-import { Link, Element, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
-import icon from '../../../assets/svg/icon';
-import Avatar from '../../utils/Avatar/Avatar';
-import styles from './postPage.module.scss';
-import Button from '../../utils/Button/Button';
-import { postActions } from '../../../api/storage/post';
-import { Post as PostModel } from '../../../api/models/post';
 import queryString from "query-string";
-import { useLocation, useParams } from "react-router-dom";
-import Post from '../../utils/Post/Post';
+import icon from '../../../assets/svg/icon';
+import styles from './postPage.module.scss';
+import { useLocation, useParams, useHistory } from "react-router-dom";
 import RepostBlock from '../../utils/Post/RepostBlock';
 import CommentBlock from '../../utils/Post/CommentBlock';
-import routes from '../../../config/routes.config.js';
-import InfoAuthor from '../../utils/InfoAuthor/InfoAuthor';
-import Checkbox from '../../utils/Checkbox/Checkbox';
 import AuthorBlock from '../../utils/AuthorBlock/AuthorBlock';
 import { getReadFormat } from '../../../libs/date.js';
 import Reaction from '../../utils/Reaction/Reaction';
 import PostContent from '../../utils/PostContent/PostContent';
+import useReaction from '../../customHooks/useReaction';
+import getCommentTrees from '../../customHooks/getCommentTrees';
+import getImgSources from '../../customHooks/getImgSources';
+import Preview from '../../utils/Preview/Preview';
+import Avatar from '../../utils/Avatar/Avatar';
+import InfoAuthor from '../../utils/InfoAuthor/InfoAuthor';
+import Slider from '../../utils/Slider/Slider';
 
 
+// TODO: refactor this component to use module Post if it possible
 const PostPage = ({ toggleTheme }) => {
     const user = useSelector(state => state.user);
     const postMapState = useSelector(state => state.post.hashed);
     const location = useLocation();
-    // const { post: hash, user: source, type } = queryString.parse(location.search);
+    const { slider } = queryString.parse(location.search);
+
     let { hash } = useParams();
     const history = useHistory();
-    const dispatch = useDispatch();
+    const reaction = useReaction();
 
     const [post, setPost] = useState('');
-
-    const [postMap, setPostMap] = useState({});
     const [comments, setComments] = useState([]);
+    const [imgPreview, setImgPreview] = useState([]);
+    const [showSlider, setShowSlider] = useState(false);
+    const [sliderNum, setSliderNum] = useState('');
 
     useEffect(() => {
         toggleTheme(false);
     }, [toggleTheme]);
-
 
     useEffect(() => {
         const currentPost = postMapState[hash];
         setPost(currentPost);
     }, [hash, postMapState]);
 
-
-    console.log('post^^^^^^^^^^^^^^^^^^^^', post);
-
-    const getCommentTreas = (currentPostHash) => {
-        const postArr = Object.values(postMapState);
-        const comments = [];
-
-        const recursion = (hash) => {
-            postArr.map(post => {
-                if (post.target.postHash === hash && post.type !== 'like') {
-                    console.log('post$$$$$$$$$$$$$$$$$$$$$$$$$$$$$', post);
-                    comments.push(post);
-                    recursion(post.hash);
-                }
-            })
-        }
-        recursion(currentPostHash);
-        return comments;
-    }
-
     useEffect(() => {
-        const commentsTrees = getCommentTreas(hash);
-        const commentsDateFilter = commentsTrees.sort((a, b) => a.createdAt - b.createdAt)
-        console.log('commentsTrees', commentsTrees);
-        setComments(commentsDateFilter);
+        const commentsTrees = getCommentTrees({ hashMap: postMapState, currentHash: hash });
+        setComments(commentsTrees);
     }, [postMapState, hash]);
 
-
-
-    const getMentions = () => {
-        const mentions = [];
-        comments.map(post => {
-            if (post.isMention) {
-                mentions.push(post.source)
-            }
-        })
-        console.log('mentions))))))))))))))))))))))', mentions);
-        return mentions;
-    }
-
-
-    const handleLike = (p) => {
-        let data;
-        if (p.type === 'post' || p.type === 'reply') {
-            data = {
-                source: user.source,
-                type: 'like',
-                wfi: user.wfi,
-                target: {
-                    "sourceHash": p.source.hash,
-                    "postHash": p.hash
-                }
-            }
+    useEffect(() => {
+        if (post?.attachments?.length) {
+            const imgSourceArr = getImgSources(post.attachments);
+            setImgPreview(imgSourceArr)
         }
-        else {
-            const postData = postMapState[p?.target?.postHash];
-            data = {
-                ...postData,
-                type: 'like',
-                wfi: user.wfi,
-                target: {
-                    sourceHash: postData.source.hash,
-                    postHash: postData.hash
-                }
-            }
-        };
-        const post = new PostModel(data);
-        const likePost = post.newPost;
-        dispatch(postActions.sendPost(likePost));
-    };
+    }, [post]);
 
-    const handleRepost = (p) => {
-        let sourcePost
-        let sourceAddress
-        if (p.type === 'post' || p.type === 'reply') {
-            sourcePost = p.hash;
-            sourceAddress = p.source.address;
-        } else {
-            sourcePost = p.target.postHash;
-            sourceAddress = p.target.sourceHash;
+    useEffect(() => {
+        if (slider) {
+            setSliderNum(slider);
+            setShowSlider(true);
         }
-        const type = 'repost';
-        history.push(`${routes.repost}?post=${sourcePost}&user=${sourceAddress}&type=${type}`);
-    };
+    }, [slider]);
 
-    const handleReply = (p) => {
-        let sourcePost
-        let sourceAddress
-        if (p.type === 'post' || p.type === 'reply' || p.type === 'repost') {
-            sourcePost = p.hash;
-            sourceAddress = p.source.address;
-        } else {
-            sourcePost = p.target.postHash;
-            sourceAddress = p.target.sourceHash;
-        }
-        const type = 'reply';
-        history.push(`${routes.repost}?post=${sourcePost}&user=${sourceAddress}&type=${type}`);
-    }
-
-
-
-
-    const renderComments = comments.slice().reverse().map((post, i) =>
+    const renderComments = comments.slice().map((post, i) =>
     (
         <CommentBlock
+            post={post}
+            type={post.type}
             key={i}
             img={post?.source?.avatar?.hash}
             name={post.source?.name}
             text={post.text}
             createdAt={post.createdAt}
+            removeLastLine={comments.length === i + 1}
+            hash={post.hash}
         />
     ));
 
+    const handleFullSlider = (i) => {
+        setShowSlider(true)
+        setSliderNum(i)
+    }
+ 
     return (
-        <>
-            <div className={styles.backBlock}>
-                <img src={icon.arrowBack} onClick={() => history.goBack()} alt="arrow back icon" />
-            </div>
-            { post &&
-                <div className={styles.bodyBlock}>
-                    <div className={styles.wrapperContent}>
-                        <AuthorBlock name={post.name} createdAt={getReadFormat(post.createdAt)} />
-                        <img src={icon.menu} alt="menu icon" className={styles.menuIcon} />
-                    </div>
-                    <PostContent sourceAddress={hash} text={post.text} />
-                    <Reaction
-                        likesCount={post.likesCount}
-                        repostsCount={post.repostsCount}
-                        handleLike={() => handleLike(post)}
-                        handleRepost={() => handleRepost(post)}
-                        handleReply={() => handleReply(post)} />
-
-                    {comments.length > 0 &&
-                        <div className={styles.commentsWrapper}>
-                            {renderComments}
+        showSlider ?
+            <Slider
+                uploadImgArr={imgPreview}
+                firstSlide={sliderNum}
+                setIsFullImgPrev={setShowSlider}
+            />
+            :
+            <>
+                <div div className={styles.backBlock} >
+                    <img src={icon.arrowBack} onClick={() => history.goBack()} alt="arrow back icon" />
+                </div >
+                {
+                    post &&
+                    <div className={styles.bodyBlock}>
+                        <div className={styles.typePost}>
+                            <div className={styles.avatarBlock}>
+                                <Avatar />
+                                {/*  ${styles.verticalLineRemove} */}
+                                <div className={`${styles.verticalLine} 
+                             ${comments.length === 0 && styles.verticalLineRemove}`}></div>
+                            </div>
+                            <div className={styles.postMain}>
+                                <div className={styles.hover}>
+                                    <InfoAuthor createdAt={getReadFormat(post.createdAt)} name={post?.source?.name} />
+                                    <img src={icon.menu} alt="menu icon" className={styles.menuIcon} />
+                                </div>
+                                <div className={styles.bodyWrapper}>
+                                    {/* TODO: find out name sourceAddress,are is better  hash ?  */}
+                                    <PostContent sourceAddress={post.hash} text={post.text} type={post.type} />
+                                    <Preview uploadImgArr={imgPreview} handleFullSlider={handleFullSlider} />
+                                </div>
+                                <Reaction
+                                    likesCount={post.likesCount}
+                                    repostsCount={post.repostsCount}
+                                    handleLike={() => reaction.handleLike(post)}
+                                    handleRepost={() => reaction.handleRepost(post)}
+                                    handleReply={() => reaction.handleReply(post)} />
+                            </div>
                         </div>
-                    }
+                        {post?.type === 'repost' &&
+                            <div className={styles.repostBlockWrapper}>
+                                <RepostBlock postHash={post.target.postHash} />
+                            </div>}
+                        {comments.length > 0 &&
+                            <div className={styles.commentsWrapper}>
+                                {renderComments}
+                            </div>
+                        }
 
-                </div>
-            }
-        </>
+                    </div>
+                }
+            </>
     );
 };
 
