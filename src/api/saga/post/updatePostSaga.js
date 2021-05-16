@@ -15,7 +15,7 @@ const sendPosts = async (axios, post) => {
   }
 };
 
-export function* workerSendPost(action) {
+export function* workerUpdatePost(action) {
   console.log("action====================[saga]", action);
 
   const axios = yield select((state) => state.axios.axios);
@@ -29,6 +29,5 @@ export function* workerSendPost(action) {
 }
 
 export default function* watchSendPost() {
-  console.log("hi444");
-  yield takeEvery(ACTIONS.SEND_POST, workerSendPost);
+  yield takeEvery(ACTIONS.UPDATE_POST, workerUpdatePost);
 }

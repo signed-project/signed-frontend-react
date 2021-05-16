@@ -1,11 +1,16 @@
-import { ACTIONS } from './reducer';
+import { ACTIONS } from "./reducer";
 
 export const setPostStream = (payload) => ({
-    type: ACTIONS.SET_STREAM,
-    payload,
+  type: ACTIONS.SET_STREAM,
+  payload,
 });
 
 export const sendPost = (payload) => ({
-    type: ACTIONS.SEND_POST,
-    payload,
+  type: ACTIONS.SEND_POST,
+  payload,
+});
+
+export const updatePost = (payload) => ({
+  type: ACTIONS.UPDATE_POST,
+  payload,
 });

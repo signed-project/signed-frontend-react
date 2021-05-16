@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { filesApi } from "../../config/http.config";
-import mime from 'mime/lite';
+import mime from "mime/lite";
 
 const useFiles = () => {
   const axios = useSelector((state) => state.axios.axios);
@@ -14,7 +14,6 @@ const useFiles = () => {
     code: null,
   });
 
-
   const uploadFile = (file) => {
     // mime.getExtension('text/plain');
     const type = mime.getExtension(file.type);
@@ -23,6 +22,7 @@ const useFiles = () => {
     formData.append("File", file, file.name);
     // formData.append("File", file, file.name);
     // formData.append("FileType", fileType);
+    console.log("file77777777777777", file);
 
     setIsLoading(true);
 
@@ -62,9 +62,6 @@ const useFiles = () => {
   };
 
   const uploadFileArr = (file) => {
-
-    console.log('uploadFile^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^');
-
     const formData = new FormData();
     formData.append("File", file, file.name);
     // formData.append("FileType", fileType);
@@ -106,8 +103,6 @@ const useFiles = () => {
       });
   };
 
-
-
   const deleteFiles = (fileIds) => {
     setIsLoading(true);
 
@@ -130,10 +125,6 @@ const useFiles = () => {
         setIsLoading(false);
       });
   };
-
-
-
-
 
   return {
     isLoading,
