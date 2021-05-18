@@ -33,9 +33,13 @@ const postReducer = (state = initialState, action) => {
         hashed: action.payload,
       };
     case ACTIONS.ADD_POST_TO_STREAM:
+      const currentStream = state.stream.filter(post => post.id !== action.payload.id)
+
+
       return {
         ...state,
-        stream: [...state.stream, action.payload],
+        stream: [...currentStream, action.payload],
+        // stream: [...state.stream, action.payload],
       };
     case ACTIONS.ADD_POST_TO_HASH:
       return {

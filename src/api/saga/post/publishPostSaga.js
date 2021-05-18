@@ -29,6 +29,5 @@ export function* workerSendPost(action) {
 }
 
 export default function* watchSendPost() {
-  console.log("hi444");
   yield takeEvery(ACTIONS.SEND_POST, workerSendPost);
 }

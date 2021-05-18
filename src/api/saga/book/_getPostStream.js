@@ -33,11 +33,11 @@ const sortPostUpdateAt = (arr) => {
         };
     });
 
-    const sortUniquePost = uniquePost.slice().map(pst => {
-        if (pst.length > 1) {
-            pst.sort((a, b) => a.updatedAt - b.updatedAt)
-            return pst[0]
-        } else return pst[0];
+    const sortUniquePost = uniquePost.slice().map(post => {
+        if (post.length > 1) {
+            post.sort((a, b) => b.updatedAt - a.updatedAt)
+            return post[0]
+        } else return post[0];
     })
 
     return sortUniquePost

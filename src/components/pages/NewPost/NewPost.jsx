@@ -80,8 +80,7 @@ const NewPost = ({ toggleTheme }) => {
     setPost((prev) => ({
       ...prev,
       type,
-      hash,
-      source,
+      target: { sourceHash: source, postHash: hash }
     }));
   }, [hash, source, type]);
 
@@ -108,8 +107,8 @@ const NewPost = ({ toggleTheme }) => {
   };
 
   useEffect(() => {
-    if (post.hash && hashedPost) {
-      const commentsKnitFlow = getCommentStoryKnots(hashedPost, post.hash);
+    if (post.target?.postHash && hashedPost) {
+      const commentsKnitFlow = getCommentStoryKnots(hashedPost, post.target?.postHash);
       const commentsCheckbox = commentsKnitFlow.map((comment) => {
         comment.isMention = false;
         return comment;
@@ -127,9 +126,9 @@ const NewPost = ({ toggleTheme }) => {
         setUploadedImg(imgSours);
       }
       setMessage(editedPost?.text);
+
       setPost((prev) => ({
-        ...prev,
-        type: "post",
+        ...editedPost
       }));
     }
   }, [edit, hashedPost]);
@@ -197,25 +196,24 @@ const NewPost = ({ toggleTheme }) => {
     );
 
     const postInstance = new PostModel({
+      id: post.id ? post.id : '',
       source: user.source,
       type: post.type,
       text: message,
-      target: post.hash ? { postHash: post.hash, sourceHash: post.source } : "",
+      target: {
+        postHash: post.target?.postHash ? post.target?.postHash : '',
+        sourceHash: post.target?.sourceHash ? post.target?.sourceHash : '',
+      },
+      // target: post.hash ? { postHash: post.hash, sourceHash: post.source } : "",
       mentions: mentions?.length ? mentions : "",
       attachments: attachments.length > 0 ? attachments : "",
       wfi: user.wfi,
     });
 
     const newPost = postInstance.newPost;
-    if (edit) {
-      const payload = {
-        post: newPost,
-        updatedPost: edit,
-      };
-      dispatch(postActions.sendPost(payload));
-    } else {
-      dispatch(postActions.sendPost(newPost));
-    }
+    console.log('newPost-------------', newPost);
+
+    dispatch(postActions.sendPost(newPost));
     history.push(routes.feed);
   };
 
@@ -368,7 +366,7 @@ const NewPost = ({ toggleTheme }) => {
 
             {post?.type === "repost" && (
               <div className={style.repostBlockWrapper}>
-                <RepostBlock postHash={post.hash} />
+                <RepostBlock postHash={post.target?.postHash} />
               </div>
             )}
           </div>
