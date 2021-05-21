@@ -7,6 +7,7 @@ export default {
   post: '/post',
   profile: '/profile',
   notification: '/notification',
-  signUp: '/sign-up',
-  signIn: '/sign-in',
+  register: '/register',
+  login: '/login',
+  passwordRecovery: '/password-recovery',
 };

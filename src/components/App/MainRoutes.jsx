@@ -1,9 +1,10 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import Layout from '../layout/Layout';
 import LayoutProvider from '../layout/LayoutProvider';
 import Feed from '../pages/Feed/Feed';
-import SingUp from '../pages/SingUp/SingUp';
+import SingUp from '../pages/Register/Register';
 import Search from '../pages/Search/Search';
 import NewPost from '../pages/NewPost/NewPost';
 import PostPage from '../pages/PostPage/PostPage';
@@ -11,9 +12,11 @@ import Profile from '../pages/Profile/Profile';
 import Notification from '../pages/Notification/Notification';
 // import PageNotFound from '../pages/PageNotFound/PageNotFound';
 import routes from '../../config/routes.config';
-
+import Login from '../pages/Login/Login';
+import Register from '../pages/Register/Register';
 
 const MainRouts = () => {
+
     return (
         <>
             <LayoutProvider.Consumer >
@@ -30,9 +33,6 @@ const MainRouts = () => {
                                 <Route path={routes.newPost} exact
                                     component={() => <NewPost theme={theme} toggleTheme={toggleTheme} />}
                                 />
-                                {/* <Route path={routes.repost}
-                                    component={() => <NewPost theme={theme} toggleTheme={toggleTheme} />}
-                                /> */}
                                 <Route path={routes.postHash}
                                     component={() => <PostPage theme={theme} toggleTheme={toggleTheme} />}
                                 />
@@ -42,9 +42,10 @@ const MainRouts = () => {
                                 <Route path={routes.notification} exact
                                     component={() => <Notification theme={theme} toggleTheme={toggleTheme} />}
                                 />
-                                <Route path={routes.signUp} exact
-                                    component={() => <SingUp theme={theme} toggleTheme={toggleTheme} />}
-                                />
+                                <Route path={routes.login} exact
+                                    component={() => <Login theme={theme} toggleTheme={toggleTheme} />} />
+                                <Route path={routes.register} exact
+                                    component={() => <Register theme={theme} toggleTheme={toggleTheme} />} />
                             </Switch>
                         </Layout>
                     )

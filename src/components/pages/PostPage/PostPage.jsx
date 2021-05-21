@@ -83,7 +83,7 @@ const PostPage = ({ toggleTheme }) => {
         setShowSlider(true)
         setSliderNum(i)
     }
- 
+
     return (
         showSlider ?
             <Slider

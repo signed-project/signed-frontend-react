@@ -13,3 +13,8 @@ export const filesApi = {
   FILE_SIGNATURE: "/files/signatures",
   GET_FILE_PATH: "http://localhost:4000/static/",
 };
+
+export const userApi = {
+  LOGIN: '/auth/login',
+  REGISTER: '/auth/login'
+};
