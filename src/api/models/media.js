@@ -1,5 +1,4 @@
 import mime from "mime/lite";
-import { generateId, getHash, getSignatures } from "../../libs/signature";
 
 export class Media {
   constructor(data) {

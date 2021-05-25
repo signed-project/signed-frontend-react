@@ -16,12 +16,9 @@ const Layout = ({ children, theme }) => {
 
   useEffect(() => {
     if (location && (location.pathname === router.register || location.pathname === router.login)) {
-      console.log('-----------hire====================');
       setISAuthPage(true)
     }
   }, [location])
-
-  console.log('location', location);
 
   // const {
   //   post: hash,

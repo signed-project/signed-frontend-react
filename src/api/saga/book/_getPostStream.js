@@ -2,9 +2,6 @@ import { isPostFieldValid } from '../../../libs/validation';
 import { isSignatureValid } from '../../../libs/signature';
 
 
-
-
-
 const sortPostUpdateAt = (arr) => {
     let uniquePost = [];
     let samesPost = [];
@@ -15,6 +12,7 @@ const sortPostUpdateAt = (arr) => {
             if (postArr.length > 1 && postArr.filter(ps => ps.id = id).length > 1) {
                 isExist = true
             }
+            return postArr;
         });
         return isExist;
     };
@@ -25,12 +23,14 @@ const sortPostUpdateAt = (arr) => {
             samesPost = [];
             arr.filter(p => p.id === post.id).map(pt => {
                 samesPost.push(pt);
+                return pt;
             });
             uniquePost.push(samesPost)
         }
         else if (arr.filter(p => post.id === p.id).length === 1) {
             uniquePost.push([post])
         };
+        return post;
     });
 
     const sortUniquePost = uniquePost.slice().map(post => {
@@ -46,16 +46,13 @@ const sortPostUpdateAt = (arr) => {
 const getPostStream = (arr) => {
     const newArr = arr.filter(post => {
         if (isPostFieldValid(post) && isSignatureValid(post) && post.type !== 'reply') {
-            console.log('post.type', post.type);
-            return post
+            return true
         }
         else {
             console.warn('isPostFieldValid.errors', isPostFieldValid.errors);
         }
     });
-    console.log('newArr', newArr);
     return sortPostUpdateAt(newArr);
-    // return newArr;
 }
 
 

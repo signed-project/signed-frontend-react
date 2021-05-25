@@ -3,6 +3,8 @@ import sortKeys from 'sort-keys';
 import { nanoid } from 'nanoid';
 import CryptoJS from 'crypto-js';
 import bs58 from 'bs58';
+import wif from 'wif';
+import bip38 from 'bip38';
 import * as   bitcoin from 'bitcoinjs-lib';
 import * as   bitcoinMessage from 'bitcoinjs-message';
 
@@ -11,7 +13,7 @@ import * as   bitcoinMessage from 'bitcoinjs-message';
  * @tutorial way to get wif and atc 
  * 
  *  const keyPairRundom = bitcoin.ECPair.makeRandom();
-  const keyPairRun = bitcoin.ECPair.fromPrivateKey();
+//   const keyPairRun = bitcoin.ECPair.fromPrivateKey();
   const { address } = bitcoin.payments.p2pkh({ pubkey: keyPairRundom.publicKey });
   console.log('keyPair__________________________________________________________', address);
   const privateKeyBuffer = Buffer.from(keyPairRundom.privateKey)
@@ -52,6 +54,22 @@ import * as   bitcoinMessage from 'bitcoinjs-message';
     console.log('signature', signature); 
 
  */
+
+
+
+export const getRegisterUserData = ({ password }) => {
+    const keyPair = bitcoin.ECPair.makeRandom();
+    const wifString = keyPair.toWIF();
+    const decoded = wif.decode(wifString);
+    const encryptedKey = bip38.encrypt(decoded.privateKey, decoded.compressed, password);
+    const { address } = bitcoin.payments.p2pkh({ pubkey: keyPair.publicKey });
+    return {
+        wif: encryptedKey,
+        address: address,
+    };
+
+
+}
 
 
 export const getJsonStringFromObj = (postObj) => {

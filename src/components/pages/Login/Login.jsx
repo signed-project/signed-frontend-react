@@ -7,7 +7,7 @@ import Input from '../../utils/Input/Input';
 import Button from '../../utils/Button/Button';
 import routes from '../../../config/routes.config';
 import { userApi } from '../../../config/http.config';
-
+import srp from 'secure-remote-password/client';
 const Login = ({ toggleTheme }) => {
     useEffect(() => {
         toggleTheme(false);
@@ -29,15 +29,28 @@ const Login = ({ toggleTheme }) => {
             ...prev,
             [name]: value
         }))
-
     }
     console.log('form', form);
+
+    const getSendData = ({ login, password }) => {
+        const salt = srp.generateSalt();
+        const privateKey = srp.derivePrivateKey(salt, login, password)
+        const verifier = srp.deriveVerifier(privateKey);
+        return {
+            salt,
+            privateKey,
+            verifier
+        }
+    }
+
 
     const handleSendForm = async () => {
         console.log('handleSendForm');
         //  TODO : validation form
+        const sendData = getSendData({ login: form.login, password: form.password })
         try {
-            let res = await axios.post(userApi.LOGIN, form);
+            let res = await axios.post(userApi.LOGIN, sendData);
+
             console.log('res', res);
             return res;
         } catch (e) {

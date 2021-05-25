@@ -15,6 +15,7 @@ export const filesApi = {
 };
 
 export const userApi = {
-  LOGIN: '/auth/login',
-  REGISTER: '/auth/login'
+  LOGIN: '/login',
+  REGISTER: '/register',
+  IS_FREE_LOGIN: '/isFreeLogin',
 };

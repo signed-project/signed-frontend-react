@@ -130,9 +130,8 @@ const Post = ({
             <div className={styles.avatarBlock}>
               <Avatar />
               <div
-                className={`${styles.verticalLine}  ${
-                  comments.length === 0 && styles.verticalLineRemove
-                }`}
+                className={`${styles.verticalLine}  ${comments.length === 0 && styles.verticalLineRemove
+                  }`}
               ></div>
             </div>
             <div className={styles.postMain}>
@@ -167,9 +166,8 @@ const Post = ({
               <div className={styles.avatarBlock}>
                 <Avatar />
                 <div
-                  className={`${styles.verticalLine}    ${
-                    type === "like" && styles.verticalLineRemove
-                  }`}
+                  className={`${styles.verticalLine}    ${type === "like" && styles.verticalLineRemove
+                    }`}
                 ></div>
               </div>
               <div className={styles.postBody}>
@@ -203,9 +201,8 @@ const Post = ({
             <div className={styles.avatarBlock}>
               <Avatar />
               <div
-                className={`${styles.verticalLine}  ${
-                  comments.length === 0 && styles.verticalLineRemove
-                }`}
+                className={`${styles.verticalLine}  ${comments.length === 0 && styles.verticalLineRemove
+                  }`}
               ></div>
             </div>
             <div className={styles.postMain}>

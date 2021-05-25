@@ -6,7 +6,7 @@ import { getHash } from '../../../libs/signature';
 
 const getHashedData = (arr) => {
     let hashMap = new Map();
-    arr.map(val => { hashMap.set(val.hash, val); return });
+    arr.map(val => { hashMap.set(val.hash, val); return val });
     return Object.fromEntries(hashMap);
 }
 
@@ -20,7 +20,7 @@ const getLatestPost = (arr) => {
     arr.map(post => {
         const key = post.source.address + '*' + post.hash;
         latestPost.set(key, post)
-        return
+        return post
     });
     return Object.fromEntries(latestPost);
 };
@@ -29,7 +29,7 @@ const getLatestSource = (arr) => {
     let hashMap = new Map();
     arr.map(val => {
         hashMap.set(val.address, val)
-        return
+        return val
     });
     return Object.fromEntries(hashMap);
 }

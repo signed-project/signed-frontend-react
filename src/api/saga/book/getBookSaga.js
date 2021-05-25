@@ -1,9 +1,8 @@
-import { takeEvery, call, put, select } from "redux-saga/effects";
+import { call, put, select } from "redux-saga/effects";
 import { bookApi } from "../../../config/http.config";
 import { ACTIONS as POST_ACTIONS } from "../../storage/post";
 import { ACTIONS as SOURCE_ACTIONS } from "../../storage/source";
 import { dummyBook } from "../../../dummyData/dummyIndex";
-import { stringify, parseJson } from "../../../libs/json";
 import { getCashData } from "./_aggregationBook";
 
 const getMyBook = async (axios) => {
@@ -15,9 +14,9 @@ const getMyBook = async (axios) => {
   }
 };
 
-export function* workerLogin(action) {
-  console.log("workerLogin");
-}
+// export function* workerLogin(action) {
+//   console.log("workerLogin");
+// }
 
 export default function* watchGetBook() {
   const axios = yield select((state) => state.axios.axios);
@@ -28,7 +27,6 @@ export default function* watchGetBook() {
   try {
     myPosts = yield call(getMyBook, axios);
 
-    console.log(myPosts);
     if (hosts) {
       hostsPost = yield call(getMyBook, axios);
     } else {

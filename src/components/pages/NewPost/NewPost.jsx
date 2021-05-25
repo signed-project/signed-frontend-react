@@ -2,12 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import {
-  Link,
-  Element,
-  Events,
   animateScroll as scroll,
-  scrollSpy,
-  scroller,
 } from "react-scroll";
 import icon from "../../../assets/svg/icon";
 import Avatar from "../../utils/Avatar/Avatar";
@@ -26,7 +21,6 @@ import ReplyingUser from "./ReplyingUser";
 import useFiles from "../../customHooks/useFiles";
 import Preview from "../../utils/Preview/Preview";
 import Slider from "../../utils/Slider/Slider";
-import { set } from "date-fns/esm";
 import getImgArr from "../../customHooks/getImgSources";
 
 // TOTO: this component too mach long need to split up it!
@@ -165,6 +159,7 @@ const NewPost = ({ toggleTheme }) => {
       if (post.isMention) {
         mentions.push(post.source);
       }
+      return post;
     });
     return mentions;
   };
@@ -268,6 +263,7 @@ const NewPost = ({ toggleTheme }) => {
         />
       );
     }
+    return post;
   });
 
   const handleChangeFile = (e) => {
@@ -281,6 +277,7 @@ const NewPost = ({ toggleTheme }) => {
         imagePreviewUrl: URL.createObjectURL(file),
       };
       newUploadedImg.push(filePrev);
+      return file;
     });
     setUploadedImg(newUploadedImg);
   };

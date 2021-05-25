@@ -25,7 +25,6 @@ export class Post {
 
 
     get newPost() {
-        const id = generateId();
         const date = new Date().getTime();
 
         const post = {
