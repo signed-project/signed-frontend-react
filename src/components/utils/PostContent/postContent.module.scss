@@ -1,3 +1,30 @@
+@import "/src/assets/css/index.scss";
+
 .postContent {
   margin-bottom: 16px;
+  word-wrap: break-word;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
 }
+
+.postContent span {
+  font-family: $mainFont;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 13px;
+  color: $textColorMain;
+}
+
+.navLink {
+  text-decoration: none;
+}
+
+.imgCommentPreview {
+  width: 56px;
+  height: 56px;
+  border-radius: 4px;
+  margin-right: 8px;
+}
+
+

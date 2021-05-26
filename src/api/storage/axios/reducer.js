@@ -29,7 +29,7 @@ const generateAxiosInstance = (token) => {
 
 const axiosReducer = (state = initialState, action) => {
   switch (action.type) {
-    case ' actions.SET_TOKEN':
+    case 'actions.SET_TOKEN':
       return {
         ...state,
         axios: generateAxiosInstance(),
@@ -40,7 +40,6 @@ const axiosReducer = (state = initialState, action) => {
         ...state,
         axios: "",
       };
-
     default:
       return state;
   }

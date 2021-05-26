@@ -1,0 +1,57 @@
+@import "/src/assets/css/index.scss";
+
+.swiper-container {
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: #fff;
+
+  /* Center slide text vertically */
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+}
+
+.swiper-slide img {
+  display: block;
+  width: 100%;
+  min-height: 100%;
+  object-fit: cover;
+}
+
+.swiper-wrapper {
+  align-items: center; /* add this will all relevant prefixes */
+}
+
+.swiper-container {
+  position: static;
+}
+
+.swiper-pagination-fraction {
+  font-family: $mainFont;
+  color: white;
+  background: $colorGrey700;
+  width: 60px;
+  height: 30px;
+  left: calc(50% - 25px);
+  border-radius: 30px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+

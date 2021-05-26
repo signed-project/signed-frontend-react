@@ -5,8 +5,7 @@ export const setPostStream = (payload) => ({
     payload,
 });
 
-export const publishPost = (payload) => ({
-    type: ACTIONS.PUBLISH_POST,
+export const sendPost = (payload) => ({
+    type: ACTIONS.SEND_POST,
     payload,
 });
-

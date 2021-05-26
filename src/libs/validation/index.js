@@ -1,9 +1,8 @@
 import Ajv, { ErrorObject } from 'ajv';
-import { object } from 'joi';
 const ajv = new Ajv({ allErrors: true, async: true });
 
 /**
- * for combining schemas in docs use this way
+ * @tutorial combining schemas in docs use this way
  * @example 
  *    ajv.addSchema({
         "$id": 'parent.schema',
@@ -34,39 +33,41 @@ const ajv = new Ajv({ allErrors: true, async: true });
             sub2: '111'
         }
     }));
-  */
+ other_way to get validate instance is
+ajv.addSchema(schema_user, "user")
+const validate = ajv.getSchema("user")
+*
+* @param  {validate.errors}  - get errors validation 
+*
+ */
 
 
-const sourceSchema = {
-  type: "object",
-  properties: {
-    address: {},
-    name: {}
-  }
+export const schemaId = {
+  post: 'validation//post',
+  target: 'validation//target',
+  source: 'validation//source',
+  host: 'validation//host',
+  media: 'validation//media',
 };
 
-const contentSchema = {
-  type: "object",
-  properties: {
-    url: { type: "string" },
-    hash: { type: "string" }
-  },
-  required: ["url", 'hash'],
-  additionalProperties: true
-};
 
-const avatarSchema = {
+
+
+const mediaSchema = {
+  $id: schemaId.media,
   type: "object",
   properties: {
     contentType: { type: "string" },
-    content: contentSchema
+    hash: { type: "string" },
+    width: { type: "string" },
+    height: { type: "string" }
   },
-  required: ["url", 'hash'],
-  additionalProperties: true
+  required: ["contentType", "hash"],
+  additionalProperties: true,
 }
 
-// TODO: required [...]
-const hostSchema = {
+export const hostSchema = {
+  $id: schemaId.host,
   type: "object",
   properties: {
     fileStores: { type: "array", items: { type: "string" } },
@@ -74,21 +75,26 @@ const hostSchema = {
   }
 }
 
-const sourceSchema = {
+export const sourceSchema = {
+  $id: schemaId.source,
   type: "object",
   properties: {
     address: { type: "string" },
     name: { type: "string" },
     updatedAt: { type: "integer" },
-    avatar: avatarSchema,
-    hosts: hostSchema,
+    avatar: mediaSchema,
+    hosts: {
+      "type": "array",
+      "items": hostSchema
+    },
     hash: { type: "string" }
   },
   required: ["address", "name", "updatedAt", "avatar", "hosts", "hash"],
   additionalProperties: true
-}
+};
 
 const targetSchema = {
+  $id: schemaId.target,
   type: "object",
   properties: {
     "sourceHash": { type: "string" },
@@ -99,6 +105,7 @@ const targetSchema = {
 };
 
 const postSchema = {
+  $id: schemaId.post,
   type: "object",
   properties: {
     "source": sourceSchema,
@@ -107,33 +114,37 @@ const postSchema = {
     "createdAt": { type: "integer" },
     "updatedAt": { type: "integer" },
     "text": { type: "string" },
-    "attachments": avatarSchema,
-    "target": targetSchema,
+    "attachments": { type: "array", items: mediaSchema },
     "signatures": { type: "string" },
     "likesCount": { type: "integer" },
     "repostsCount": { type: "integer" },
     "commentsCount": { type: "integer" },
     "hash": { type: "string" }
   },
+  anyOf: [
+    {
+      properties: {
+        target: targetSchema
+      }
+    },
+    {
+      properties: {
+        target: {
+          "type": "string",
+          "maxLength": 0
+        }
+      }
+    }
+  ],
   required: [
     "source", "id", "type", "createdAt", "updatedAt",
-    "text", "attachments", "signatures", "likesCount",
+    "text", "signatures", "likesCount",
     "repostsCount", "commentsCount", "hash"
   ],
   additionalProperties: true
 }
 
-const validate = ajv.compile(schema)
 
-const data = {
-  next: {
-    one: 'jkk',
-  },
-  two: 23232,
-  foo: 1,
-  bar: "abc"
-}
+export const isSource = ajv.compile(sourceSchema);
+export const isPostFieldValid = ajv.compile(postSchema);
 
-const valid = validate(data)
-console.log('valid', valid);
-if (!valid) console.log(validate.errors)

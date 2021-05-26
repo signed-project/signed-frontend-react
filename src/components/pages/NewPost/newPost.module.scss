@@ -1,4 +1,9 @@
+@import "/src/assets/css/index.scss";
+
 .backBlock {
+  top: 0;
+  background: white;
+  position: fixed;
   height: 48px;
   width: 100%;
   border-bottom: 1px solid #f0f0f0;
@@ -14,7 +19,6 @@
 }
 
 .messageBlock {
-  padding: 16px 12px;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -23,11 +27,12 @@
 .textarea {
   width: 100%;
   border: none;
-  height: 500px;
+  overflow: "hidden";
+  outline: "none";
 }
 
 .toolsBlock {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   height: 54px;
   border-top: 1px solid #f0f0f0;
@@ -36,8 +41,239 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  background: white;
 }
 
 .buttonWrapper {
   margin-right: 12px;
 }
+
+.repostBlockWrapper {
+  margin-left: 50px;
+  margin-right: 12px;
+}
+
+.bodyBlock {
+  box-sizing: border-box;
+  padding: 50px 12px 100px 12px;
+  // padding-top: 50px;
+  // padding-left: 12px;
+  width: 100%;
+  margin-bottom: 100px;
+}
+
+.backButtonText {
+  margin-left: 26px;
+  font-family: $mainFont;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 24px;
+
+  color: rgba(0, 0, 0, 0.85);
+
+  /* Inside Auto Layout */
+  flex: none;
+  order: 0;
+  flex-grow: 0;
+  margin: 0px 12px;
+}
+
+.newPostPage {
+  margin-top: 20px;
+}
+
+/* module Author linde */
+
+.replyingBlock {
+  padding: 5px;
+}
+
+.authorInfoBlock {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.authorRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+  border-bottom: 1px solid $colorGrey500;
+}
+
+.checkboxWrapper {
+  margin-bottom: -15px;
+  margin-right: 8px;
+}
+
+.otherCheckBox {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 40px 0 12px 0;
+  border-bottom: 1px solid $colorGrey500;
+}
+
+.checkbox_wrapper {
+  margin-right: 8px;
+}
+
+.uploadBlock {
+  margin-left: 64px;
+}
+
+.imgPreview {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.wrapperPreview {
+  margin-left: 62px;
+}
+
+.smallPreview {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.imgPreviewBig {
+  max-width: 100%;
+  border-radius: 4px 4px 0px 0px;
+}
+
+.imgPreviewSmall {
+  width: 100%;
+  height: 100%;
+  margin-right: 2px;
+}
+
+.imgSmallWrapper {
+  width: 95px;
+  height: 95px;
+  margin-right: 2px;
+  position: relative;
+  overflow: hidden;
+}
+
+.imgSmallWrapper:first-child {
+  border-radius: 0 0 0 4px;
+}
+
+.imgPreviewSmall:first-child {
+  border-radius: 0 0 0 4px;
+}
+
+.imgSmallWrapper:nth-child(3n) {
+  border-radius: 0 0 4px 0;
+  margin-right: none;
+  background-color: wheat;
+}
+
+.impPreviewShowMore {
+  background-color: black;
+  width: 95px;
+  height: 95px;
+  color: $colorGrey400;
+  border-radius: 0 0 4px 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  font-family: $mainFont;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 24px;
+  letter-spacing: 0em;
+  text-align: center;
+}
+
+.impPreviewShowMore > span {
+  margin: auto;
+}
+
+.sliderMain {
+  width: 100%;
+  // height: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: $colorGrey600;
+}
+
+.cancelIcon {
+  position: absolute;
+  width: 26px;
+  top: 16px;
+  left: 16px;
+  z-index: 100;
+}
+
+.sliderItem {
+  height: 100%;
+  display: block;
+}
+
+.img_preview_big_img_wrapper {
+  position: relative;
+  max-width: 288px;
+}
+
+.delIcon {
+  position: absolute;
+  width: 26px;
+  top: 5px;
+  left: 5px;
+  z-index: 1000;
+}
+
+.delIconSlider {
+  position: absolute;
+  width: 26px;
+  top: 16px;
+  right: 16px;
+  z-index: 1000;
+}
+
+.fl_row * {
+  box-sizing: border-box;
+}
+
+.fl_row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 10px 0;
+  width: 100%;
+}
+
+.fl_col {
+  // width: calc(25% - 10px);
+  margin: 5px;
+  // height: calc(25% - 10px);
+  position: relative;
+  overflow: hidden;
+  border: 8px solid #bfe2ff;
+  height: 0px;
+  width: 25%;
+  padding-top: 25%;
+}
+
+.fl_col:after {
+  content: "";
+  padding-top: 100%;
+  float: left;
+}
+
+// .fl_col:first-child {
+//   margin-left: 0;
+// }

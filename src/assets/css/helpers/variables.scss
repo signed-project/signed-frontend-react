@@ -8,10 +8,16 @@ $colorPrimary100: #1890ff;
 // grey colors
 $colorGrey100: #8c8c8c;
 $colorGrey200: #bfbfbf;
+$colorGrey300: #d9d9d9;
+$colorGrey400: #fafafa;
+$colorGrey500: #f0f0f0;
+$colorGrey600: #434343;
+$colorGrey700: rgba(11, 32, 56, 0.7);
 
 // font
 $textColorMain: #000000;
+$textColorGrey100: #828282;
 // $textMein: rgba(0, 0, 0, 0.65);
 $textGrey: rgba(0, 0, 0, 0.65);
 
-$mainFont: "Montserrat", sans-serif;
+$mainFont: Roboto, sans-serif;

@@ -1,19 +1,15 @@
 
 import Avatar from '../Avatar/Avatar';
 import InfoAuthor from '../InfoAuthor/InfoAuthor';
-import icon from '../../../assets/svg/icon';
+
 import styles from './authorBlock.module.scss';
 
-const AuthorBlock = ({ name, date }) => {
-
+const AuthorBlock = ({ name, createdAt, imgSmall }) => {
     return (
         <>
             <div className={styles.author}>
-                <Avatar />
-                <div className={styles.wrapperContent}>
-                    <InfoAuthor date={date} name={name} />
-                    <img src={icon.menu} alt="menu icon" className={styles.menuIcon} />
-                </div>
+                <Avatar imgSmall={imgSmall} />
+                <InfoAuthor createdAt={createdAt} name={name} />
             </div>
         </>
     )
