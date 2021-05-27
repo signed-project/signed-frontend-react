@@ -32,3 +32,5 @@
 
 
 - [ ] refactor edit and  component `Post` if possible
+
+- [ ] save only refresh token on localStorage, so assess save on sessionStorage

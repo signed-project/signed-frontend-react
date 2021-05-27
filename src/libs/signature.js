@@ -61,13 +61,13 @@ export const getRegisterUserData = ({ password }) => {
     const keyPair = bitcoin.ECPair.makeRandom();
     const wifString = keyPair.toWIF();
     const decoded = wif.decode(wifString);
-    const encryptedKey = bip38.encrypt(decoded.privateKey, decoded.compressed, password);
+    const encryptedWif = bip38.encrypt(decoded.privateKey, decoded.compressed, password);
     const { address } = bitcoin.payments.p2pkh({ pubkey: keyPair.publicKey });
     return {
-        wif: encryptedKey,
+        encryptedWif,
+        wif: wifString,
         address: address,
     };
-
 
 }
 

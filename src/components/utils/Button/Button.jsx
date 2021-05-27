@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from './button.module.scss'
- 
+
 
 /**
  * @param {string}  classNames:  - defines button style and colors
@@ -20,7 +20,7 @@ const Button = ({ className, onClick, disabled, type, children }) => {
   return (
     <button
       className={buttonClasses.join(' ')}
-      onClick={onClick}
+      onClick={() => onClick()}
       disabled={disabled}
       type={type ? type : 'button'}
     > {children}

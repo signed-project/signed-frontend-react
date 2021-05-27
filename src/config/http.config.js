@@ -18,4 +18,6 @@ export const userApi = {
   LOGIN: '/login',
   REGISTER: '/register',
   IS_FREE_LOGIN: '/isFreeLogin',
+  GET_USER_BY_TOKEN: '/user-by-token',
+  GET_TOKEN_PAIR: '/tokens-pair'
 };

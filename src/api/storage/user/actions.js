@@ -7,8 +7,8 @@ export const setUser = (payload) => ({
     payload
 })
 
-export const getUserData = (payload) => ({
-    type: ACTIONS.GET_USER_DATA,
+export const getUserByToken = (payload) => ({
+    type: ACTIONS.GET_USER_DATA_BY_TOKEN,
     payload
 });
 

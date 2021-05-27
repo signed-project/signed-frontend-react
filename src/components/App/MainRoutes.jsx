@@ -1,10 +1,9 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, useHistory } from 'react-router-dom';
 import Layout from '../layout/Layout';
 import LayoutProvider from '../layout/LayoutProvider';
 import Feed from '../pages/Feed/Feed';
-import SingUp from '../pages/Register/Register';
 import Search from '../pages/Search/Search';
 import NewPost from '../pages/NewPost/NewPost';
 import PostPage from '../pages/PostPage/PostPage';
@@ -15,31 +14,32 @@ import routes from '../../config/routes.config';
 import Login from '../pages/Login/Login';
 import Register from '../pages/Register/Register';
 import jwt from 'jsonwebtoken';
-import { userAction } from '../../api/storage/user';
+import { userActions } from '../../api/storage/user';
+import format from 'date-fns/format';
+
+
 
 const MainRouts = () => {
     const user = useSelector((state) => state.user);
-
+    const history = useHistory();
+    const dispatch = useDispatch();
     const checkAuth = () => {
         const accessToken = localStorage.getItem("accessToken");
         const refreshToken = localStorage.getItem("refreshToken");
         const accessTokenDecoded = jwt.decode(accessToken);
         const refreshTokenDecoded = jwt.decode(refreshToken);
-        console.log('accessTokenDecoded', accessTokenDecoded);
+
+        // TODO: use for access token  sessionStorage
+        console.log(' refreshTokenDecoded.exp', format(refreshTokenDecoded.exp * 1000, 'yyy-mm-dd[T]HH:mm'));
         if (!user.isAuth) {
             if (accessToken && refreshToken) {
-                if (accessTokenDecoded.exp * 1000 < new Date().getTime()) {
-                    if (refreshTokenDecoded.exp < new Date().getTime() / 1000) {
-                        //     direct to sign up 
-                    }
-                    else {
-                        // get new token and get user
-                    }
+                dispatch(userActions.getPairTokens(refreshToken))
+                if (accessTokenDecoded.exp * 1000 > new Date().getTime()) {
+                    // dispatch(userActions.getUserByToken(accessToken));
+                } else if (accessTokenDecoded.exp * 1000 < new Date().getTime()
+                    && refreshTokenDecoded.exp * 1000 < new Date().getTime()) {
+                    dispatch(userActions.getPairTokens(refreshToken))
                 }
-                // send to get user data from server without get new token
-            }
-            else {
-                // sing up/in
             }
         }
     };
