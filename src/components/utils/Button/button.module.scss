@@ -83,9 +83,9 @@ button.agree:hover .iconGreen {
   text-transform: capitalize;
 }
 
-// .button + .button {
-//   margin-left: 30px;
-// }
+.button + .button {
+  margin-left: 30px;
+}
 
 .disabled {
   color: #1fbd4b !important;

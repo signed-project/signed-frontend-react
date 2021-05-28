@@ -55,20 +55,33 @@ import * as   bitcoinMessage from 'bitcoinjs-message';
 
  */
 
-
-
-export const getRegisterUserData = ({ password }) => {
-    const keyPair = bitcoin.ECPair.makeRandom();
-    const wifString = keyPair.toWIF();
-    const decoded = wif.decode(wifString);
+export const getRegisterUserData = ({ password, wifString = '' }) => {
+    let wifBeforeEncrypt, keyPair;
+    if (!wifString) {
+        console.log('001');
+        keyPair = bitcoin.ECPair.makeRandom();
+        wifBeforeEncrypt = keyPair.toWIF();
+    }
+    else {
+        console.log('002', wifString);
+        wifBeforeEncrypt = wifString;
+        // KwLpfcbeeM1hPALhcGYz8gzVhu8a3YthLGWsgGicegQX2v1BVHzx
+        // Kx7DQ8DtiTaEYut5f85jAG3bhPNJUB6neER3yQaVgueeLDT7Ax8e
+        // keyPair = bitcoin.ECPair.fromWIF('6PYM2e1ruFg7j2um7JXnmuLry14YeqbHWjz65xCtUrk2XjkSTjmqcpyFPa');
+        keyPair = bitcoin.ECPair.fromWIF(wifBeforeEncrypt);
+        console.log('keyPair', keyPair);
+    }
+    const decoded = wif.decode(wifBeforeEncrypt);
     const encryptedWif = bip38.encrypt(decoded.privateKey, decoded.compressed, password);
     const { address } = bitcoin.payments.p2pkh({ pubkey: keyPair.publicKey });
+    console.log('wifBeforeEncrypt', wifBeforeEncrypt);
+    console.log('wif', wif);
+    console.log('address', address);
     return {
         encryptedWif,
-        wif: wifString,
+        wif: wifBeforeEncrypt,
         address: address,
     };
-
 }
 
 

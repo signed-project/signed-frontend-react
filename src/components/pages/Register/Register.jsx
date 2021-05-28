@@ -7,8 +7,7 @@ import Input from '../../utils/Input/Input';
 import Button from '../../utils/Button/Button';
 import routes from '../../../config/routes.config';
 import { userApi } from '../../../config/http.config';
-import srp from 'secure-remote-password/client';
-import { getRegisterUserData } from '../../../libs/signature.js';
+
 import { userActions } from '../../../api/storage/user';
 
 const Register = ({ toggleTheme }) => {
@@ -44,44 +43,24 @@ const Register = ({ toggleTheme }) => {
       })
   }, [typeRegistration]);
 
-
-
-
-
   const handleForm = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-
-    setForm(prev => {
-      const itemForm = form[name];
-      return {
-        ...prev,
-        [name]: {
-          ...itemForm,
-          warning: '',
-          value: value
-        }
-      }
-    })
-
-  }
-
-  const getSendDataSrp = ({ login, password }) => {
-    const salt = srp.generateSalt();
-    const privateKey = srp.derivePrivateKey(salt, login, password)
-    const verifier = srp.deriveVerifier(privateKey);
-    return {
-      salt,
-      privateKey,
-      verifier
+    const newForm = JSON.parse(JSON.stringify(form));
+    newForm[name].warning = '';
+    if (name === 'password') {
+      newForm['passwordRepeat'].warning = '';
     }
+    newForm[name].value = value;
+    setForm(newForm);
   }
+
+
 
 
   const checkIsLoginFree = async ({ login }) => {
     try {
       let { data } = await axios.post(userApi.IS_FREE_LOGIN, { login: login });
-      console.log('data', data);
       const isFreeLogin = data?.isFreeLogin
       let warningMessage = '';
       if (isFreeLogin === false) {
@@ -100,51 +79,24 @@ const Register = ({ toggleTheme }) => {
     }
   }
 
-  const setNewUser = ({ address, wif, name, updatedAt, refreshToken, accessToken }) => {
-    const data = {
-      isAuth: true,
-      source: {
-        address: address,
-        name: name,
-        updatedAt: updatedAt,
-        avatar: {
-          contentType: "image/jpeg",
-          hash: "f433c21fe3c6c7475f7be0017294547e93d7fcd44617f62bf7f369a13b48e764"
-        },
-        hosts: [{
-          fileStores: ['jdjjdj'],
-          index: "url"
-        }],
-        signatures: 'fjdjd343243jkdfjdk343',
-        hash: 'fjdjd343243jkdfjdk343',
-      },
-      wfi: wif,
-    };
-    dispatch(userActions.setUser(data));
-    localStorage.setItem('refreshToken', refreshToken);
-    localStorage.setItem('accessToken', accessToken);
-    history.push(routes.feed);
-  }
+
 
   const formValidate = () => {
     let isValid = true;
     let formCopy = JSON.parse(JSON.stringify(form));
 
-    if (form.password !== form.passwordRepeat) {
+    if (form.password.value !== form.passwordRepeat.value) {
       isValid = false;
       formCopy.passwordRepeat.warning = 'Password mismatch';
     }
 
     Object.keys(formCopy).map(fieldName => {
-      console.log('form[fieldName].value.length', formCopy[fieldName].value.length);
       if (formCopy[fieldName].value.length === 0) {
-        console.log('type', fieldName);
         formCopy[fieldName].warning = 'Field this field';
         isValid = false
       }
     })
     setForm(formCopy);
-    console.log('isValid', isValid);
     return isValid;
   }
 
@@ -155,45 +107,17 @@ const Register = ({ toggleTheme }) => {
       return;
     }
 
-    const srpData = getSendDataSrp({ login: form.login.value, password: form.password.value });
-    const userBitcoinData = getRegisterUserData({ password: form.password.value });
-    const data = {
-      address: userBitcoinData.address,
-      encryptedWif: userBitcoinData.encryptedWif,
-      salt: srpData.salt,
-      privateKey: srpData.privateKey,
-      verifier: srpData.verifier,
-      login: form.login.value
-    }
+    let data = {};
 
+    Object.keys(form).map(field => {
+      if (field !== 'passwordRepeat') {
+        data[field] = form[field].value;
+      }
+    })
 
+    console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$data', data);
 
-
-    /*  try {
-       const isLoginFree = await checkIsLoginFree({ login: data.login });
-       if (isLoginFree === false) {
-         return;
-       }
-     } catch (e) {
-       console.warn('[handleSendForm----1]', e);
-     }
- 
-     try {
-       let res = await axios.post(userApi.REGISTER, data);
-       if (res.data) {
-         // TODO add validation
-         setNewUser({
-           address: res.data.address,
-           name: res.data.name,
-           wif: userBitcoinData.wif,
-           accessToken: res.data.accessToken,
-           refreshToken: res.data.refreshToken
-         });
-       }
-       return res;
-     } catch (e) {
-       console.warn('[handleSendForm----2]', e)
-     } */
+    dispatch(userActions.sendUserData(data));
   }
 
 
@@ -228,10 +152,16 @@ const Register = ({ toggleTheme }) => {
         </div>
 
         {chooseTypeRegistration ?
-          <div className={styles.chooseButtonWrapper}>
-            <Button className="primary" onClick={() => handleChooseRegistration({ type: 'createAddress' })}>Create new Bitcoin address</Button>
-            <Button className="clean" onClick={() => handleChooseRegistration({ type: 'haveAddress' })}>I have Bitcoin address</Button>
-          </div>
+          <>
+
+            <div className={styles.chooseButtonWrapper}>
+              <Button className="primary" onClick={() => handleChooseRegistration({ type: 'createAddress' })}>Create new Bitcoin address</Button>
+            </div>
+            <div className={styles.chooseButtonWrapper}>
+              <Button className="clean" onClick={() => handleChooseRegistration({ type: 'haveAddress' })}>I have Bitcoin address</Button>
+            </div>
+
+          </>
           :
           <div className={styles.formWrapper}>
             {typeRegistration === typeMap.haveAddress && <Input title={'Enter Bitcoin address'} name={'wif'} warning={form.wif.warning} type={'text'} handleChange={handleForm} value={form.wif.value} />}

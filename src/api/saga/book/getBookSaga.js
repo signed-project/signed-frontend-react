@@ -11,6 +11,7 @@ const getMyBook = async (axios) => {
     return res.data.posts;
   } catch (error) {
     console.log("[getMyBook][error]", error);
+    return []
   }
 };
 

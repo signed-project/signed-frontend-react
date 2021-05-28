@@ -12,8 +12,8 @@ export const getUserByToken = (payload) => ({
     payload
 });
 
-export const getPairTokens = (payload) => ({
-    type: ACTIONS.GET_PAIRS_TOKEN,
+export const sendUserData = (payload) => ({
+    type: ACTIONS.SEND_USER_DATA,
     payload
 });
 

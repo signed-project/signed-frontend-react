@@ -33,12 +33,12 @@ const MainRouts = () => {
         console.log(' refreshTokenDecoded.exp', format(refreshTokenDecoded.exp * 1000, 'yyy-mm-dd[T]HH:mm'));
         if (!user.isAuth) {
             if (accessToken && refreshToken) {
-                dispatch(userActions.getPairTokens(refreshToken))
+                // dispatch(userActions.getPairTokens(refreshToken))
                 if (accessTokenDecoded.exp * 1000 > new Date().getTime()) {
                     // dispatch(userActions.getUserByToken(accessToken));
                 } else if (accessTokenDecoded.exp * 1000 < new Date().getTime()
                     && refreshTokenDecoded.exp * 1000 < new Date().getTime()) {
-                    dispatch(userActions.getPairTokens(refreshToken))
+                    // dispatch(userActions.getPairTokens(refreshToken))
                 }
             }
         }
