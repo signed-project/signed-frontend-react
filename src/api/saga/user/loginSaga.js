@@ -67,10 +67,9 @@ function* workerLogin(action) {
 
 
     try {
-        // TODO add token in 
         if (isProof) {
             const sendLoginData = {
-                login: action.payload.password,
+                login: action.payload.login,
                 serverSessionProof
             };
             const { data } = yield call(loginGetUser, axios, sendLoginData);

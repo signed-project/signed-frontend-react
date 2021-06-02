@@ -54,7 +54,7 @@ export function* workerRegister(action) {
         sessionStorage.setItem('accessToken', userResponse.data.accessToken);
         sessionStorage.setItem('wif', userBitcoinData.wif);
         yield put({ type: ACTIONS.SET_USER, payload: user });
-        action.payload.history.push(routes.login);
+        action.payload.history.push(routes.feed);
     }
 }
 
