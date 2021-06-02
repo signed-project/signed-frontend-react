@@ -19,7 +19,7 @@ const useReaction = () => {
             data = {
                 source: user.source,
                 type: 'like',
-                wfi: user.wfi,
+                wif: user.wif,
                 target: {
                     "sourceHash": p.source.hash,
                     "postHash": p.hash
@@ -31,7 +31,7 @@ const useReaction = () => {
             data = {
                 ...postData,
                 type: 'like',
-                wfi: user.wfi,
+                wif: user.wif,
                 target: {
                     sourceHash: postData.source.hash,
                     postHash: postData.hash

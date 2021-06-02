@@ -7,8 +7,9 @@ import Input from '../../utils/Input/Input';
 import Button from '../../utils/Button/Button';
 import routes from '../../../config/routes.config';
 import { userApi } from '../../../config/http.config';
-
 import { userActions } from '../../../api/storage/user';
+import { isWifFormat } from '../../../libs/signature';
+
 
 const Register = ({ toggleTheme }) => {
   const typeMap = {
@@ -55,9 +56,6 @@ const Register = ({ toggleTheme }) => {
     setForm(newForm);
   }
 
-
-
-
   const checkIsLoginFree = async ({ login }) => {
     try {
       let { data } = await axios.post(userApi.IS_FREE_LOGIN, { login: login });
@@ -76,11 +74,12 @@ const Register = ({ toggleTheme }) => {
       return isFreeLogin;
     } catch (e) {
       console.warn('[checkIsLoginFree]', e);
+      return false
     }
   }
 
 
-
+  // TODO change state add error in every items
   const formValidate = () => {
     let isValid = true;
     let formCopy = JSON.parse(JSON.stringify(form));
@@ -88,6 +87,11 @@ const Register = ({ toggleTheme }) => {
     if (form.password.value !== form.passwordRepeat.value) {
       isValid = false;
       formCopy.passwordRepeat.warning = 'Password mismatch';
+    }
+
+    if (form?.wif?.value && !isWifFormat({ wif: form?.wif?.value })) {
+      isValid = false;
+      formCopy.wif.warning = 'Wrong format';
     }
 
     Object.keys(formCopy).map(fieldName => {
@@ -100,26 +104,35 @@ const Register = ({ toggleTheme }) => {
     return isValid;
   }
 
-  const handleSendForm = async () => {
-    //  TODO : validation form
+  const formClear = () => {
+    if (form.wif.value) {
+      setForm(initialForm);
+    }
+    else {
+      delete initialForm.wif
+      setForm(initialForm);
+    }
+  }
 
+  const handleSendForm = async () => {
     if (!formValidate()) {
       return;
     }
 
-    let data = {};
+    if (!await checkIsLoginFree({ login: form.login.value })) {
+      return;
+    }
 
+    let data = {};
     Object.keys(form).map(field => {
       if (field !== 'passwordRepeat') {
         data[field] = form[field].value;
       }
-    })
-
-    console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$data', data);
-
-    dispatch(userActions.sendUserData(data));
+    });
+    data = { ...data, history };
+    dispatch(userActions.sendRegisterData(data));
+    // formClear();
   }
-
 
   const handleChooseRegistration = ({ type }) => {
     if (!Object.keys(typeMap).includes(type)) {
@@ -135,20 +148,14 @@ const Register = ({ toggleTheme }) => {
       }
       default: return
     }
-
   }
-
-
-  console.log('form', form);
 
   return (
     <>
       <RegisterHeader />
-
-
       <div className={styles.page}>
         <div className={styles.title}>
-          <h3 >Register</h3>
+          <h3>Register</h3>
         </div>
 
         {chooseTypeRegistration ?

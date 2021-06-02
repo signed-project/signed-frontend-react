@@ -81,8 +81,10 @@ const Post = ({
     };
   }
 
+  // TODO : subscribed condition in depends  subscribed state 
   const renderComments = comments.map((c, i) => {
-    if (subscribed.includes(c.source.address) && i !== 3) {
+    if (true) {
+      // if (subscribed.includes(c.source.address) && i !== 3) {
       return (
         <CommentBlock
           key={i}

@@ -14,18 +14,14 @@ const Layout = ({ children, theme }) => {
   const user = useSelector(state => state.user);
   const location = useLocation();
 
+
+  console.log(' user.isAuth', user.isAuth);
+
   useEffect(() => {
     if (location && (location.pathname === router.register || location.pathname === router.login)) {
       setISAuthPage(true)
     }
   }, [location])
-
-  // const {
-  //   post: hash,
-  //   user: source,
-  //   type,
-  //   edit,
-  // } = queryString.parse(location.search);
 
 
   return (
@@ -34,6 +30,7 @@ const Layout = ({ children, theme }) => {
       <main >
         {children}
       </main>
+      {/* {  user.isAuth && <Navigation />} */}
       { theme && user.isAuth && <Navigation />}
       {!user.isAuth && !isAuthPage && < WelcomeSing />}
     </div >

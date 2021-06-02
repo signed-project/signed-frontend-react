@@ -58,7 +58,6 @@ import * as   bitcoinMessage from 'bitcoinjs-message';
 export const getRegisterUserData = ({ password, wifString = '' }) => {
     let wifBeforeEncrypt, keyPair;
     if (!wifString) {
-        console.log('001');
         keyPair = bitcoin.ECPair.makeRandom();
         wifBeforeEncrypt = keyPair.toWIF();
     }
@@ -69,7 +68,6 @@ export const getRegisterUserData = ({ password, wifString = '' }) => {
         // Kx7DQ8DtiTaEYut5f85jAG3bhPNJUB6neER3yQaVgueeLDT7Ax8e
         // keyPair = bitcoin.ECPair.fromWIF('6PYM2e1ruFg7j2um7JXnmuLry14YeqbHWjz65xCtUrk2XjkSTjmqcpyFPa');
         keyPair = bitcoin.ECPair.fromWIF(wifBeforeEncrypt);
-        console.log('keyPair', keyPair);
     }
     const decoded = wif.decode(wifBeforeEncrypt);
     const encryptedWif = bip38.encrypt(decoded.privateKey, decoded.compressed, password);
@@ -82,6 +80,18 @@ export const getRegisterUserData = ({ password, wifString = '' }) => {
         wif: wifBeforeEncrypt,
         address: address,
     };
+}
+
+export const isWifFormat = ({ wif }) => {
+    try {
+        const pair = bitcoin.ECPair.fromWIF(wif)
+        return !!pair
+    } catch (e) {
+        console.warn('[isWifFormat]', e);
+        return false;
+    }
+
+
 }
 
 
@@ -102,11 +112,11 @@ export const getJsonStringFromObj = (postObj) => {
     return jsonPost;
 }
 
-export const getSignatures = (post, wfi) => {
+export const getSignatures = (post, wif) => {
     let signatureString;
     try {
         const postJson = getJsonStringFromObj(post);
-        const keyPair = bitcoin.ECPair.fromWIF(wfi);
+        const keyPair = bitcoin.ECPair.fromWIF(wif);
         const privateKey = keyPair.privateKey;
         const signature = bitcoinMessage.sign(postJson, privateKey, keyPair.compressed);
         signatureString = signature.toString('base64');

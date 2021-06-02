@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { NavLink } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { NavLink, useHistory } from 'react-router-dom';
 import RegisterHeader from '../../utils/RegisterHeader/RegisterHeader';
 import styles from './login.module.scss';
 import Input from '../../utils/Input/Input';
@@ -8,16 +8,20 @@ import Button from '../../utils/Button/Button';
 import routes from '../../../config/routes.config';
 import { userApi } from '../../../config/http.config';
 import srp from 'secure-remote-password/client';
+import { userActions } from '../../../api/storage/user';
+
+
 const Login = ({ toggleTheme }) => {
     useEffect(() => {
         toggleTheme(false);
     }, [toggleTheme]);
 
     const initialForm = {
-        login: '',
-        password: ''
+        login: { value: '', warning: '' },
+        password: { value: '', warning: '' },
     }
-
+    const history = useHistory();
+    const dispatch = useDispatch();
     const [form, setForm] = useState(initialForm);
     const axios = useSelector(state => state.axios.axios);
 
@@ -25,38 +29,38 @@ const Login = ({ toggleTheme }) => {
     const handleForm = (e) => {
         const name = e.target.name;
         const value = e.target.value;
-        setForm(prev => ({
-            ...prev,
-            [name]: value
-        }))
+        const newForm = JSON.parse(JSON.stringify(form));
+        newForm[name].value = value;
+        setForm(newForm);
     }
-    console.log('form', form);
 
-    const getSendData = ({ login, password }) => {
-        const salt = srp.generateSalt();
-        const privateKey = srp.derivePrivateKey(salt, login, password)
-        const verifier = srp.deriveVerifier(privateKey);
-        return {
-            salt,
-            privateKey,
-            verifier
-        }
+
+    const formValidate = () => {
+        let isValid = true;
+        let formCopy = JSON.parse(JSON.stringify(form));
+
+        Object.keys(formCopy).map(fieldName => {
+            if (formCopy[fieldName].value.length === 0) {
+                formCopy[fieldName].warning = 'Field this field';
+                isValid = false
+            }
+        })
+        setForm(formCopy);
+        return isValid;
     }
 
 
     const handleSendForm = async () => {
-        console.log('handleSendForm');
-        //  TODO : validation form
-        const sendData = getSendData({ login: form.login, password: form.password })
-        try {
-            let res = await axios.post(userApi.LOGIN, sendData);
-
-            console.log('res', res);
-            return res;
-        } catch (e) {
-            console.warn('handleSendForm', e)
+        if (!formValidate()) {
+            return;
         }
-
+        let data = {};
+        Object.keys(form).map(field => {
+            data[field] = form[field].value;
+        });
+        data = { ...data, history };
+        dispatch(userActions.sendLoginData(data))
+        // setForm(initialForm);
     }
 
     return (
@@ -67,8 +71,8 @@ const Login = ({ toggleTheme }) => {
                     <h3 className={styles.title}>Login</h3>
                 </div>
                 <div className={styles.formWrapper}>
-                    <Input title={'Nickname'} type={'text'} name={'login'} value={form.login} handleChange={handleForm} />
-                    <Input title={'Password'} type={'password'} name={'password'} value={form.password} handleChange={handleForm} />
+                    <Input title={'Nickname'} type={'text'} name={'login'} value={form.login.value} handleChange={handleForm} warning={form.login.warning} />
+                    <Input title={'Password'} type={'password'} name={'password'} value={form.password.value} handleChange={handleForm} warning={form.password.warning} />
                     <NavLink to={routes.passwordRecovery} className={styles.passForgot}> Forgot your password?</NavLink>
                     <Button className="primary" onClick={() => { handleSendForm() }}>Login</Button>
                 </div>

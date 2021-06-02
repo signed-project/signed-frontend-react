@@ -19,7 +19,7 @@ export class Post {
             commentsCount: data.commentsCount ? data.commentsCount : 0,
             mentions: data.mentions ? data.mentions : '',
             // hash: data.hash ? data.hash : '',
-            wfi: data.wfi
+            wif: data.wif
         }
     }
 
@@ -43,7 +43,10 @@ export class Post {
         };
 
         const hash = getHash(post);
-        const signature = getSignatures(post, this.data.wfi);
+
+        console.log('post', post);
+
+        const signature = getSignatures(post, this.data.wif);
 
         return {
             ...post,

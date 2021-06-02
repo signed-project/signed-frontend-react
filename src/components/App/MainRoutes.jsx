@@ -9,14 +9,11 @@ import NewPost from '../pages/NewPost/NewPost';
 import PostPage from '../pages/PostPage/PostPage';
 import Profile from '../pages/Profile/Profile';
 import Notification from '../pages/Notification/Notification';
-// import PageNotFound from '../pages/PageNotFound/PageNotFound';
 import routes from '../../config/routes.config';
 import Login from '../pages/Login/Login';
 import Register from '../pages/Register/Register';
 import jwt from 'jsonwebtoken';
 import { userActions } from '../../api/storage/user';
-import format from 'date-fns/format';
-
 
 
 const MainRouts = () => {
@@ -24,22 +21,17 @@ const MainRouts = () => {
     const history = useHistory();
     const dispatch = useDispatch();
     const checkAuth = () => {
-        const accessToken = localStorage.getItem("accessToken");
-        const refreshToken = localStorage.getItem("refreshToken");
+        const accessToken = sessionStorage.getItem("accessToken");
+        const wif = sessionStorage.getItem("wif");
         const accessTokenDecoded = jwt.decode(accessToken);
-        const refreshTokenDecoded = jwt.decode(refreshToken);
 
-        // TODO: use for access token  sessionStorage
-        console.log(' refreshTokenDecoded.exp', format(refreshTokenDecoded.exp * 1000, 'yyy-mm-dd[T]HH:mm'));
         if (!user.isAuth) {
-            if (accessToken && refreshToken) {
-                // dispatch(userActions.getPairTokens(refreshToken))
-                if (accessTokenDecoded.exp * 1000 > new Date().getTime()) {
-                    // dispatch(userActions.getUserByToken(accessToken));
-                } else if (accessTokenDecoded.exp * 1000 < new Date().getTime()
-                    && refreshTokenDecoded.exp * 1000 < new Date().getTime()) {
-                    // dispatch(userActions.getPairTokens(refreshToken))
-                }
+            if (wif && accessToken && accessTokenDecoded.exp * 1000 > new Date().getTime()) {
+                const payload = {
+                    wif, accessToken
+                };
+                console.log('payload', payload);
+                // dispatch(userActions.getUserByToken(payload));
             }
         }
     };

@@ -96,7 +96,7 @@ const Register = ({ toggleTheme }) => {
                 signatures: 'fjdjd343243jkdfjdk343',
                 hash: 'fjdjd343243jkdfjdk343',
             },
-            wfi: wif,
+            wif: wif,
         };
         dispatch(userActions.setUser(data));
         localStorage.setItem('refreshToken', refreshToken);
@@ -154,7 +154,7 @@ const Register = ({ toggleTheme }) => {
                     <h3 className={styles.title}>Register</h3>
                 </div>
                 <div className={styles.formWrapper}>
-          
+
                 </div>
                 <div className={styles.footer}>
                     <NavLink to={routes.login} className={styles.passForgot}> I don't have an account</NavLink>

@@ -2,14 +2,13 @@ export const ACTIONS = {
   SET_USER: 'USER::SET_USER',
   GET_USER: 'USER::GET_USER',
   GET_USER_DATA_BY_TOKEN: 'USER::GET_USER_DATA_BY_TOKEN',
-  SEND_USER_DATA: 'USER::SEND_USER_DATA',
-
+  SEND_REGISTER_DATA: 'USER::SEND_REGISTER_DATA',
+  SEND_LOGIN_DATA: 'USER::SEND_LOGIN_DATA',
 };
 
 
-
-
 const initialState = {
+  // isAuth: true,
   isAuth: false,
   source: {
     address: "19FRhaywUUpvMxUMSxgpTvc44Bj9VFd3BT",
@@ -27,7 +26,7 @@ const initialState = {
     hash: 'fjdjd343243jkdfjdk343',
   },
   subscribed: ['19FRhaywUUpvMxUMSxgpTvc44Bj9VFd3BT'],
-  wfi: 'Kx7DQ8DtiTaEYut5f85jAG3bhPNJUB6neER3yQaVgueeLDT7Ax8e',
+  wif: 'Kx7DQ8DtiTaEYut5f85jAG3bhPNJUB6neER3yQaVgueeLDT7Ax8e',
   token: 'fjkajslfdas434jk234j2k4j23l4j2l34j2l3'
 };
 

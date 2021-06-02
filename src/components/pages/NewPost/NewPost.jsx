@@ -202,10 +202,11 @@ const NewPost = ({ toggleTheme }) => {
       // target: post.hash ? { postHash: post.hash, sourceHash: post.source } : "",
       mentions: mentions?.length ? mentions : "",
       attachments: attachments.length > 0 ? attachments : "",
-      wfi: user.wfi,
+      wif: user.wif,
     });
 
     const newPost = postInstance.newPost;
+
     console.log('newPost-------------', newPost);
 
     dispatch(postActions.sendPost(newPost));
@@ -251,6 +252,9 @@ const NewPost = ({ toggleTheme }) => {
     setComments(newComments);
   };
 
+
+  console.log('comments_____________________________', comments);
+
   const renderReplyingUser = comments.map((post, i) => {
     if (i > 0) {
       return (
@@ -263,7 +267,7 @@ const NewPost = ({ toggleTheme }) => {
         />
       );
     }
-    return post;
+    return '';
   });
 
   const handleChangeFile = (e) => {
@@ -287,7 +291,7 @@ const NewPost = ({ toggleTheme }) => {
     setFirstSlide(i);
   };
 
-  console.log("uploadedImg: ", uploadedImg);
+  console.log("replyingPage: ", replyingPage);
   const handleDeleteImgPreview = (i) => {
     const newUploadedImg = uploadedImg.filter((img, index) => index !== i);
 
