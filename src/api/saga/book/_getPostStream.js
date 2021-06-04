@@ -50,6 +50,7 @@ const getPostStream = (arr) => {
         }
         else {
             console.warn('isPostFieldValid.errors', isPostFieldValid.errors);
+            return false;
         }
     });
     return sortPostUpdateAt(newArr);

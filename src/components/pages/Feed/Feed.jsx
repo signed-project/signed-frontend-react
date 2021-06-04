@@ -14,6 +14,7 @@ const Feed = ({ toggleTheme }) => {
   const [posts, setPosts] = useState([]);
   let history = useHistory();
 
+
   useEffect(() => {
     toggleTheme(true);
   }, [toggleTheme]);
@@ -21,6 +22,8 @@ const Feed = ({ toggleTheme }) => {
   useEffect(() => {
     setPosts(stream);
   }, [stream]);
+
+  console.log('posts', posts);
 
   const handleShowMenu = (hash) => {
     setOpenMenuHash(hash);
@@ -48,6 +51,7 @@ const Feed = ({ toggleTheme }) => {
     .slice()
     .reverse()
     .map((p, i) => {
+
       return (
         <Post
           post={p}
@@ -68,6 +72,8 @@ const Feed = ({ toggleTheme }) => {
         />
       );
     });
+
+  console.log('renderPosts', renderPosts);
 
   return (
     <>

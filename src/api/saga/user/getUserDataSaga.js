@@ -18,28 +18,34 @@ const getTokenPair = async (axios, token) => {
     }
 };
 const getUser = async (axios, token) => {
+    let res;
     try {
         const data = {
             token
         };
-        let res = await axios.post(userApi.GET_USER_BY_TOKEN, data);
+        res = await axios.post(userApi.GET_USER_BY_TOKEN, data);
         return res;
     } catch (error) {
         console.log("[getUserInfo][error]", error);
+        return res;
     }
 };
 
 export function* workerGetUserData(action) {
     const axios = yield select((state) => state.axios.axios);
-    const { data } = yield call(getUser, axios, action.payload.accessToken);
-    const userModel = new User({
-        isAuth: true,
-        address: data.address,
-        name: data.name,
-        wif: action.payload.wif
-    })
-    const user = userModel.newUser;
-    yield put({ type: ACTIONS.SET_USER, payload: user });
+    const resData = yield call(getUser, axios, action.payload.accessToken);
+    if (resData) {
+        const { data } = resData;
+        const userModel = new User({
+            isAuth: true,
+            address: data.address,
+            name: data.name,
+            wif: action.payload.wif
+        })
+        const user = userModel.newUser;
+        yield put({ type: ACTIONS.SET_USER, payload: user });
+    }
+
 }
 
 export default function* watchGetUserData() {

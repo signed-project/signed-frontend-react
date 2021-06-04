@@ -44,7 +44,6 @@ export default function* watchGetBook() {
   const arrSources = [...hostsSources];
 
   const book = yield call(getCashData, arrPosts, arrSources);
-
   yield put({ type: POST_ACTIONS.SET_POST_STREAM, payload: book.stream });
   yield put({ type: POST_ACTIONS.SET_POST_HASH, payload: book.hashedPost });
   yield put({ type: POST_ACTIONS.SET_POST_LATEST, payload: book.latestPost });

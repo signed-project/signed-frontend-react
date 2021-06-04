@@ -31,7 +31,7 @@ const MainRouts = () => {
                     wif, accessToken
                 };
                 console.log('payload', payload);
-                // dispatch(userActions.getUserByToken(payload));
+                dispatch(userActions.getUserByToken(payload));
             }
         }
     };
