@@ -8,8 +8,8 @@ export const ACTIONS = {
 
 
 const initialState = {
-  // isAuth: true,
-  isAuth: false,
+  isAuth: true,
+  // isAuth: false,
   source: {
     address: "19FRhaywUUpvMxUMSxgpTvc44Bj9VFd3BT",
     name: "Name1",

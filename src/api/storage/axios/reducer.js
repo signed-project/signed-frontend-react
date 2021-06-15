@@ -20,6 +20,7 @@ const generateAxiosInstance = (token) => {
     baseURL: API_HOST,
     headers: {
       "Content-Type": "application/json",
+      'Access-Control-Allow-Origin': '*'
       // Authorization: "Bearer " + token,
     },
   });

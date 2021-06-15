@@ -5,9 +5,14 @@ import { ACTIONS as SOURCE_ACTIONS } from "../../storage/source";
 import { dummyBook } from "../../../dummyData/dummyIndex";
 import { getCashData } from "./_aggregationBook";
 
-const getMyBook = async (axios) => {
+const getMyBook = async (axios, address) => {
+
   try {
-    let res = await axios.get(bookApi.GET_BOOK);
+    let res = await axios.get(bookApi.GET_BOOK, {
+      params: {
+        address
+      }
+    });
     return res.data.posts;
   } catch (error) {
     console.log("[getMyBook][error]", error);
@@ -21,15 +26,16 @@ const getMyBook = async (axios) => {
 
 export default function* watchGetBook() {
   const axios = yield select((state) => state.axios.axios);
+  const { address } = yield select((state) => state.user.source);
   const hosts = "";
   let hostsPost;
 
   let myPosts;
   try {
-    myPosts = yield call(getMyBook, axios);
+    myPosts = yield call(getMyBook, axios, address);
 
     if (hosts) {
-      hostsPost = yield call(getMyBook, axios);
+      hostsPost = yield call(getMyBook, axios, address);
     } else {
       // hostsPost = parseJson(stringify(dummyBook.posts));
       hostsPost = dummyBook.posts;
