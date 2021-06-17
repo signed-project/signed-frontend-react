@@ -1,5 +1,3 @@
-
-
 import { takeEvery, call, select, put } from "redux-saga/effects";
 import { userApi } from "../../../config/http.config";
 import { ACTIONS } from "../../storage/user";
@@ -8,7 +6,7 @@ import { getRegisterUserData } from '../../../libs/signature.js';
 import { User } from '../../models/user';
 import routes from '../../../config/routes.config';
 
-const getSendDataSrp = ({ login, password }) => {
+const getDataSrp = ({ login, password }) => {
     const salt = srp.generateSalt();
     const privateKey = srp.derivePrivateKey(salt, login, password)
     const verifier = srp.deriveVerifier(privateKey);
@@ -31,7 +29,7 @@ const sendUserData = async (axios, data) => {
 
 export function* workerRegister(action) {
     const axios = yield select((state) => state.axios.axios);
-    const srpData = getSendDataSrp({ login: action.payload.login, password: action.payload.password });
+    const srpData = getDataSrp({ login: action.payload.login, password: action.payload.password });
     const userBitcoinData = getRegisterUserData({ password: action.payload.password, wifString: action.payload.wif });
 
     const data = {
@@ -47,9 +45,9 @@ export function* workerRegister(action) {
         const userModel = new User({
             isAuth: true,
             address: userResponse.data.address,
-            name: userResponse.data.name,
+            name: userResponse.data.login,
             wif: userBitcoinData.wif
-        })
+        });
         user = userModel.newUser;
         sessionStorage.setItem('accessToken', userResponse.data.accessToken);
         sessionStorage.setItem('wif', userBitcoinData.wif);
