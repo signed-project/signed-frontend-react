@@ -58,7 +58,8 @@ const Register = ({ toggleTheme }) => {
 
   const checkIsLoginFree = async ({ login }) => {
     try {
-      let { data } = await axios.post(userApi.IS_FREE_LOGIN, { login: login });
+      // let { data } = await axios.post(userApi.IS_FREE_LOGIN, { login: login });
+      let { data } = await axios.get('https://699m468ak3.execute-api.us-west-2.amazonaws.com/test');
       const isFreeLogin = data?.isFreeLogin
       let warningMessage = '';
       if (isFreeLogin === false) {

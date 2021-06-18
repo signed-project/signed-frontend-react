@@ -1,14 +1,17 @@
 import { takeEvery, call, select, put } from "redux-saga/effects";
-import { bookApi } from "../../../config/http.config";
+import { postApi } from "../../../config/http.config";
 import { ACTIONS } from "../../storage/post";
-
-const sendPosts = async (axios, post) => {
+import axios from "axios";
+const sendPosts = async (axiosInst, post) => {
   try {
     const data = {
       post: post,
       addToIndex: true,
     };
-    let res = await axios.post(bookApi.SEND_POST, data);
+    console.log('axiosInst', axiosInst);
+    console.log('axios', axios);
+    // let res = await axios.post(postApi.SEND_POST, data);
+    let res = await axiosInst.post(postApi.SEND_POST, data);
     return res;
   } catch (error) {
     console.log("[getUserInfo][error]", error);

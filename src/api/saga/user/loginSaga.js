@@ -40,7 +40,7 @@ function* workerLogin(action) {
     const login = action.payload.login;
     const history = action.payload.history;
     try {
-        const sendData = { login: action.payload.login, clientEphemeralPublic: clientEphemeral.public };
+        const sendData = { userName: action.payload.login, clientPublicEphemeral: clientEphemeral.public };
         const { data } = yield call(sendUserData, axios, sendData);
         resFirstStep = data;
     } catch (e) {

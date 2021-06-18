@@ -1,6 +1,8 @@
-export const bookApi = {
+export const postApi = {
   SEND_POST: "/post",
-  GET_BOOK: "/book",
+};
+export const publicApi = {
+  GET_INDEX: "/prod",
 };
 
 export const filesApi = {
@@ -15,11 +17,11 @@ export const filesApi = {
 };
 
 export const userApi = {
-  LOGIN: '/login',
-  LOGIN_SESSION_PROOF: '/login/session-proof',
   REGISTER: '/register',
-  IS_FREE_LOGIN: '/isFreeLogin',
+  IS_FREE_LOGIN: '/register/checkLogin',
+  LOGIN: '/login/exchangeEphemeralKeys',
+  LOGIN_SESSION_PROOF: '/login/validateSessionProofs',
+  LOGIN_GET_USER_TOKEN: '/login/getUserToken',
   GET_USER_BY_TOKEN: '/user-by-token',
-  GET_USER: '/user',
   GET_TOKEN_PAIR: '/tokens-pair',
 };
