@@ -3,6 +3,8 @@ import sortKeys from 'sort-keys';
 import { nanoid } from 'nanoid';
 import CryptoJS from 'crypto-js';
 import bs58 from 'bs58';
+import wif from 'wif';
+import bip38 from 'bip38';
 import * as   bitcoin from 'bitcoinjs-lib';
 import * as   bitcoinMessage from 'bitcoinjs-message';
 
@@ -11,7 +13,7 @@ import * as   bitcoinMessage from 'bitcoinjs-message';
  * @tutorial way to get wif and atc 
  * 
  *  const keyPairRundom = bitcoin.ECPair.makeRandom();
-  const keyPairRun = bitcoin.ECPair.fromPrivateKey();
+//   const keyPairRun = bitcoin.ECPair.fromPrivateKey();
   const { address } = bitcoin.payments.p2pkh({ pubkey: keyPairRundom.publicKey });
   console.log('keyPair__________________________________________________________', address);
   const privateKeyBuffer = Buffer.from(keyPairRundom.privateKey)
@@ -53,6 +55,45 @@ import * as   bitcoinMessage from 'bitcoinjs-message';
 
  */
 
+export const getRegisterUserData = ({ password, wifString = '' }) => {
+    let wifBeforeEncrypt, keyPair;
+    if (!wifString) {
+        keyPair = bitcoin.ECPair.makeRandom();
+        wifBeforeEncrypt = keyPair.toWIF();
+    }
+    else {
+        console.log('002', wifString);
+        wifBeforeEncrypt = wifString;
+        // KwLpfcbeeM1hPALhcGYz8gzVhu8a3YthLGWsgGicegQX2v1BVHzx
+        // Kx7DQ8DtiTaEYut5f85jAG3bhPNJUB6neER3yQaVgueeLDT7Ax8e
+        // keyPair = bitcoin.ECPair.fromWIF('6PYM2e1ruFg7j2um7JXnmuLry14YeqbHWjz65xCtUrk2XjkSTjmqcpyFPa');
+        keyPair = bitcoin.ECPair.fromWIF(wifBeforeEncrypt);
+    }
+    const decoded = wif.decode(wifBeforeEncrypt);
+    const encryptedWif = bip38.encrypt(decoded.privateKey, decoded.compressed, password);
+    const { address } = bitcoin.payments.p2pkh({ pubkey: keyPair.publicKey });
+    console.log('wifBeforeEncrypt', wifBeforeEncrypt);
+    console.log('wif', wif);
+    console.log('address', address);
+    return {
+        encryptedWif,
+        wif: wifBeforeEncrypt,
+        address: address,
+    };
+}
+
+export const isWifFormat = ({ wif }) => {
+    try {
+        const pair = bitcoin.ECPair.fromWIF(wif)
+        return !!pair
+    } catch (e) {
+        console.warn('[isWifFormat]', e);
+        return false;
+    }
+
+
+}
+
 
 export const getJsonStringFromObj = (postObj) => {
     let jsonPost;
@@ -71,11 +112,11 @@ export const getJsonStringFromObj = (postObj) => {
     return jsonPost;
 }
 
-export const getSignatures = (post, wfi) => {
+export const getSignatures = (post, wif) => {
     let signatureString;
     try {
         const postJson = getJsonStringFromObj(post);
-        const keyPair = bitcoin.ECPair.fromWIF(wfi);
+        const keyPair = bitcoin.ECPair.fromWIF(wif);
         const privateKey = keyPair.privateKey;
         const signature = bitcoinMessage.sign(postJson, privateKey, keyPair.compressed);
         signatureString = signature.toString('base64');

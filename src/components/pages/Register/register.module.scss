@@ -1,0 +1,51 @@
+@import "/src/assets/css/index.scss";
+.page {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 44px;
+}
+
+.formWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  min-width: 290px;
+}
+
+.passForgot {
+  align-self: flex-start;
+  margin-top: 13px;
+  font-family: $mainFont;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0em;
+  text-align: center;
+  color: $textColorGrey100;
+  margin-bottom: 37px;
+}
+
+.footer {
+  position: absolute;
+  bottom: 45px;
+}
+
+.chooseButtonWrapper {
+  margin-top: 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-width: 227px;
+}
+
+.chooseButtonWrapper :first-child {
+  margin-bottom: 24px;
+}

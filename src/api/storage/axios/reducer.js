@@ -1,5 +1,5 @@
 import axios from "axios";
-// import { store } from "../../index";
+
 
 
 const API_HOST = process.env.REACT_APP_API_HOST;
@@ -7,29 +7,26 @@ const API_HOST = process.env.REACT_APP_API_HOST;
 const initialState = {
   axios: axios.create({
     baseURL: API_HOST,
-    headers: {},
+    headers: {
+      // 'Content-Type': 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Accept': 'application/json',
+    },
   }),
 };
-
-
 
 
 const generateAxiosInstance = (token) => {
   // const { dispatch } = store;
   const instance = axios.create({
     baseURL: API_HOST,
-    headers: {
-      "Content-Type": "application/json",
-      // Authorization: "Bearer " + token,
-    },
   });
-
   return instance;
 };
 
 const axiosReducer = (state = initialState, action) => {
   switch (action.type) {
-    case ' actions.SET_TOKEN':
+    case 'actions.SET_TOKEN':
       return {
         ...state,
         axios: generateAxiosInstance(),
@@ -40,7 +37,6 @@ const axiosReducer = (state = initialState, action) => {
         ...state,
         axios: "",
       };
-
     default:
       return state;
   }

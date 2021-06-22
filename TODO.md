@@ -29,3 +29,8 @@
 
 - [ ] check is exist way to upload img arr into server
 - [ ] rename component `Preview` to `PreviewImg`
+
+
+- [ ] refactor edit and  component `Post` if possible
+
+- [ ] save only refresh token on localStorage, so assess save on sessionStorage

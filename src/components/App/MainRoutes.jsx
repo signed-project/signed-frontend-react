@@ -1,19 +1,49 @@
-import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Route, Switch, useHistory } from 'react-router-dom';
 import Layout from '../layout/Layout';
 import LayoutProvider from '../layout/LayoutProvider';
 import Feed from '../pages/Feed/Feed';
-import SingUp from '../pages/SingUp/SingUp';
 import Search from '../pages/Search/Search';
 import NewPost from '../pages/NewPost/NewPost';
 import PostPage from '../pages/PostPage/PostPage';
 import Profile from '../pages/Profile/Profile';
 import Notification from '../pages/Notification/Notification';
-// import PageNotFound from '../pages/PageNotFound/PageNotFound';
 import routes from '../../config/routes.config';
+import Login from '../pages/Login/Login';
+import Register from '../pages/Register/Register';
+import jwt from 'jsonwebtoken';
+import { userActions } from '../../api/storage/user';
 
 
 const MainRouts = () => {
+    const user = useSelector((state) => state.user);
+    const history = useHistory();
+    const dispatch = useDispatch();
+
+    const checkAuth = () => {
+        const accessToken = sessionStorage.getItem("accessToken");
+        const wif = sessionStorage.getItem("wif");
+        const accessTokenDecoded = jwt.decode(accessToken);
+
+        if (!user.isAuth) {
+            if (wif && accessToken && accessTokenDecoded.exp * 1000 > new Date().getTime()) {
+                const payload = {
+                    wif, accessToken
+                };
+                console.log('payload', payload);
+                dispatch(userActions.getUser(payload));
+            }
+        }
+    };
+
+    useEffect(() => {
+        checkAuth();
+    }, [])
+
+
+
+
     return (
         <>
             <LayoutProvider.Consumer >
@@ -30,9 +60,6 @@ const MainRouts = () => {
                                 <Route path={routes.newPost} exact
                                     component={() => <NewPost theme={theme} toggleTheme={toggleTheme} />}
                                 />
-                                {/* <Route path={routes.repost}
-                                    component={() => <NewPost theme={theme} toggleTheme={toggleTheme} />}
-                                /> */}
                                 <Route path={routes.postHash}
                                     component={() => <PostPage theme={theme} toggleTheme={toggleTheme} />}
                                 />
@@ -42,9 +69,10 @@ const MainRouts = () => {
                                 <Route path={routes.notification} exact
                                     component={() => <Notification theme={theme} toggleTheme={toggleTheme} />}
                                 />
-                                <Route path={routes.signUp} exact
-                                    component={() => <SingUp theme={theme} toggleTheme={toggleTheme} />}
-                                />
+                                <Route path={routes.login} exact
+                                    component={() => <Login theme={theme} toggleTheme={toggleTheme} />} />
+                                <Route path={routes.register} exact
+                                    component={() => <Register theme={theme} toggleTheme={toggleTheme} />} />
                             </Switch>
                         </Layout>
                     )

@@ -1,15 +1,15 @@
 export const ACTIONS = {
+  SET_USER: 'USER::SET_USER',
   GET_USER: 'USER::GET_USER',
-  SET_TOKEN: 'USER::SET_TOKEN',
-  LOGIN: 'USER::LOGIN',
-  LOGIN_SUCCESS: 'USER::LOGIN_SUCCESS',
-  LOGIN_ERROR: 'USER::LOGIN_ERROR',
-  LOGOUT: 'USER::LOGOUT',
-  OPEN_MODAL_403: 'USER::OPEN_MODAL_403',
+  // GET_USER_DATA_BY_TOKEN: 'USER::GET_USER_DATA_BY_TOKEN',
+  SEND_REGISTER_DATA: 'USER::SEND_REGISTER_DATA',
+  SEND_LOGIN_DATA: 'USER::SEND_LOGIN_DATA',
 };
 
+
 const initialState = {
-  isAuth: true,
+  // isAuth: true,
+  isAuth: false,
   source: {
     address: "19FRhaywUUpvMxUMSxgpTvc44Bj9VFd3BT",
     name: "Name1",
@@ -26,22 +26,17 @@ const initialState = {
     hash: 'fjdjd343243jkdfjdk343',
   },
   subscribed: ['19FRhaywUUpvMxUMSxgpTvc44Bj9VFd3BT'],
-  wfi: 'Kx7DQ8DtiTaEYut5f85jAG3bhPNJUB6neER3yQaVgueeLDT7Ax8e',
-  isLoginError: false,
-  isLoginProcess: false,
-  token: "",
-  firstName: "",
-  middleName: "",
-  lastName: "",
-  phone: "",
-  email: "",
-  role: "",
-  invites: [],
-  modal403: false,
+  wif: 'Kx7DQ8DtiTaEYut5f85jAG3bhPNJUB6neER3yQaVgueeLDT7Ax8e',
+  token: 'fjkajslfdas434jk234j2k4j23l4j2l34j2l3'
 };
 
 const userReducer = (state = initialState, action) => {
   switch (action.type) {
+    case ACTIONS.SET_USER:
+      console.log('action.payload&&&&&&&&&&&&&&&&&', action.payload);
+      return {
+        ...action.payload
+      };
     case ACTIONS.GET_USER:
       return {
         ...state,
@@ -57,27 +52,8 @@ const userReducer = (state = initialState, action) => {
         token: action.token,
         isAuth: true,
       };
-    case ACTIONS.LOGIN:
-      return {
-        ...state,
-        isLoginProcess: true,
-      };
-    case ACTIONS.LOGIN_SUCCESS:
-      return {
-        ...state,
-        isLoginProcess: false,
-      };
-    case ACTIONS.LOGIN_ERROR:
-      return {
-        ...state,
-        isLoginError: true,
-        isLoginProcess: false,
-      };
-    case ACTIONS.OPEN_MODAL_403:
-      return {
-        ...state,
-        modal403: true,
-      };
+
+
     default:
       return state;
   }
