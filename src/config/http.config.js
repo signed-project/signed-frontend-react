@@ -18,10 +18,10 @@ export const filesApi = {
 
 export const userApi = {
   REGISTER: '/register',
-  IS_FREE_LOGIN: '/register/checkLogin',
-  LOGIN: '/login/exchangeEphemeralKeys',
+  CHECK_LOGIN: '/register/checkLogin',
+  LOGIN_EXCHANGE_EPHEMERAL_KEYS: '/login/exchangeEphemeralKeys',
   LOGIN_SESSION_PROOF: '/login/validateSessionProofs',
   LOGIN_GET_USER_TOKEN: '/login/getUserToken',
-  GET_USER_BY_TOKEN: '/user-by-token',
+  GET_USER: '/user',
   GET_TOKEN_PAIR: '/tokens-pair',
 };

@@ -1,15 +1,15 @@
 export const ACTIONS = {
   SET_USER: 'USER::SET_USER',
   GET_USER: 'USER::GET_USER',
-  GET_USER_DATA_BY_TOKEN: 'USER::GET_USER_DATA_BY_TOKEN',
+  // GET_USER_DATA_BY_TOKEN: 'USER::GET_USER_DATA_BY_TOKEN',
   SEND_REGISTER_DATA: 'USER::SEND_REGISTER_DATA',
   SEND_LOGIN_DATA: 'USER::SEND_LOGIN_DATA',
 };
 
 
 const initialState = {
-  isAuth: true,
-  // isAuth: false,
+  // isAuth: true,
+  isAuth: false,
   source: {
     address: "19FRhaywUUpvMxUMSxgpTvc44Bj9VFd3BT",
     name: "Name1",

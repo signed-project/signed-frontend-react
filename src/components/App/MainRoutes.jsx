@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Switch, useHistory } from 'react-router-dom';
 import Layout from '../layout/Layout';
@@ -20,6 +20,7 @@ const MainRouts = () => {
     const user = useSelector((state) => state.user);
     const history = useHistory();
     const dispatch = useDispatch();
+
     const checkAuth = () => {
         const accessToken = sessionStorage.getItem("accessToken");
         const wif = sessionStorage.getItem("wif");
@@ -31,10 +32,16 @@ const MainRouts = () => {
                     wif, accessToken
                 };
                 console.log('payload', payload);
-                dispatch(userActions.getUserByToken(payload));
+                dispatch(userActions.getUser(payload));
             }
         }
     };
+
+    useEffect(() => {
+        checkAuth();
+    }, [])
+
+
 
 
     return (
@@ -66,7 +73,6 @@ const MainRouts = () => {
                                     component={() => <Login theme={theme} toggleTheme={toggleTheme} />} />
                                 <Route path={routes.register} exact
                                     component={() => <Register theme={theme} toggleTheme={toggleTheme} />} />
-                                {checkAuth()}
                             </Switch>
                         </Layout>
                     )

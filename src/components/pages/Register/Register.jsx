@@ -18,7 +18,7 @@ const Register = ({ toggleTheme }) => {
   };
   const initialForm = {
     wif: { value: '', warning: '' },
-    login: { value: '', warning: '' },
+    userName: { value: '', warning: '' },
     password: { value: '', warning: '' },
     passwordRepeat: { value: '', warning: '' }
   }
@@ -56,20 +56,23 @@ const Register = ({ toggleTheme }) => {
     setForm(newForm);
   }
 
-  const checkIsLoginFree = async ({ login }) => {
+
+  console.log('form', form);
+
+
+  const checkIsLoginFree = async ({ userName }) => {
     try {
-      // let { data } = await axios.post(userApi.IS_FREE_LOGIN, { login: login });
-      let { data } = await axios.get('https://699m468ak3.execute-api.us-west-2.amazonaws.com/test');
+      let { data } = await axios.post(userApi.CHECK_LOGIN, { userName });
       const isFreeLogin = data?.isFreeLogin
       let warningMessage = '';
       if (isFreeLogin === false) {
         warningMessage = 'The login you entered is already in use'
       }
       setForm((prev) => {
-        const loginItem = form['login'];
+        const userNameItem = form['userName'];
         return ({
           ...prev,
-          login: { ...loginItem, warning: warningMessage }
+          userName: { ...userNameItem, warning: warningMessage }
         })
       })
       return isFreeLogin;
@@ -120,7 +123,7 @@ const Register = ({ toggleTheme }) => {
       return;
     }
 
-    if (!await checkIsLoginFree({ login: form.login.value })) {
+    if (!await checkIsLoginFree({ userName: form.userName.value })) {
       return;
     }
 
@@ -173,7 +176,7 @@ const Register = ({ toggleTheme }) => {
           :
           <div className={styles.formWrapper}>
             {typeRegistration === typeMap.haveAddress && <Input title={'Enter Bitcoin address'} name={'wif'} warning={form.wif.warning} type={'text'} handleChange={handleForm} value={form.wif.value} />}
-            <Input title={'Nickname'} name={'login'} warning={form.login.warning} type={'text'} handleChange={handleForm} value={form.login.value} />
+            <Input title={'Nickname'} name={'userName'} warning={form.userName.warning} type={'text'} handleChange={handleForm} value={form.userName.value} />
             <Input title={'Password'} type={'password'} warning={form.password.warning} name={'password'} handleChange={handleForm} value={form.password.value} />
             <Input title={'Repeat password'} type={'password'} warning={form.passwordRepeat.warning} name={'passwordRepeat'} handleChange={handleForm} value={form.passwordRepeat.value} />
             <NavLink to={routes.passwordRecovery} className={styles.passForgot}> Forgot your password?</NavLink>
@@ -181,7 +184,7 @@ const Register = ({ toggleTheme }) => {
           </div>
         }
         <div className={styles.footer}>
-          <NavLink to={routes.login} className={styles.passForgot}> I don't have an account</NavLink>
+          <NavLink to={routes.login} className={styles.passForgot}> I have an account</NavLink>
         </div>
       </div>
     </>

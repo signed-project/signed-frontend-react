@@ -6,9 +6,9 @@ import { getRegisterUserData } from '../../../libs/signature.js';
 import { User } from '../../models/user';
 import routes from '../../../config/routes.config';
 
-const getDataSrp = ({ login, password }) => {
+const getDataSrp = ({ userName, password }) => {
     const salt = srp.generateSalt();
-    const privateKey = srp.derivePrivateKey(salt, login, password)
+    const privateKey = srp.derivePrivateKey(salt, userName, password)
     const verifier = srp.deriveVerifier(privateKey);
     return {
         salt,
@@ -28,31 +28,32 @@ const sendUserData = async (axios, data) => {
 
 
 export function* workerRegister(action) {
+    let user;
     const axios = yield select((state) => state.axios.axios);
-    const srpData = getDataSrp({ login: action.payload.login, password: action.payload.password });
+    const { userName, password, history } = action.payload;
+    const srpData = getDataSrp({ userName: userName, password: password });
     const userBitcoinData = getRegisterUserData({ password: action.payload.password, wifString: action.payload.wif });
-
     const data = {
         salt: srpData.salt,
         verifier: srpData.verifier,
-        login: action.payload.login,
+        userName: userName,
         address: userBitcoinData.address,
         encryptedWif: userBitcoinData.encryptedWif,
     }
-    let user;
+
     const userResponse = yield call(sendUserData, axios, data)
     if (userResponse.data) {
         const userModel = new User({
             isAuth: true,
             address: userResponse.data.address,
-            name: userResponse.data.login,
+            name: userResponse.data.userName,
             wif: userBitcoinData.wif
         });
         user = userModel.newUser;
         sessionStorage.setItem('accessToken', userResponse.data.accessToken);
         sessionStorage.setItem('wif', userBitcoinData.wif);
         yield put({ type: ACTIONS.SET_USER, payload: user });
-        action.payload.history.push(routes.feed);
+        history.push(routes.feed);
     }
 }
 

@@ -23,7 +23,8 @@ const getUser = async (axios, token) => {
         const data = {
             token
         };
-        res = await axios.post(userApi.GET_USER_BY_TOKEN, data);
+        res = await axios.post(userApi.GET_USER, data);
+        console.log('----res-------', res);
         return res;
     } catch (error) {
         console.log("[getUserInfo][error]", error);
@@ -49,5 +50,5 @@ export function* workerGetUserData(action) {
 }
 
 export default function* watchGetUserData() {
-    yield takeEvery(ACTIONS.GET_USER_DATA_BY_TOKEN, workerGetUserData);
+    yield takeEvery(ACTIONS.GET_USER, workerGetUserData);
 }

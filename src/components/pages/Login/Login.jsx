@@ -17,9 +17,9 @@ const Login = ({ toggleTheme }) => {
     }, [toggleTheme]);
 
     const initialForm = {
-        login: { value: '', warning: '' },
+        userName: { value: '', warning: '' },
         password: { value: '', warning: '' },
-    }
+    };
     const history = useHistory();
     const dispatch = useDispatch();
     const [form, setForm] = useState(initialForm);
@@ -68,10 +68,10 @@ const Login = ({ toggleTheme }) => {
             <RegisterHeader />
             <div className={styles.page}>
                 <div>
-                    <h3 className={styles.title}>Login</h3>
+                    <h3 className={styles.title}>User name</h3>
                 </div>
                 <div className={styles.formWrapper}>
-                    <Input title={'Nickname'} type={'text'} name={'login'} value={form.login.value} handleChange={handleForm} warning={form.login.warning} />
+                    <Input title={'Nickname'} type={'text'} name={'userName'} value={form.userName.value} handleChange={handleForm} warning={form.userName.warning} />
                     <Input title={'Password'} type={'password'} name={'password'} value={form.password.value} handleChange={handleForm} warning={form.password.warning} />
                     <NavLink to={routes.passwordRecovery} className={styles.passForgot}> Forgot your password?</NavLink>
                     <Button className="primary" onClick={() => { handleSendForm() }}>Login</Button>
