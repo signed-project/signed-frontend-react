@@ -176,7 +176,7 @@ const Post = ({
                 <div className={styles.hover}>
                   <InfoAuthor
                     createdAt={getReadFormat(createdAt)}
-                    name={name}
+                    name={targetPost?.source?.name}
                   />
                 </div>
                 <div className={styles.bodyWrapper}>

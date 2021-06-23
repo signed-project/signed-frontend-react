@@ -1,3 +1,4 @@
+
 import { ACTIONS } from "./reducer";
 
 export const setPostStream = (payload) => ({
@@ -12,5 +13,10 @@ export const sendPost = (payload) => ({
 
 export const updatePost = (payload) => ({
   type: ACTIONS.UPDATE_POST,
+  payload,
+});
+
+export const getBook = (payload) => ({
+  type: ACTIONS.GET_BOOK,
   payload,
 });

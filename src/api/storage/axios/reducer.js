@@ -8,9 +8,8 @@ const initialState = {
   axios: axios.create({
     baseURL: API_HOST,
     headers: {
-      // 'Content-Type': 'application/json',
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Accept': 'application/json',
+      // 'Accept': 'application/json',
     },
   }),
 };

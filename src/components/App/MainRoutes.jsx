@@ -14,6 +14,7 @@ import Login from '../pages/Login/Login';
 import Register from '../pages/Register/Register';
 import jwt from 'jsonwebtoken';
 import { userActions } from '../../api/storage/user';
+import { postActions } from '../../api/storage/post';
 
 
 const MainRouts = () => {
@@ -26,23 +27,26 @@ const MainRouts = () => {
         const wif = sessionStorage.getItem("wif");
         const accessTokenDecoded = jwt.decode(accessToken);
 
-        if (!user.isAuth) {
-            if (wif && accessToken && accessTokenDecoded.exp * 1000 > new Date().getTime()) {
-                const payload = {
-                    wif, accessToken
-                };
-                console.log('payload', payload);
-                dispatch(userActions.getUser(payload));
+        // if (user.isAuth === false && wif && accessToken && accessTokenDecoded.exp * 1000 > new Date().getTime()) {
+        if (wif && accessToken && accessTokenDecoded.exp * 1000 > new Date().getTime()) {
+            const payload = {
+                wif, accessToken
             }
+
+            console.log('111111111111111111111111111111111111111111');
+            dispatch(userActions.getUser(payload));
+            // dispatch(postActions.getBook({ isRegistered: false }));
+        }
+        else {
+            console.log('2222222222222222222222222222222');
+
+            dispatch(postActions.getBook({ isRegistered: false }));
         }
     };
 
     useEffect(() => {
         checkAuth();
-    }, [])
-
-
-
+    }, []);
 
     return (
         <>

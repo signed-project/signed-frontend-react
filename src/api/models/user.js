@@ -4,7 +4,7 @@ export class User {
         this.data = {
             isAuth: data.isAuth ? data.isAuth : false,
             wif: data.wif ? data.wif : '',
-            subscribed: data.address ? [data.address] : [],
+            subscribed: data.subscribed ? data.subscribed : [],
             source: {
                 address: data.address ? data.address : "",
                 name: data.name ? data.name : "",
@@ -13,7 +13,7 @@ export class User {
                     contentType: "image/jpeg",
                     hash: "f433c21fe3c6c7475f7be0017294547e93d7fcd44617f62bf7f369a13b48e764"
                 },
-                hosts: [{
+                hosts: data.hosts ? data.hosts : [{
                     fileStores: ['jdjjdj'],
                     index: "url"
                 }],

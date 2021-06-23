@@ -27,4 +27,9 @@ export const sendLoginData = (payload) => ({
     payload
 });
 
+export const getHosts = (payload) => ({
+    type: ACTIONS.GET_SOURCE_HOSTS,
+    payload
+});
+
 

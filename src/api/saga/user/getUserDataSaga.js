@@ -2,7 +2,8 @@
 
 import { takeEvery, call, select, put } from "redux-saga/effects";
 import { userApi } from "../../../config/http.config";
-import { ACTIONS } from "../../storage/user";
+import { ACTIONS as ACTIONS_USER } from "../../storage/user";
+import { ACTIONS as ACTIONS_POST } from "../../storage/post";
 import { User } from '../../models/user';
 
 
@@ -24,15 +25,14 @@ const getUser = async (axios, token) => {
             token
         };
         res = await axios.post(userApi.GET_USER, data);
-        console.log('----res-------', res);
-        return res;
     } catch (error) {
         console.log("[getUserInfo][error]", error);
-        return res;
     }
+    return res;
 };
 
 export function* workerGetUserData(action) {
+    console.log('33333333workerGetUserData33333333');
     const axios = yield select((state) => state.axios.axios);
     const resData = yield call(getUser, axios, action.payload.accessToken);
     if (resData) {
@@ -40,15 +40,20 @@ export function* workerGetUserData(action) {
         const userModel = new User({
             isAuth: true,
             address: data.address,
-            name: data.name,
-            wif: action.payload.wif
-        })
+            name: data.userName,
+            wif: action.payload.wif,
+            subscribed: data.subscribed
+        });
         const user = userModel.newUser;
-        yield put({ type: ACTIONS.SET_USER, payload: user });
-    }
+        yield put({ type: ACTIONS_USER.SET_USER, payload: user });
 
+        yield put({ type: ACTIONS_POST.GET_BOOK, payload: { isRegistered: true } });
+
+
+
+    }
 }
 
 export default function* watchGetUserData() {
-    yield takeEvery(ACTIONS.GET_USER, workerGetUserData);
+    yield takeEvery(ACTIONS_USER.GET_USER, workerGetUserData);
 }

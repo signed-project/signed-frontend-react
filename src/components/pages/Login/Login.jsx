@@ -68,13 +68,13 @@ const Login = ({ toggleTheme }) => {
             <RegisterHeader />
             <div className={styles.page}>
                 <div>
-                    <h3 className={styles.title}>User name</h3>
+                    <h3 className={styles.title}>Sing in</h3>
                 </div>
                 <div className={styles.formWrapper}>
                     <Input title={'Nickname'} type={'text'} name={'userName'} value={form.userName.value} handleChange={handleForm} warning={form.userName.warning} />
                     <Input title={'Password'} type={'password'} name={'password'} value={form.password.value} handleChange={handleForm} warning={form.password.warning} />
                     <NavLink to={routes.passwordRecovery} className={styles.passForgot}> Forgot your password?</NavLink>
-                    <Button className="primary" onClick={() => { handleSendForm() }}>Login</Button>
+                    <Button className="primary" onClick={() => { handleSendForm() }}>Sing in</Button>
                 </div>
                 <div className={styles.footer}>
                     <NavLink to={routes.register} className={styles.passForgot}> I don't have an account</NavLink>

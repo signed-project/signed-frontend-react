@@ -1,6 +1,7 @@
 import { takeEvery, call, select, put } from "redux-saga/effects";
 import { userApi } from "../../../config/http.config";
-import { ACTIONS } from "../../storage/user";
+import { ACTIONS as ACTIONS_USER } from "../../storage/user";
+import { ACTIONS as ACTIONS_POST } from "../../storage/post";
 import srp from 'secure-remote-password/client';
 import { getRegisterUserData } from '../../../libs/signature.js';
 import { User } from '../../models/user';
@@ -29,6 +30,7 @@ const sendUserData = async (axios, data) => {
 
 export function* workerRegister(action) {
     let user;
+    console.log('workerRegister', workerRegister);
     const axios = yield select((state) => state.axios.axios);
     const { userName, password, history } = action.payload;
     const srpData = getDataSrp({ userName: userName, password: password });
@@ -41,22 +43,24 @@ export function* workerRegister(action) {
         encryptedWif: userBitcoinData.encryptedWif,
     }
 
-    const userResponse = yield call(sendUserData, axios, data)
-    if (userResponse.data) {
+    const userResponse = yield call(sendUserData, axios, data);
+    if (userResponse?.data) {
         const userModel = new User({
             isAuth: true,
             address: userResponse.data.address,
             name: userResponse.data.userName,
-            wif: userBitcoinData.wif
+            wif: userBitcoinData.wif,
+            subscribed: userResponse.data.subscribed
         });
         user = userModel.newUser;
         sessionStorage.setItem('accessToken', userResponse.data.accessToken);
         sessionStorage.setItem('wif', userBitcoinData.wif);
-        yield put({ type: ACTIONS.SET_USER, payload: user });
+        yield put({ type: ACTIONS_USER.SET_USER, payload: user });
+        yield put({ type: ACTIONS_POST.GET_BOOK, payload: { isRegistered: true } });
         history.push(routes.feed);
     }
 }
 
 export default function* watchRegister() {
-    yield takeEvery(ACTIONS.SEND_REGISTER_DATA, workerRegister);
+    yield takeEvery(ACTIONS_USER.SEND_REGISTER_DATA, workerRegister);
 }

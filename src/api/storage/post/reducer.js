@@ -7,6 +7,7 @@ export const ACTIONS = {
   SET_POST_STREAM: "POST::SET_POST_STREAM",
   SET_POST_HASH: "POST::SET_POST_HASH",
   SET_POST_LATEST: "POST::SET_POST_LATEST",
+  GET_BOOK: "POST::GET_BOOK",
 };
 
 const initialState = {

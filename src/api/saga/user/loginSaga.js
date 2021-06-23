@@ -1,7 +1,8 @@
 import { takeEvery, call, select, put } from 'redux-saga/effects';
 import srp from 'secure-remote-password/client';
 import { userApi } from "../../../config/http.config";
-import { ACTIONS } from "../../storage/user";
+import { ACTIONS as ACTIONS_USER } from "../../storage/user";
+import { ACTIONS as ACTIONS_POST } from "../../storage/post";
 import { User } from '../../models/user';
 import routes from '../../../config/routes.config';
 import wif from 'wif';
@@ -96,11 +97,13 @@ function* workerLogin(action) {
                     isAuth: true,
                     address: data.address,
                     name: data.login,
-                    wif: wifEncode
+                    wif: wifEncode,
+                    subscribed: data.subscribed
                 })
                 const userItem = userModel.newUser;
                 console.log('userItem', userItem);
-                yield put({ type: ACTIONS.SET_USER, payload: userItem });
+                yield put({ type: ACTIONS_USER.SET_USER, payload: userItem });
+                yield put({ type: ACTIONS_POST.GET_BOOK, payload: { isRegistered: true } });
                 action.payload.history.push(routes.feed);
             }
         }
@@ -110,5 +113,5 @@ function* workerLogin(action) {
 }
 
 export default function* watchLogin() {
-    yield takeEvery(ACTIONS.SEND_LOGIN_DATA, workerLogin)
+    yield takeEvery(ACTIONS_USER.SEND_LOGIN_DATA, workerLogin)
 }
