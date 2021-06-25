@@ -14,6 +14,7 @@ const Feed = ({ toggleTheme }) => {
   const [posts, setPosts] = useState([]);
   let history = useHistory();
 
+  console.log('________stream________feed--------!!!', stream);
 
   useEffect(() => {
     toggleTheme(true);

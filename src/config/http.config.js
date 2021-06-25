@@ -24,5 +24,5 @@ export const userApi = {
   LOGIN_GET_USER_TOKEN: '/login/getUserToken',
   GET_USER: '/user',
   GET_TOKEN_PAIR: '/tokens-pair',
-  HOSTS: '/hosts',
+  SUBSCRIBED: '/subscribed',
 };

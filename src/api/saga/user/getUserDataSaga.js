@@ -34,23 +34,20 @@ const getUser = async (axios, token) => {
 export function* workerGetUserData(action) {
     console.log('33333333workerGetUserData33333333');
     const axios = yield select((state) => state.axios.axios);
-    const resData = yield call(getUser, axios, action.payload.accessToken);
+    const { accessToken, wif, history } = action.payload;
+    const resData = yield call(getUser, axios, accessToken);
     if (resData) {
         const { data } = resData;
         const userModel = new User({
             isAuth: true,
             address: data.address,
             name: data.userName,
-            wif: action.payload.wif,
+            wif: wif,
             subscribed: data.subscribed
         });
         const user = userModel.newUser;
         yield put({ type: ACTIONS_USER.SET_USER, payload: user });
-
-        yield put({ type: ACTIONS_POST.GET_BOOK, payload: { isRegistered: true } });
-
-
-
+        yield put({ type: ACTIONS_POST.GET_BOOK, payload: { isRegistered: true, history } });
     }
 }
 

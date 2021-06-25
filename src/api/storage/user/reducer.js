@@ -13,6 +13,7 @@ const initialStateMock = {
   subscribed: [],
   wif: '',
   token: '',
+  signInError: '',
   source: {
     address: "19FRhaywUUpvMxUMSxgpTvc44Bj9VFd3BT",
     name: "Name1",

@@ -2,6 +2,14 @@
 .page {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bodyBlock {
+  min-height: 600px;
+  display: flex;
+  flex-direction: column;
   justify-content: flex-start;
   align-items: center;
 }
@@ -33,10 +41,10 @@
   margin-bottom: 37px;
 }
 
-.footer {
-  position: absolute;
-  bottom: 45px;
-}
+// .footer {
+//   position: absolute;
+//   bottom: 45px;
+// }
 
 .chooseButtonWrapper {
   margin-top: 22px;

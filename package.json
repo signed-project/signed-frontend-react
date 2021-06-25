@@ -46,6 +46,10 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
+  "homepage": "/public",
+  "output": {
+    "path": "public/"
+  },
   "eslintConfig": {
     "extends": [
       "react-app",

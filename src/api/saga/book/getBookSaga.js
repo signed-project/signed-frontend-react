@@ -5,9 +5,11 @@ import { ACTIONS as SOURCE_ACTIONS } from "../../storage/source";
 import { dummyBook } from "../../../dummyData/dummyIndex";
 import { getCashData } from "./_aggregationBook";
 import axios from "axios";
+import routes from '../../../config/routes.config';
+const publicApiHost = process.env.REACT_APP_PUBLIC_API_HOST;
+const apiHost = process.env.REACT_APP_API_HOST;
 
 const getMyBook = async (address) => {
-  const publicApiHost = process.env.REACT_APP_PUBLIC_API_HOST;
   try {
     let res = await axios.get(`${publicApiHost}${publicApi.GET_INDEX}/${address}`);
     // let res = await axios.post('https://699m468ak3.execute-api.us-west-2.amazonaws.com/post');
@@ -20,23 +22,20 @@ const getMyBook = async (address) => {
 
 
 
-
+// TODO rename
 const getSubscribedBook = async ({ subscribed }) => {
-  console.log('=========================hosts=========================', subscribed);
   let postSubscribed = [], combinePosts = [];
   try {
     await Promise.all(subscribed.map(async (sbs) => {
-      console.log('---------sbs---------', sbs);
       try {
         let res = await axios.get(`${sbs.url}`);
         if (res?.data?.posts) {
           postSubscribed.push(res?.data?.posts);
         }
       } catch (e) {
-        console.log("[getSubscribedBook][postSubscribed.push]", e);
+        console.warn("[getSubscribedBook][postSubscribed.push]", e);
       }
     }));
-    console.log('!!!!!!!!postSubscribed---postSubscribed', postSubscribed);
   } catch (e) {
     console.warn("[getSubscribedBook][Promise.all]", e);
   }
@@ -52,34 +51,29 @@ const getSubscribedBook = async ({ subscribed }) => {
   return combinePosts;
 };
 
-const getAllHosts = async () => {
-  let hostsPosts = [], combinePosts = [];
+const getAllHostsBook = async () => {
+  let data;
   try {
-    const res = await axios.get(`${userApi.HOSTS}`);
-    console.log('!!!!!!!!hostsPosts---hostsPosts', res);
+    ({ data } = await axios.get(`${apiHost}${userApi.SUBSCRIBED}`));
   } catch (e) {
-    console.warn("[getBookSaga][getAllHosts]", e);
+    console.warn("[getBookSaga][getAllHostsBook]", e);
   }
 
   try {
-    hostsPosts.map(posts => {
-      combinePosts = [...combinePosts, ...posts]
-    })
+    return await getSubscribedBook({ subscribed: data });
+  } catch (e) {
+    console.warn("[getBookSaga][getAllHostsBook][getSubscribedBook]", e);
+    return []
   }
-  catch (e) {
-    console.warn("[getHostsBook][combinePosts]", e);
-  }
-  return combinePosts;
+
 };
 
 function* workerGetBook(action) {
-  const { isRegistered } = action.payload;
+  const { isRegistered, history } = action.payload;
   console.log('!!!!!!!!!!!isRegistered!!!!!!!!!!', isRegistered);
   // const axios = yield select((state) => state.axios.axios);
   let gatheredPosts = [], arrPosts, arrSources;
   if (isRegistered) {
-    console.log('@@@@@@@@@@@@@@@@@isRegistered@@@@@@@@@@@@@@@@@', isRegistered);
-
     const { address } = yield select((state) => state.user.source);
     const subscribed = yield select((state) => state.user?.subscribed);
     let myPosts;
@@ -98,17 +92,12 @@ function* workerGetBook(action) {
       console.warn("[workerGetBook][getSubscribedBook]", e);
     }
 
-
-
-
-    const hostsSources = dummyBook.source;
     gatheredPosts = Array.isArray(gatheredPosts) ? gatheredPosts : [gatheredPosts];
 
     console.log('----gatheredPosts--------', gatheredPosts);
 
     try {
       arrPosts = [...myPosts, ...gatheredPosts];
-      arrSources = [...hostsSources];
     } catch (e) {
       console.warn('Destructuring myPost, hostPost, hostsSources', e)
     }
@@ -117,15 +106,18 @@ function* workerGetBook(action) {
 
   else {
     try {
-      const posts = yield call(getAllHosts);
+      arrPosts = yield call(getAllHostsBook);
+      console.log('arrPosts---------------------------', arrPosts);
     } catch (e) {
       console.warn('[getBookSaga][getAllHosts]', e)
-      arrSources = [];
+      arrPosts = [];
     }
-  }
-
+  };
+  const hostsSources = dummyBook.source;
+  arrSources = [...hostsSources];
   if (!arrPosts) { return }
   const book = yield call(getCashData, arrPosts, arrSources);
+  console.log('book----get --book', book);
   yield put({ type: POST_ACTIONS.SET_POST_STREAM, payload: book.stream });
   yield put({ type: POST_ACTIONS.SET_POST_HASH, payload: book.hashedPost });
   yield put({ type: POST_ACTIONS.SET_POST_LATEST, payload: book.latestPost });
@@ -137,6 +129,7 @@ function* workerGetBook(action) {
     type: SOURCE_ACTIONS.SET_SOURCE_HASH,
     payload: book.latestSource,
   });
+  history.push(routes.feed);
 }
 
 // while (true) {

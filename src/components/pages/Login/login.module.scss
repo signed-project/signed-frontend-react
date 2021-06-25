@@ -2,6 +2,14 @@
 .page {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bodyBlock {
+  min-height: 600px;
+  display: flex;
+  flex-direction: column;
   justify-content: flex-start;
   align-items: center;
 }
@@ -33,6 +41,7 @@
 }
 
 .footer {
-  position: absolute;
-  bottom: 45px;
+  // position: absolute;
+  // bottom: 45px;
+  // margin-bottom: 45px;
 }

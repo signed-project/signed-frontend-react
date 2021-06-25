@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Route, Switch, useHistory } from 'react-router-dom';
+import { Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import Layout from '../layout/Layout';
 import LayoutProvider from '../layout/LayoutProvider';
 import Feed from '../pages/Feed/Feed';
@@ -21,7 +21,8 @@ const MainRouts = () => {
     const user = useSelector((state) => state.user);
     const history = useHistory();
     const dispatch = useDispatch();
-
+    const location = useLocation();
+    console.log('location.pathname', location.pathname);
     const checkAuth = () => {
         const accessToken = sessionStorage.getItem("accessToken");
         const wif = sessionStorage.getItem("wif");
@@ -30,17 +31,15 @@ const MainRouts = () => {
         // if (user.isAuth === false && wif && accessToken && accessTokenDecoded.exp * 1000 > new Date().getTime()) {
         if (wif && accessToken && accessTokenDecoded.exp * 1000 > new Date().getTime()) {
             const payload = {
-                wif, accessToken
+                wif, accessToken, history
             }
-
             console.log('111111111111111111111111111111111111111111');
             dispatch(userActions.getUser(payload));
             // dispatch(postActions.getBook({ isRegistered: false }));
         }
         else {
             console.log('2222222222222222222222222222222');
-
-            dispatch(postActions.getBook({ isRegistered: false }));
+            dispatch(postActions.getBook({ isRegistered: false, history }));
         }
     };
 

@@ -10,7 +10,6 @@ import { userApi } from '../../../config/http.config';
 import { userActions } from '../../../api/storage/user';
 import { isWifFormat } from '../../../libs/signature';
 
-
 const Register = ({ toggleTheme }) => {
   const typeMap = {
     createAddress: 'createAddress',
@@ -158,31 +157,33 @@ const Register = ({ toggleTheme }) => {
     <>
       <RegisterHeader />
       <div className={styles.page}>
-        <div className={styles.title}>
-          <h3>Register</h3>
-        </div>
-
-        {chooseTypeRegistration ?
-          <>
-
-            <div className={styles.chooseButtonWrapper}>
-              <Button className="primary" onClick={() => handleChooseRegistration({ type: 'createAddress' })}>Create new Bitcoin address</Button>
-            </div>
-            <div className={styles.chooseButtonWrapper}>
-              <Button className="clean" onClick={() => handleChooseRegistration({ type: 'haveAddress' })}>I have Bitcoin address</Button>
-            </div>
-
-          </>
-          :
-          <div className={styles.formWrapper}>
-            {typeRegistration === typeMap.haveAddress && <Input title={'Enter Bitcoin address'} name={'wif'} warning={form.wif.warning} type={'text'} handleChange={handleForm} value={form.wif.value} />}
-            <Input title={'Nickname'} name={'userName'} warning={form.userName.warning} type={'text'} handleChange={handleForm} value={form.userName.value} />
-            <Input title={'Password'} type={'password'} warning={form.password.warning} name={'password'} handleChange={handleForm} value={form.password.value} />
-            <Input title={'Repeat password'} type={'password'} warning={form.passwordRepeat.warning} name={'passwordRepeat'} handleChange={handleForm} value={form.passwordRepeat.value} />
-            <NavLink to={routes.passwordRecovery} className={styles.passForgot}> Forgot your password?</NavLink>
-            <Button className="primary" onClick={() => { handleSendForm() }}>Register</Button>
+        <div className={styles.bodyBlock}>
+          <div className={styles.title}>
+            <h3>Register</h3>
           </div>
-        }
+
+          {chooseTypeRegistration ?
+            <>
+
+              <div className={styles.chooseButtonWrapper}>
+                <Button className="primary" onClick={() => handleChooseRegistration({ type: 'createAddress' })}>Create new Bitcoin address</Button>
+              </div>
+              <div className={styles.chooseButtonWrapper}>
+                <Button className="clean" onClick={() => handleChooseRegistration({ type: 'haveAddress' })}>I have Bitcoin address</Button>
+              </div>
+
+            </>
+            :
+            <div className={styles.formWrapper}>
+              {typeRegistration === typeMap.haveAddress && <Input title={'Enter Bitcoin address'} name={'wif'} warning={form.wif.warning} type={'text'} handleChange={handleForm} value={form.wif.value} />}
+              <Input title={'Nickname'} name={'userName'} warning={form.userName.warning} type={'text'} handleChange={handleForm} value={form.userName.value} />
+              <Input title={'Password'} type={'password'} warning={form.password.warning} name={'password'} handleChange={handleForm} value={form.password.value} />
+              <Input title={'Repeat password'} type={'password'} warning={form.passwordRepeat.warning} name={'passwordRepeat'} handleChange={handleForm} value={form.passwordRepeat.value} />
+              <NavLink to={routes.passwordRecovery} className={styles.passForgot}> Forgot your password?</NavLink>
+              <Button className="primary" onClick={() => { handleSendForm() }}>Register</Button>
+            </div>
+          }
+        </div>
         <div className={styles.footer}>
           <NavLink to={routes.login} className={styles.passForgot}> I have an account</NavLink>
         </div>

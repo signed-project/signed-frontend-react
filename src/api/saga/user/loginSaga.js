@@ -9,9 +9,9 @@ import wif from 'wif';
 import bip38 from 'bip38';
 
 const sendUserData = async (axios, data) => {
-    console.log('data', data);
     try {
         let res = await axios.post(userApi.LOGIN_EXCHANGE_EPHEMERAL_KEYS, data);
+        console.log('resresresresresresresres', res);
         return res;
     } catch (error) {
         console.log("[sendLogin][sendUserData]", error);
@@ -37,15 +37,19 @@ const loginGetUser = async (axios, data) => {
 
 function* workerLogin(action) {
     const axios = yield select((state) => state.axios.axios);
-    let resFirstStep, isProof, serverSessionProof;
+    let resFirstStep, isProof, serverSessionProof, sendData;
     const clientEphemeral = srp.generateEphemeral()
     const { password, userName, history } = action.payload;
     try {
-        const sendData = { userName: userName, clientPublicEphemeral: clientEphemeral.public };
-        const { data } = yield call(sendUserData, axios, sendData);
-        resFirstStep = data;
+        sendData = { userName: userName, clientPublicEphemeral: clientEphemeral.public };
+        const result = yield call(sendUserData, axios, sendData);
+        if (result?.data) {
+            resFirstStep = result?.data
+        }
+        console.log('result----------result?.data', result);
     } catch (e) {
         console.warn('workerLogin--1', e);
+        console.warn('workerLogin--1', sendData);
     }
     try {
         const privateKey = srp.derivePrivateKey(resFirstStep.salt, userName, password);
@@ -107,6 +111,7 @@ function* workerLogin(action) {
                 action.payload.history.push(routes.feed);
             }
         }
+
     } catch (e) {
         console.warn('workerLogin--3', e);
     }

@@ -13,7 +13,7 @@ export class User {
                     contentType: "image/jpeg",
                     hash: "f433c21fe3c6c7475f7be0017294547e93d7fcd44617f62bf7f369a13b48e764"
                 },
-                hosts: data.hosts ? data.hosts : [{
+                hosts: [{
                     fileStores: ['jdjjdj'],
                     index: "url"
                 }],
