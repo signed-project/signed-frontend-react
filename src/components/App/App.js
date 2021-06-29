@@ -16,9 +16,9 @@ const App = () => {
   return (
     <BrowserRouter basename={'/'}>
       <LayoutProvider.Provider value={state}>
-        <BrowserRouter>
-          <MainRouts />
-        </BrowserRouter>
+        {/* <BrowserRouter> */}
+        <MainRouts />
+        {/* </BrowserRouter> */}
       </LayoutProvider.Provider>
     </BrowserRouter >
   );

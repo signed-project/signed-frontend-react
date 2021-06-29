@@ -1,11 +1,8 @@
-
-
 import { takeEvery, call, select, put } from "redux-saga/effects";
 import { userApi } from "../../../config/http.config";
 import { ACTIONS as ACTIONS_USER } from "../../storage/user";
 import { ACTIONS as ACTIONS_POST } from "../../storage/post";
 import { User } from '../../models/user';
-
 
 const getTokenPair = async (axios, token) => {
     try {

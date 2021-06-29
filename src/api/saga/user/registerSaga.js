@@ -26,9 +26,8 @@ const sendUserData = async (axios, data) => {
     }
 };
 
-
-
 export function* workerRegister(action) {
+    yield put({ type: ACTIONS_USER.SET_LOADING, payload: true });
     let user;
     console.log('workerRegister', workerRegister);
     const axios = yield select((state) => state.axios.axios);
@@ -59,6 +58,7 @@ export function* workerRegister(action) {
         yield put({ type: ACTIONS_POST.GET_BOOK, payload: { isRegistered: true } });
         history.push(routes.feed);
     }
+    yield put({ type: ACTIONS_USER.SET_LOADING, payload: false });
 }
 
 export default function* watchRegister() {

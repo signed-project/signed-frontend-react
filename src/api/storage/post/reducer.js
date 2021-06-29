@@ -8,12 +8,14 @@ export const ACTIONS = {
   SET_POST_HASH: "POST::SET_POST_HASH",
   SET_POST_LATEST: "POST::SET_POST_LATEST",
   GET_BOOK: "POST::GET_BOOK",
+  TEST: "POST::TEST",
 };
 
 const initialState = {
   stream: [],
   latest: {},
   hashed: {},
+  test: ''
 };
 
 const postReducer = (state = initialState, action) => {
@@ -35,8 +37,6 @@ const postReducer = (state = initialState, action) => {
       };
     case ACTIONS.ADD_POST_TO_STREAM:
       const currentStream = state.stream.filter(post => post.id !== action.payload.id)
-
-
       return {
         ...state,
         stream: [...currentStream, action.payload],
@@ -59,6 +59,11 @@ const postReducer = (state = initialState, action) => {
           ...state.latest,
           [compositeKey]: action.payload,
         },
+      };
+    case ACTIONS.TEST:
+      return {
+        ...state,
+        test: action.payload
       };
     default:
       return state;

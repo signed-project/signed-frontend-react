@@ -36,20 +36,22 @@ const loginGetUser = async (axios, data) => {
 };
 
 function* workerLogin(action) {
+    yield put({ type: ACTIONS_USER.SET_LOADING, payload: true });
     const axios = yield select((state) => state.axios.axios);
     let resFirstStep, isProof, serverSessionProof, sendData;
     const clientEphemeral = srp.generateEphemeral()
     const { password, userName, history } = action.payload;
+    const loginError = 'Nickname or password is invalid';
+    yield put({ type: ACTIONS_USER.SET_LOGIN_ERROR, payload: '' });
     try {
         sendData = { userName: userName, clientPublicEphemeral: clientEphemeral.public };
         const result = yield call(sendUserData, axios, sendData);
         if (result?.data) {
             resFirstStep = result?.data
         }
-        console.log('result----------result?.data', result);
     } catch (e) {
         console.warn('workerLogin--1', e);
-        console.warn('workerLogin--1', sendData);
+        yield put({ type: ACTIONS_USER.SET_LOGIN_ERROR, payload: loginError });
     }
     try {
         const privateKey = srp.derivePrivateKey(resFirstStep.salt, userName, password);
@@ -61,12 +63,7 @@ function* workerLogin(action) {
         }
         const { data } = yield call(sendSessionProof, axios, dataSendSessionProof);
         serverSessionProof = data.serverSessionProof;
-        console.log('clientEphemeral.public', clientEphemeral.public);
-        console.log('clientSession', clientSession);
-        console.log('serverSessionProof', serverSessionProof);
-
         const isVerify = srp.verifySession(clientEphemeral.public, clientSession, serverSessionProof);
-        // const isVerify = srp.verifySession('clientEphemeral.public', clientSession, 'serverSessionProof');
         console.log('isVerify', isVerify);
 
         const proof = typeof isVerify === 'undefined';
@@ -77,7 +74,8 @@ function* workerLogin(action) {
         } else { isProof = false };
     } catch (e) {
         console.warn('workerLogin--2', e);
-        isProof = false
+        isProof = false;
+        yield put({ type: ACTIONS_USER.SET_LOGIN_ERROR, payload: loginError });
     }
 
 
@@ -89,11 +87,8 @@ function* workerLogin(action) {
             };
             const { data } = yield call(loginGetUser, axios, sendLoginData);
             if (data?.token && data?.wif) {
-
                 const decryptedKey = bip38.decrypt(data?.wif, password)
-
                 const wifEncode = wif.encode(0x80, decryptedKey.privateKey, decryptedKey.compressed);
-
                 sessionStorage.setItem('accessToken', data?.token);
                 sessionStorage.setItem('wif', wifEncode);
 
@@ -111,10 +106,10 @@ function* workerLogin(action) {
                 action.payload.history.push(routes.feed);
             }
         }
-
     } catch (e) {
         console.warn('workerLogin--3', e);
     }
+    yield put({ type: ACTIONS_USER.SET_LOADING, payload: false });
 }
 
 export default function* watchLogin() {

@@ -22,7 +22,7 @@ const WelcomeSing = () => {
                 </div>
                 <div className={styles.buttonWrapper}>
                     <Button className="clean" onClick={() => handleGoingTo(routes.register)}>Sign up </Button>
-                    <Button className="primary" onClick={() => handleGoingTo(routes.login)}>Sign in</Button>
+                    <Button className="primary" onClick={() => handleGoingTo(routes.login)}>Log in</Button>
                 </div>
             </div>
         </>

@@ -16,9 +16,8 @@ import jwt from 'jsonwebtoken';
 import { userActions } from '../../api/storage/user';
 import { postActions } from '../../api/storage/post';
 
-
 const MainRouts = () => {
-    const user = useSelector((state) => state.user);
+    // const user = useSelector((state) => state.user);
     const history = useHistory();
     const dispatch = useDispatch();
     const location = useLocation();
@@ -82,7 +81,6 @@ const MainRouts = () => {
                 }
                 }
             </LayoutProvider.Consumer>
-
         </>
     )
 }

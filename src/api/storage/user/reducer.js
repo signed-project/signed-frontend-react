@@ -4,7 +4,8 @@ export const ACTIONS = {
   // GET_USER_DATA_BY_TOKEN: 'USER::GET_USER_DATA_BY_TOKEN',
   SEND_REGISTER_DATA: 'USER::SEND_REGISTER_DATA',
   SEND_LOGIN_DATA: 'USER::SEND_LOGIN_DATA',
-
+  SET_LOGIN_ERROR: 'USER::SET_LOGIN_ERROR',
+  SET_LOADING: 'USER::SET_LOADING',
 };
 
 const initialStateMock = {
@@ -13,7 +14,7 @@ const initialStateMock = {
   subscribed: [],
   wif: '',
   token: '',
-  signInError: '',
+  loginError: '',
   source: {
     address: "19FRhaywUUpvMxUMSxgpTvc44Bj9VFd3BT",
     name: "Name1",
@@ -38,6 +39,9 @@ const initialState = {
   subscribed: [],
   wif: '',
   token: '',
+  loginError: '',
+  isLoginProcess: false,
+  test: '',
   source: {},
 };
 
@@ -53,8 +57,16 @@ const userReducer = (state = initialState, action) => {
         token: action.token,
         isAuth: true,
       };
-
-
+    case ACTIONS.SET_LOGIN_ERROR:
+      return {
+        ...state,
+        loginError: action.payload
+      };
+    case ACTIONS.SET_LOADING:
+      return {
+        ...state,
+        isLoginProcess: action.payload
+      };
     default:
       return state;
   }

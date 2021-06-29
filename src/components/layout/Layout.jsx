@@ -12,11 +12,11 @@ const Layout = ({ children, theme }) => {
 
   const [isAuthPage, setISAuthPage] = useState(false)
   const user = useSelector(state => state.user);
+  // const user = { isAuth: false }
   const location = useLocation();
 
 
-  console.log(' user.isAuth', user.isAuth);
-  console.log(' user.isAuth[---------------------------]', location);
+
 
   useEffect(() => {
     setISAuthPage(false)

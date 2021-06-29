@@ -32,4 +32,15 @@ export const getHosts = (payload) => ({
     payload
 });
 
+export const setLoginError = (payload) => ({
+    type: ACTIONS.SET_LOGIN_ERROR,
+    payload
+});
+
+export const setLoading = (payload) => ({
+    type: ACTIONS.SET_LOADING,
+    payload
+});
+ 
+
 

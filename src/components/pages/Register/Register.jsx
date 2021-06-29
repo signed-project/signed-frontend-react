@@ -25,13 +25,24 @@ const Register = ({ toggleTheme }) => {
   const history = useHistory();
   const dispatch = useDispatch();
   const axios = useSelector(state => state.axios.axios);
+  const isLoginProcess = useSelector(state => state.user.isLoginProcess);
   const [form, setForm] = useState(initialForm);
   const [chooseTypeRegistration, setChooseTypeRegistration] = useState(true);
   const [typeRegistration, setTypeRegistration] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
 
   useEffect(() => {
     toggleTheme(false);
   }, [toggleTheme]);
+
+
+  useEffect(() => {
+    setIsLoading(isLoginProcess)
+  }, [isLoginProcess]);
+
+
+  console.log('isLoading', isLoading);
 
   useEffect(() => {
     if (typeRegistration === typeMap.createAddress)
@@ -65,7 +76,8 @@ const Register = ({ toggleTheme }) => {
       const isFreeLogin = data?.isFreeLogin
       let warningMessage = '';
       if (isFreeLogin === false) {
-        warningMessage = 'The login you entered is already in use'
+        warningMessage = 'The login you entered is already in use';
+        dispatch(userActions.setLoading(false));
       }
       setForm((prev) => {
         const userNameItem = form['userName'];
@@ -121,8 +133,10 @@ const Register = ({ toggleTheme }) => {
     if (!formValidate()) {
       return;
     }
+    dispatch(userActions.setLoading(true));
 
     if (!await checkIsLoginFree({ userName: form.userName.value })) {
+      dispatch(userActions.setLoading(false));
       return;
     }
 
@@ -180,7 +194,7 @@ const Register = ({ toggleTheme }) => {
               <Input title={'Password'} type={'password'} warning={form.password.warning} name={'password'} handleChange={handleForm} value={form.password.value} />
               <Input title={'Repeat password'} type={'password'} warning={form.passwordRepeat.warning} name={'passwordRepeat'} handleChange={handleForm} value={form.passwordRepeat.value} />
               <NavLink to={routes.passwordRecovery} className={styles.passForgot}> Forgot your password?</NavLink>
-              <Button className="primary" onClick={() => { handleSendForm() }}>Register</Button>
+              <Button className="primary" isLoading={isLoading} onClick={() => { handleSendForm() }}>Register</Button>
             </div>
           }
         </div>

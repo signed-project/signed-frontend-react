@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from './button.module.scss'
-
+import Loader from '../loader/Loader';
 
 /**
  * @param {string}  classNames:  - defines button style and colors
@@ -8,7 +8,7 @@ import styles from './button.module.scss'
  *  
  */
 
-const Button = ({ className, onClick, disabled, type, children }) => {
+const Button = ({ className, onClick, disabled, type, children, isLoading, loaderColor }) => {
   let buttonClasses = [styles.button]
   if (className) {
     const currentClasses = className.split(' ')
@@ -23,7 +23,7 @@ const Button = ({ className, onClick, disabled, type, children }) => {
       onClick={() => onClick()}
       disabled={disabled}
       type={type ? type : 'button'}
-    > {children}
+    >  {isLoading ? <Loader loaderColor={'white'} /> : children}
     </button>
   )
 }

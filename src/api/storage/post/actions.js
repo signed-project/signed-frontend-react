@@ -20,3 +20,8 @@ export const getBook = (payload) => ({
   type: ACTIONS.GET_BOOK,
   payload,
 });
+
+export const test = (payload) => ({
+  type: ACTIONS.TEST,
+  payload,
+});

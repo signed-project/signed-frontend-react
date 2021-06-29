@@ -107,7 +107,6 @@ function* workerGetBook(action) {
   else {
     try {
       arrPosts = yield call(getAllHostsBook);
-      console.log('arrPosts---------------------------', arrPosts);
     } catch (e) {
       console.warn('[getBookSaga][getAllHosts]', e)
       arrPosts = [];
@@ -129,16 +128,11 @@ function* workerGetBook(action) {
     type: SOURCE_ACTIONS.SET_SOURCE_HASH,
     payload: book.latestSource,
   });
-  history.push(routes.feed);
+  if (history) {
+    history.push(routes.feed);
+  }
 }
 
-// while (true) {
-//         try {
-//             yield take('setAxios',);
-//         } catch (err) {
-//             console.error(err);
-//         }
-//     }
 
 export default function* watchGetBook() {
   yield takeEvery(POST_ACTIONS.GET_BOOK, workerGetBook);
