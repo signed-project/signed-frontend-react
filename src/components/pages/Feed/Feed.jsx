@@ -50,7 +50,7 @@ const Feed = ({ toggleTheme }) => {
   // TODO : refactor change less signature
   const renderPosts = posts
     .slice()
-    .reverse()
+    // .reverse()
     .map((p, i) => {
 
       return (

@@ -17,29 +17,33 @@ const sortPostUpdateAt = (arr) => {
         return isExist;
     };
 
-    arr.map(post => {
-        if (arr.filter(p => post.id === p.id).length > 1
-            && !isAlreadyExist(post.id)) {
-            samesPost = [];
-            arr.filter(p => p.id === post.id).map(pt => {
-                samesPost.push(pt);
-                return pt;
-            });
-            uniquePost.push(samesPost)
-        }
-        else if (arr.filter(p => post.id === p.id).length === 1) {
-            uniquePost.push([post])
-        };
-        return post;
-    });
+    if (arr)
 
-    const sortUniquePost = uniquePost.slice().map(post => {
-        if (post.length > 1) {
-            post.sort((a, b) => b.updatedAt - a.updatedAt)
-            return post[0]
-        } else return post[0];
-    })
+        arr.map(post => {
+            if (arr.filter(p => post.id === p.id).length > 1
+                && !isAlreadyExist(post.id)) {
+                samesPost = [];
+                arr.filter(p => p.id === post.id).map(pt => {
+                    samesPost.push(pt);
+                    return pt;
+                });
+                const samePostSort = samesPost.sort((a, b) => b.updatedAt - a.updatedAt)
+                uniquePost.push(samePostSort[0])
+            }
+            else if (arr.filter(p => post.id === p.id).length === 1) {
+                uniquePost.push(post)
+            };
+            return post;
+        });
 
+    const sortUniquePost = uniquePost.slice().sort((a, b) => b.updatedAt - a.updatedAt)
+
+    // const sortUniquePost = uniquePost.slice().map(post => {
+    //     if (post.length > 1) {
+    //         post.sort((a, b) => b.updatedAt - a.updatedAt)
+    //         return post[0]
+    //     } else return post[0];
+    // })
     return sortUniquePost
 }
 
@@ -53,6 +57,8 @@ const getPostStream = (arr) => {
             return false;
         }
     });
+    console.log('newArr---hobbit-2', newArr);
+    console.log(' sortPostUpdateAt(newArr)', sortPostUpdateAt(newArr));
     return sortPostUpdateAt(newArr);
 }
 

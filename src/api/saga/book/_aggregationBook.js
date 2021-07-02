@@ -11,8 +11,7 @@ const getHashedData = (arr) => {
 }
 
 const getPostsHashValid = (arr) => {
-    const hashValidArr = arr.filter(post => post.hash === getHash(post))
-    return hashValidArr;
+    return arr.filter(post => post.hash === getHash(post))
 }
 
 const getLatestPost = (arr) => {
@@ -36,6 +35,7 @@ const getLatestSource = (arr) => {
 
 export const getCashData = (posts, sources) => {
     const postHashValid = getPostsHashValid(posts);
+    console.log('Hobbit---postHashValid', postHashValid);
     // TOOD: check sourcesHashValid add react signatures to source
     const sourcesHashValid = sources;
     return {

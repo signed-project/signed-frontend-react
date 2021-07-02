@@ -155,8 +155,8 @@
 }
 
 .imgSmallWrapper {
-  width: 95px;
-  height: 95px;
+  width: $imgSmallSquare;
+  height: $imgSmallSquare;
   margin-right: 2px;
   position: relative;
   overflow: hidden;
@@ -178,8 +178,8 @@
 
 .impPreviewShowMore {
   background-color: black;
-  width: 95px;
-  height: 95px;
+  width: $imgSmallSquare;
+  height: $imgSmallSquare;
   color: $colorGrey400;
   border-radius: 0 0 4px 0;
   display: flex;
@@ -226,7 +226,8 @@
 
 .img_preview_big_img_wrapper {
   position: relative;
-  max-width: 288px;
+  max-width: $imgBigWidth;
+  // max-width: 288px;
 }
 
 .delIcon {

@@ -93,6 +93,7 @@ const NewPost = ({ toggleTheme }) => {
         recursion(filterComment.target.postHash, level - 1);
       } else {
         commentWay.push(filterComment);
+        
         return;
       }
     };

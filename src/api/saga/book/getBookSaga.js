@@ -94,14 +94,15 @@ function* workerGetBook(action) {
 
     gatheredPosts = Array.isArray(gatheredPosts) ? gatheredPosts : [gatheredPosts];
 
-    console.log('----gatheredPosts--------', gatheredPosts);
-
     try {
+      // arrPosts = [...myPosts];
       arrPosts = [...myPosts, ...gatheredPosts];
+      console.log('myPosts', myPosts);
+      console.log('gatheredPosts', gatheredPosts);
+      console.log('arrPosts', arrPosts);
     } catch (e) {
       console.warn('Destructuring myPost, hostPost, hostsSources', e)
     }
-
   }
 
   else {
@@ -115,6 +116,7 @@ function* workerGetBook(action) {
   const hostsSources = dummyBook.source;
   arrSources = [...hostsSources];
   if (!arrPosts) { return }
+  console.log('arrPosts----2', arrPosts);
   const book = yield call(getCashData, arrPosts, arrSources);
   console.log('book----get --book', book);
   yield put({ type: POST_ACTIONS.SET_POST_STREAM, payload: book.stream });
