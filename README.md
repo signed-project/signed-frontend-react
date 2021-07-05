@@ -28,7 +28,7 @@
 * hash - string, every source shall be stored as a separate file in the fileStore
 
 ## host
-* fileStore - url
+* assets - url
 * index - url
 
 ## signature
@@ -45,7 +45,6 @@
 
 ## index
 * mainSource - source
-* fileStores - [url]
 * recentPosts - [post]
 * pinnedPosts - [post]
 * sources - [source]
