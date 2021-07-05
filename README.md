@@ -28,7 +28,7 @@
 * hash - string, every source shall be stored as a separate file in the fileStore
 
 ## host
-* fileStores - [url]
+* fileStore - url
 * index - url
 
 ## signature
