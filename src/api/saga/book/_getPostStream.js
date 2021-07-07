@@ -48,8 +48,9 @@ const sortPostUpdateAt = (arr) => {
 }
 
 const getPostStream = (arr) => {
+    console.log('arr----------getPostStream', arr);
     const newArr = arr.filter(post => {
-        if (isPostFieldValid(post) && isSignatureValid(post) && post.type !== 'reply') {
+        if (isPostFieldValid(post) && isSignatureValid({ data: post }) && post.type !== 'reply') {
             return true
         }
         else {

@@ -1,6 +1,7 @@
 import { takeEvery, call, select, put } from "redux-saga/effects";
 import { postApi } from "../../../config/http.config";
 import { ACTIONS } from "../../storage/post";
+import { ACTIONS as ACTIONS_USER } from "../../storage/user";
 import axios from "axios";
 const sendPosts = async (axiosInst, post) => {
   try {
@@ -19,6 +20,7 @@ const sendPosts = async (axiosInst, post) => {
 };
 
 export function* workerSendPost(action) {
+  yield put({ type: ACTIONS_USER.SET_LOADING, payload: true });
   console.log("action====================[saga]", action);
 
   const axios = yield select((state) => state.axios.axios);
@@ -29,6 +31,7 @@ export function* workerSendPost(action) {
   if (action.payload.type !== "reply") {
     yield put({ type: ACTIONS.ADD_POST_TO_STREAM, payload: action.payload });
   }
+  yield put({ type: ACTIONS_USER.SET_LOADING, payload: false });
 }
 
 export default function* watchSendPost() {

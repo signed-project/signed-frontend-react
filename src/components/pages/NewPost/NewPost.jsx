@@ -22,6 +22,8 @@ import useFiles from "../../customHooks/useFiles";
 import Preview from "../../utils/Preview/Preview";
 import Slider from "../../utils/Slider/Slider";
 import getImgArr from "../../customHooks/getImgSources";
+import { set } from "date-fns/esm";
+import { setLoading } from "../../../api/storage/user/actions";
 
 // TOTO: this component too mach long need to split up it!
 /**
@@ -43,7 +45,7 @@ const NewPost = ({ toggleTheme }) => {
   } = queryString.parse(location.search);
 
   const { uploadFile } = useFiles();
-
+  const isLoginProcess = useSelector(state => state.user.isLoginProcess);
   const history = useHistory();
   const dispatch = useDispatch();
   const [message, setMessage] = useState("");
@@ -53,6 +55,7 @@ const NewPost = ({ toggleTheme }) => {
   const [others, setOthers] = useState(false);
   const [isFullImgPrev, setIsFullImgPrev] = useState(false);
   const [firstSlide, setFirstSlide] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [post, setPost] = useState({
     type: "post",
@@ -60,6 +63,15 @@ const NewPost = ({ toggleTheme }) => {
     source: "",
     isComment: false,
   });
+
+  useEffect(() => {
+    setIsLoading(isLoginProcess)
+  }, [isLoginProcess]);
+
+
+  console.log('isLoading', isLoading);
+  console.log('isLoginProcess', isLoginProcess);
+
 
   useEffect(() => {
     scroll.scrollToBottom();
@@ -93,7 +105,7 @@ const NewPost = ({ toggleTheme }) => {
         recursion(filterComment.target.postHash, level - 1);
       } else {
         commentWay.push(filterComment);
-        
+
         return;
       }
     };
@@ -165,53 +177,58 @@ const NewPost = ({ toggleTheme }) => {
     return mentions;
   };
 
-  const handlePublicPost = async () => {
+  const handlePublicPost = () => {
+    if (isLoading) {
+      return
+    }
     if (post.type === "reply" && !replyingPage) {
       setReplyingPage(true);
       return;
     }
     const mentions = getMentions();
-
-    const attachments = await Promise.all(
-      uploadedImg.map(async (val) => {
-        if (val.file) {
-          let data, newMedia;
-          try {
-            ({ data } = await uploadFile(val.file));
-            const media = new Media({ type: data.type, hash: data.hash });
-            newMedia = media.newMedia;
-          } catch (e) {
-            console.warn("[NewPost][attachments]", e);
+    (async () => {
+      const attachments = await Promise.all(
+        uploadedImg.map(async (val) => {
+          if (val.file) {
+            let data, newMedia;
+            try {
+              ({ data } = await uploadFile(val.file));
+              const media = new Media({ type: data.type, hash: data.hash });
+              newMedia = media.newMedia;
+            } catch (e) {
+              console.warn("[NewPost][attachments]", e);
+            }
+            return newMedia;
+          } else {
+            delete val.imagePreviewUrl;
+            return val;
           }
-          return newMedia;
-        } else {
-          delete val.imagePreviewUrl;
-          return val;
-        }
-      })
-    );
+        })
+      );
 
-    const postInstance = new PostModel({
-      id: post.id ? post.id : '',
-      source: user.source,
-      type: post.type,
-      text: message,
-      target: {
-        postHash: post.target?.postHash ? post.target?.postHash : '',
-        sourceHash: post.target?.sourceHash ? post.target?.sourceHash : '',
-      },
-      // target: post.hash ? { postHash: post.hash, sourceHash: post.source } : "",
-      mentions: mentions?.length ? mentions : "",
-      attachments: attachments.length > 0 ? attachments : "",
-      wif: user.wif,
-    });
+      const postInstance = new PostModel({
+        id: post.id ? post.id : '',
+        source: user.source,
+        type: post.type,
+        text: message,
+        target: {
+          postHash: post.target?.postHash ? post.target?.postHash : '',
+          sourceHash: post.target?.sourceHash ? post.target?.sourceHash : '',
+        },
+        // target: post.hash ? { postHash: post.hash, sourceHash: post.source } : "",
+        mentions: mentions?.length ? mentions : "",
+        attachments: attachments.length > 0 ? attachments : "",
+        wif: user.wif,
+      });
 
-    const newPost = postInstance.newPost;
+      const newPost = postInstance.newPost;
 
-    console.log('newPost-------------', newPost);
+      setMessage('');
+      setUploadedImg([]);
+      dispatch(postActions.sendPost(newPost));
+      history.push(routes.feed);
+    })()
 
-    dispatch(postActions.sendPost(newPost));
-    history.push(routes.feed);
   };
 
   const renderComments = comments
@@ -291,6 +308,8 @@ const NewPost = ({ toggleTheme }) => {
     setIsFullImgPrev(true);
     setFirstSlide(i);
   };
+
+  console.log('_dirname434', __dirname);
 
   console.log("replyingPage: ", replyingPage);
   const handleDeleteImgPreview = (i) => {
@@ -403,7 +422,10 @@ const NewPost = ({ toggleTheme }) => {
           </label>
         </div>
         <div className={style.buttonWrapper}>
-          <Button className="primary withIcon " onClick={handlePublicPost}>
+          <Button isLoading={isLoading} disabled={isLoading} className="primary withIcon " onClick={() => {
+            setIsLoading(true)
+            handlePublicPost()
+          }}>
             <img
               src={icon.messageSend}
               alt="send message icon"

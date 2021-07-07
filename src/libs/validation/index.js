@@ -70,11 +70,11 @@ export const hostSchema = {
   $id: schemaId.host,
   type: "object",
   properties: {
-    fileStores: { type: "array", items: { type: "string" } },
+    assets: { type: "string" },
     index: { type: "string" }
   }
 }
-
+//   assets: { type: "array", items: { type: "string" } },
 export const sourceSchema = {
   $id: schemaId.source,
   type: "object",

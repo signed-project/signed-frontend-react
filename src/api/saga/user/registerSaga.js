@@ -3,9 +3,10 @@ import { userApi } from "../../../config/http.config";
 import { ACTIONS as ACTIONS_USER } from "../../storage/user";
 import { ACTIONS as ACTIONS_POST } from "../../storage/post";
 import srp from 'secure-remote-password/client';
-import { getRegisterUserData } from '../../../libs/signature.js';
+import { getRegisterUserData, getSignatures, getHash } from '../../../libs/signature.js';
 import { User } from '../../models/user';
 import routes from '../../../config/routes.config';
+// import routes from '../../../config/routes.config';
 
 const getDataSrp = ({ userName, password }) => {
     const salt = srp.generateSalt();
@@ -44,16 +45,20 @@ export function* workerRegister(action) {
 
     const userResponse = yield call(sendUserData, axios, data);
     if (userResponse?.data) {
+        // getSignatures()
+
         const userModel = new User({
             isAuth: true,
             address: userResponse.data.address,
             name: userResponse.data.userName,
             wif: userBitcoinData.wif,
-            subscribed: userResponse.data.subscribed
+            subscribed: userResponse.data.subscribed,
+            host: { assets: process.env.REACT_APP_API_HOST_ASSETS, index: `${process.env.REACT_APP_API_HOST}/prod/${userResponse.data.address}` }
         });
         user = userModel.newUser;
         sessionStorage.setItem('accessToken', userResponse.data.accessToken);
         sessionStorage.setItem('wif', userBitcoinData.wif);
+ 
         yield put({ type: ACTIONS_USER.SET_USER, payload: user });
         yield put({ type: ACTIONS_POST.GET_BOOK, payload: { isRegistered: true } });
         history.push(routes.feed);

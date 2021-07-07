@@ -42,11 +42,8 @@ export class Post {
             mentions: this.data.mentions,
         };
 
-        const hash = getHash(post);
-
-        console.log('post', post);
-
-        const signature = getSignatures(post, this.data.wif);
+        const hash = getHash({ data: post });
+        const signature = getSignatures({ data: post, wif: this.data.wif });
 
         return {
             ...post,

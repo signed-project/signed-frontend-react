@@ -14,11 +14,11 @@ import Loader from '../../utils/loader/Loader';
 
 const Login = ({ toggleTheme }) => {
 
-useEffect(() => {
+    useEffect(() => {
 
-return 
+        return
 
-}, [])
+    }, [])
 
     useEffect(() => {
         toggleTheme(false);
@@ -38,7 +38,7 @@ return
 
     console.log('loginErrorState', loginErrorState);
 
- 
+
 
     useEffect(() => {
         setLoginError(loginErrorState)

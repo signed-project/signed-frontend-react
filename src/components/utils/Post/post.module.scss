@@ -40,6 +40,7 @@
 .menuIcon {
   margin-right: 14px;
   height: 15px;
+  cursor: pointer;
 }
 
 .wrapperContent {
@@ -92,6 +93,7 @@
 
 .bodyWrapper {
   margin: 8px 8px;
+  cursor: pointer;
 }
 .commentBodyWrapper {
   margin: 12px 0 12px 0;
@@ -146,5 +148,3 @@
   flex-direction: row;
   justify-content: space-between;
 }
-
-

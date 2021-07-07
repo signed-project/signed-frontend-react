@@ -7,7 +7,7 @@
 }
 
 .bodyBlock {
-  min-height: 600px;
+  // min-height: 600px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -41,10 +41,10 @@
   margin-bottom: 37px;
 }
 
-// .footer {
-//   position: absolute;
-//   bottom: 45px;
-// }
+.footer {
+  margin-top: 45px;
+  margin-bottom: 20px;
+}
 
 .chooseButtonWrapper {
   margin-top: 22px;

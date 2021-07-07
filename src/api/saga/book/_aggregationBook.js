@@ -11,7 +11,7 @@ const getHashedData = (arr) => {
 }
 
 const getPostsHashValid = (arr) => {
-    return arr.filter(post => post.hash === getHash(post))
+    return arr.filter(post => post.hash === getHash({ data: post }))
 }
 
 const getLatestPost = (arr) => {

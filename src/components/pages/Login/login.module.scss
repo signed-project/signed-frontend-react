@@ -7,7 +7,7 @@
 }
 
 .bodyBlock {
-  min-height: 600px;
+  // min-height: 600px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -43,4 +43,10 @@
 .loginError {
   height: 20px;
   color: red;
+}
+
+.footer {
+  //   position: absolute;
+  margin-top: 70px;
+  margin-bottom: 20px;
 }

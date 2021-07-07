@@ -16,7 +16,7 @@ const Button = ({ className, onClick, disabled, type, children, isLoading, loade
       buttonClasses = [...buttonClasses, styles[type]]
     })
   }
-
+  console.log('isLoading---------isLoading----isLoading', isLoading);
   return (
     <button
       className={buttonClasses.join(' ')}

@@ -178,7 +178,6 @@ const Register = ({ toggleTheme }) => {
 
           {chooseTypeRegistration ?
             <>
-
               <div className={styles.chooseButtonWrapper}>
                 <Button className="primary" onClick={() => handleChooseRegistration({ type: 'createAddress' })}>Create new Bitcoin address</Button>
               </div>

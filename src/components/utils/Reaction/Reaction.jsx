@@ -27,9 +27,10 @@ const Reaction = ({ likesCount, repostsCount, handleLike, handleRepost, handleRe
                     </div>
                 </div>
                 <div className={styles.actionReaction}>
-                    <Button className='clean_white' onClick={() => handleLike()}>Like</Button>
-                    <Button className='clean_white' onClick={() => handleReply()}>Reply</Button>
-                    <Button className='clean_white' onClick={() => handleRepost()}>Repost</Button>
+                    <div><Button className='clean_white' onClick={() => handleLike()}>Like</Button></div>
+                    <div> <Button className='clean_white' onClick={() => handleReply()}>Reply</Button></div>
+                    <div><Button className='clean_white' onClick={() => handleRepost()}>Repost</Button></div>
+
                 </div>
             </div>
 
