@@ -5,6 +5,9 @@ import {
   animateScroll as scroll,
 } from "react-scroll";
 import icon from "../../../assets/svg/icon";
+// import icon from "@/assets/svg/icon";
+import logo from './logo.svg';
+
 import Avatar from "../../utils/Avatar/Avatar";
 import style from "./newPost.module.scss";
 import Button from "../../utils/Button/Button";
@@ -309,7 +312,7 @@ const NewPost = ({ toggleTheme }) => {
     setFirstSlide(i);
   };
 
-  console.log('_dirname434', __dirname);
+
 
   console.log("replyingPage: ", replyingPage);
   const handleDeleteImgPreview = (i) => {

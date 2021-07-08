@@ -12,39 +12,14 @@ import Notification from '../pages/Notification/Notification';
 import routes from '../../config/routes.config';
 import Login from '../pages/Login/Login';
 import Register from '../pages/Register/Register';
-import jwt from 'jsonwebtoken';
-import { userActions } from '../../api/storage/user';
-import { postActions } from '../../api/storage/post';
+ 
 
 const MainRouts = () => {
     // const user = useSelector((state) => state.user);
-    const history = useHistory();
-    const dispatch = useDispatch();
-    const location = useLocation();
-    console.log('location.pathname', location.pathname);
-    const checkAuth = () => {
-        const accessToken = sessionStorage.getItem("accessToken");
-        const wif = sessionStorage.getItem("wif");
-        const accessTokenDecoded = jwt.decode(accessToken);
+ 
 
-        // if (user.isAuth === false && wif && accessToken && accessTokenDecoded.exp * 1000 > new Date().getTime()) {
-        if (wif && accessToken && accessTokenDecoded.exp * 1000 > new Date().getTime()) {
-            const payload = {
-                wif, accessToken, history
-            }
-            console.log('111111111111111111111111111111111111111111');
-            dispatch(userActions.getUser(payload));
-            // dispatch(postActions.getBook({ isRegistered: false }));
-        }
-        else {
-            console.log('2222222222222222222222222222222');
-            dispatch(postActions.getBook({ isRegistered: false, history }));
-        }
-    };
 
-    useEffect(() => {
-        checkAuth();
-    }, []);
+ 
 
     return (
         <>

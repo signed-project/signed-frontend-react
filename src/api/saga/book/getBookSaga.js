@@ -8,6 +8,9 @@ import axios from "axios";
 import routes from '../../../config/routes.config';
 const publicApiHost = process.env.REACT_APP_PUBLIC_API_HOST;
 const apiHost = process.env.REACT_APP_API_HOST;
+import { User } from '../../models/user';
+
+
 
 const getMyBook = async (address) => {
   try {
@@ -68,7 +71,52 @@ const getAllHostsBook = async () => {
 
 };
 
+const getUser = async ({ token }) => {
+  let res;
+  try {
+    const data = {
+      token
+    };
+    res = await axios.post(userApi.GET_USER, data);
+  } catch (error) {
+    console.log("[getUserInfo][error]", error);
+  }
+  return res;
+};
+
+
 function* workerGetBook(action) {
+  const accessToken = sessionStorage.getItem("accessToken");
+  const wif = sessionStorage.getItem("wif");
+  const accessTokenDecoded = jwt.decode(accessToken);
+
+  // if (user.isAuth === false && wif && accessToken && accessTokenDecoded.exp * 1000 > new Date().getTime()) {
+  if (wif && accessToken && accessTokenDecoded.exp * 1000 > new Date().getTime()) {
+
+    const resData = yield call(getUser, { token: accessToken });
+    if (resData) {
+      const { data } = resData;
+      const userModel = new User({
+        isAuth: true,
+        address: data.address,
+        name: data.userName,
+        wif: wif,
+        subscribed: data.subscribed
+      });
+      const user = userModel.newUser;
+      yield put({ type: ACTIONS_USER.SET_USER, payload: user });
+
+    }
+    // dispatch(postActions.getBook({ isRegistered: false }));
+  }
+  else {
+    console.log('2222222222222222222222222222222');
+    dispatch(postActions.getBook({ isRegistered: false, history }));
+  }
+
+
+
+
   const { isRegistered, history } = action.payload;
   console.log('!!!!!!!!!!!isRegistered!!!!!!!!!!', isRegistered);
   // const axios = yield select((state) => state.axios.axios);

@@ -14,7 +14,7 @@ const App = () => {
     toggleTheme: (val) => setThemeVal(val)
   };
   return (
-    <BrowserRouter basename={'/'}>
+    <BrowserRouter basename={window.location.pathname.replace('index.html', '')}>
       <LayoutProvider.Provider value={state}>
         {/* <BrowserRouter> */}
         <MainRouts />

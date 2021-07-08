@@ -14,7 +14,8 @@ export const filesApi = {
   FILES_TYPE: "/files/types",
   FILE_SIGNATURE: "/files/signatures",
   GET_FILE_PATH: "http://localhost:4001/static/",
-  GET_FILE_PATH: "https://kuku-staging.s3-us-west-2.amazonaws.com/public/static/img/",
+  // GET_FILE_PATH: "https://kuku-staging.s3-us-west-2.amazonaws.com/public/static/img/",
+  GET_FILE_PATH: "https://kuku-staging.s3-us-west-2.amazonaws.com/public/file_storage/",
 };
 
 export const userApi = {
