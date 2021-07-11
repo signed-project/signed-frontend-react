@@ -97,7 +97,8 @@ function* workerLogin(action) {
                     address: data.address,
                     name: data.login,
                     wif: wifEncode,
-                    subscribed: data.subscribed
+                    subscribed: data.subscribed,
+                    hosts: data.hosts
                 })
                 const userItem = userModel.newUser;
                 console.log('userItem', userItem);

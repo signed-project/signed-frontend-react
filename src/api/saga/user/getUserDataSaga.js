@@ -40,7 +40,8 @@ export function* workerGetUserData(action) {
             address: data.address,
             name: data.userName,
             wif: wif,
-            subscribed: data.subscribed
+            subscribed: data.subscribed,
+            hosts: data.hosts
         });
         const user = userModel.newUser;
         yield put({ type: ACTIONS_USER.SET_USER, payload: user });
@@ -48,6 +49,7 @@ export function* workerGetUserData(action) {
     }
 }
 
+// Todo delete this !!!!
 export default function* watchGetUserData() {
     yield takeEvery(ACTIONS_USER.GET_USER, workerGetUserData);
 }

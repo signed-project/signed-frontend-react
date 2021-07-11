@@ -35,12 +35,15 @@ export function* workerRegister(action) {
     const { userName, password, history } = action.payload;
     const srpData = getDataSrp({ userName: userName, password: password });
     const userBitcoinData = getRegisterUserData({ password: action.payload.password, wifString: action.payload.wif });
+    const hosts =
+        [{ assets: process.env.REACT_APP_API_HOST_ASSETS, index: `${process.env.REACT_APP_API_HOST}/prod/${userBitcoinData.address}` }];
     const data = {
         salt: srpData.salt,
         verifier: srpData.verifier,
         userName: userName,
         address: userBitcoinData.address,
         encryptedWif: userBitcoinData.encryptedWif,
+        hosts: hosts
     }
 
     const userResponse = yield call(sendUserData, axios, data);
@@ -53,12 +56,12 @@ export function* workerRegister(action) {
             name: userResponse.data.userName,
             wif: userBitcoinData.wif,
             subscribed: userResponse.data.subscribed,
-            host: { assets: process.env.REACT_APP_API_HOST_ASSETS, index: `${process.env.REACT_APP_API_HOST}/prod/${userResponse.data.address}` }
+            hosts
         });
         user = userModel.newUser;
         sessionStorage.setItem('accessToken', userResponse.data.accessToken);
         sessionStorage.setItem('wif', userBitcoinData.wif);
- 
+
         yield put({ type: ACTIONS_USER.SET_USER, payload: user });
         yield put({ type: ACTIONS_POST.GET_BOOK, payload: { isRegistered: true } });
         history.push(routes.feed);

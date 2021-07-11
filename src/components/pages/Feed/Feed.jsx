@@ -9,6 +9,9 @@ import routes from "../../../config/routes.config";
 const Feed = ({ toggleTheme }) => {
   const hashedPostMap = useSelector((state) => state.post.hashed);
   const stream = useSelector((state) => state.post.stream);
+
+  console.log('stream-------stream---------stream---------stream', stream);
+
   const [openMenuHash, setOpenMenuHash] = useState(null);
 
   const [posts, setPosts] = useState([]);

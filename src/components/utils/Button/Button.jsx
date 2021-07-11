@@ -8,7 +8,7 @@ import Loader from '../loader/Loader';
  *  
  */
 
-const Button = ({ className, onClick, disabled, type, children, isLoading, loaderColor }) => {
+const Button = ({ className, onClick, disabled = false, type, children, isLoading = false, loaderColor }) => {
   let buttonClasses = [styles.button]
   if (className) {
     const currentClasses = className.split(' ')
@@ -16,7 +16,7 @@ const Button = ({ className, onClick, disabled, type, children, isLoading, loade
       buttonClasses = [...buttonClasses, styles[type]]
     })
   }
-  console.log('isLoading---------isLoading----isLoading', isLoading);
+ 
   return (
     <button
       className={buttonClasses.join(' ')}

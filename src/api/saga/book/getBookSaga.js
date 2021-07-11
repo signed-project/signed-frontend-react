@@ -1,16 +1,17 @@
 import { takeEvery, call, select, put } from "redux-saga/effects";
 import { publicApi, userApi } from "../../../config/http.config";
 import { ACTIONS as POST_ACTIONS } from "../../storage/post";
+import { ACTIONS as USER_ACTIONS } from "../../storage/user";
 import { ACTIONS as SOURCE_ACTIONS } from "../../storage/source";
 import { dummyBook } from "../../../dummyData/dummyIndex";
 import { getCashData } from "./_aggregationBook";
 import axios from "axios";
-import routes from '../../../config/routes.config';
-const publicApiHost = process.env.REACT_APP_PUBLIC_API_HOST;
-const apiHost = process.env.REACT_APP_API_HOST;
+import jwt from 'jsonwebtoken';
 import { User } from '../../models/user';
 
 
+const publicApiHost = process.env.REACT_APP_PUBLIC_API_HOST;
+const apiHost = process.env.REACT_APP_API_HOST;
 
 const getMyBook = async (address) => {
   try {
@@ -71,7 +72,7 @@ const getAllHostsBook = async () => {
 
 };
 
-const getUser = async ({ token }) => {
+const getUser = async ({ axios, token }) => {
   let res;
   try {
     const data = {
@@ -85,15 +86,15 @@ const getUser = async ({ token }) => {
 };
 
 
-function* workerGetBook(action) {
+// function* workerGetBook(action) {
+export default function* watchGetBook() {
   const accessToken = sessionStorage.getItem("accessToken");
   const wif = sessionStorage.getItem("wif");
   const accessTokenDecoded = jwt.decode(accessToken);
-
-  // if (user.isAuth === false && wif && accessToken && accessTokenDecoded.exp * 1000 > new Date().getTime()) {
+  const axios = yield select((state) => state.axios.axios);
+  let gatheredPosts = [], arrPosts, arrSources, myPosts;
   if (wif && accessToken && accessTokenDecoded.exp * 1000 > new Date().getTime()) {
-
-    const resData = yield call(getUser, { token: accessToken });
+    const resData = yield call(getUser, { axios: axios, token: accessToken });
     if (resData) {
       const { data } = resData;
       const userModel = new User({
@@ -101,58 +102,38 @@ function* workerGetBook(action) {
         address: data.address,
         name: data.userName,
         wif: wif,
-        subscribed: data.subscribed
+        subscribed: data.subscribed,
+        hosts: data.hosts
       });
       const user = userModel.newUser;
-      yield put({ type: ACTIONS_USER.SET_USER, payload: user });
+      yield put({ type: USER_ACTIONS.SET_USER, payload: user });
 
+      try {
+        myPosts = yield call(getMyBook, data.address);
+      }
+      catch (e) {
+        myPosts = [];
+        console.warn("[workerGetBook][getMyBook]", e);
+      }
+
+      try {
+        if (Array.isArray(data.subscribed)) {
+          gatheredPosts = yield call(getSubscribedBook, { subscribed: data.subscribed });
+        }
+      } catch (e) {
+        console.warn("[workerGetBook][getSubscribedBook]", e);
+      }
+
+
+      try {
+        // arrPosts = [...myPosts];
+        arrPosts = [...myPosts, ...gatheredPosts];
+      } catch (e) {
+        console.warn('Destructuring myPost, hostPost, hostsSources', e)
+      }
     }
     // dispatch(postActions.getBook({ isRegistered: false }));
   }
-  else {
-    console.log('2222222222222222222222222222222');
-    dispatch(postActions.getBook({ isRegistered: false, history }));
-  }
-
-
-
-
-  const { isRegistered, history } = action.payload;
-  console.log('!!!!!!!!!!!isRegistered!!!!!!!!!!', isRegistered);
-  // const axios = yield select((state) => state.axios.axios);
-  let gatheredPosts = [], arrPosts, arrSources;
-  if (isRegistered) {
-    const { address } = yield select((state) => state.user.source);
-    const subscribed = yield select((state) => state.user?.subscribed);
-    let myPosts;
-    try {
-      myPosts = yield call(getMyBook, address);
-    }
-    catch (e) {
-      myPosts = [];
-      console.warn("[workerGetBook][getMyBook]", e);
-    }
-    try {
-      if (subscribed) {
-        gatheredPosts = yield call(getSubscribedBook, { subscribed });
-      }
-    } catch (e) {
-      console.warn("[workerGetBook][getSubscribedBook]", e);
-    }
-
-    gatheredPosts = Array.isArray(gatheredPosts) ? gatheredPosts : [gatheredPosts];
-
-    try {
-      // arrPosts = [...myPosts];
-      arrPosts = [...myPosts, ...gatheredPosts];
-      console.log('myPosts', myPosts);
-      console.log('gatheredPosts', gatheredPosts);
-      console.log('arrPosts', arrPosts);
-    } catch (e) {
-      console.warn('Destructuring myPost, hostPost, hostsSources', e)
-    }
-  }
-
   else {
     try {
       arrPosts = yield call(getAllHostsBook);
@@ -160,7 +141,8 @@ function* workerGetBook(action) {
       console.warn('[getBookSaga][getAllHosts]', e)
       arrPosts = [];
     }
-  };
+  }
+
   const hostsSources = dummyBook.source;
   arrSources = [...hostsSources];
   if (!arrPosts) { return }
@@ -178,12 +160,9 @@ function* workerGetBook(action) {
     type: SOURCE_ACTIONS.SET_SOURCE_HASH,
     payload: book.latestSource,
   });
-  if (history) {
-    history.push(routes.feed);
-  }
 }
 
+// export default function* watchGetBook() {
+//   yield takeEvery(POST_ACTIONS.GET_BOOK, workerGetBook);
 
-export default function* watchGetBook() {
-  yield takeEvery(POST_ACTIONS.GET_BOOK, workerGetBook);
-}
+// }

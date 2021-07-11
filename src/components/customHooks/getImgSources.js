@@ -10,7 +10,10 @@ import { filesApi } from "../../config/http.config";
  * img name : B2QMKmgv52q2YwpoYRrC1vmc92mxtbXcesm6f1megUCX.jpeg
  * path to img : B2/QM/Kmgv52q2YwpoYRrC1vmc92mxtbXcesm6f1megUCX.jpeg
  */
-const getFoldersName = ({ hash }) => {
+export const getFoldersName = ({ hash }) => {
+  if (!hash) {
+    return {}
+  }
   return {
     first: hash.slice(0, 2),
     second: hash.slice(2, 4),

@@ -151,7 +151,7 @@ const Post = ({
                 )}
               </div>
               <div className={styles.bodyWrapper}>
-                <PostContent sourceAddress={hash} text={text} type={type} />
+                <PostContent hostAssets={post.source.hosts[0].assets} postHash={hash} text={text} type={type} imgPrevSrc={imgPreview[0]?.imagePreviewUrl} />
                 <Preview uploadImgArr={imgPreview} postHash={hash} />
               </div>
               {reactionBlock()}
@@ -181,9 +181,11 @@ const Post = ({
                 </div>
                 <div className={styles.bodyWrapper}>
                   <PostContent
-                    sourceAddress={targetPost.hash}
+                    hostAssets={post.source.hosts[0].assets}
+                    postHash={targetPost.hash}
                     text={targetPost?.text}
                     type={type}
+                    imgPrevSrc={imgPreview[0]?.imagePreviewUrl}
                   />
                   <Preview
                     uploadImgArr={imgPreview}
@@ -217,7 +219,12 @@ const Post = ({
                 />
               </div>
               <div className={styles.bodyWrapper}>
-                <PostContent sourceAddress={hash} text={text} type={type} />
+                <PostContent
+                  hostAssets={post.source.hosts[0].assets}
+                  postHash={hash}
+                  text={text}
+                  type={type}
+                  imgPrevSrc={imgPreview[0]?.imagePreviewUrl} />
               </div>
               <RepostBlock postHash={postHash} postHash={targetPost.hash} />
               {reactionBlock()}

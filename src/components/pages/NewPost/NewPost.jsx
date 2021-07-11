@@ -71,11 +71,6 @@ const NewPost = ({ toggleTheme }) => {
     setIsLoading(isLoginProcess)
   }, [isLoginProcess]);
 
-
-  console.log('isLoading', isLoading);
-  console.log('isLoginProcess', isLoginProcess);
-
-
   useEffect(() => {
     scroll.scrollToBottom();
     scroll.scrollMore(1000);
@@ -108,7 +103,6 @@ const NewPost = ({ toggleTheme }) => {
         recursion(filterComment.target.postHash, level - 1);
       } else {
         commentWay.push(filterComment);
-
         return;
       }
     };
@@ -225,7 +219,6 @@ const NewPost = ({ toggleTheme }) => {
       });
 
       const newPost = postInstance.newPost;
-
       setMessage('');
       setUploadedImg([]);
       dispatch(postActions.sendPost(newPost));
@@ -313,8 +306,6 @@ const NewPost = ({ toggleTheme }) => {
   };
 
 
-
-  console.log("replyingPage: ", replyingPage);
   const handleDeleteImgPreview = (i) => {
     const newUploadedImg = uploadedImg.filter((img, index) => index !== i);
 
@@ -353,48 +344,51 @@ const NewPost = ({ toggleTheme }) => {
       </div>
 
       <div className={style.bodyBlock}>
-        {replyingPage ? (
-          <div className={style.replyingBlock}>
-            <ReplyingUser
-              name={comments[0].source.name}
-              checked={comments[0].isMention}
-              checkBoxName={comments[0].hash}
-              onChange={handleMention}
-            />
-            {comments.length > 1 && (
-              <div className={style.otherCheckBox}>
-                <span>Others in this conversation</span>
-                <div className={style.checkbox_wrapper}>
-                  <Checkbox
-                    onChange={handleOthersMention}
-                    isChecked={others}
-                    name="others"
-                  />
-                </div>
-              </div>
-            )}
-            {renderReplyingUser}
-          </div>
-        ) : (
-          <div className={style.newPostPage}>
-            {post.type === "reply" && <div>{renderComments}</div>}
-            <div className={style.messageBlock}>
-              <Avatar />
-              <textarea
-                value={message}
-                onChange={handleChangeMessage}
-                placeholder="Enter text..."
-                className={style.textarea}
-              ></textarea>
-            </div>
 
-            {post?.type === "repost" && (
-              <div className={style.repostBlockWrapper}>
-                <RepostBlock postHash={post.target?.postHash} />
+        {
+          // replyingPage
+          replyingPage ? (
+            <div className={style.replyingBlock}>
+              <ReplyingUser
+                name={comments[0].source.name}
+                checked={comments[0].isMention}
+                checkBoxName={comments[0].hash}
+                onChange={handleMention}
+              />
+              {comments.length > 1 && (
+                <div className={style.otherCheckBox}>
+                  <span>Others in this conversation</span>
+                  <div className={style.checkbox_wrapper}>
+                    <Checkbox
+                      onChange={handleOthersMention}
+                      isChecked={others}
+                      name="others"
+                    />
+                  </div>
+                </div>
+              )}
+              {renderReplyingUser}
+            </div>
+          ) : (
+            <div className={style.newPostPage}>
+              {post.type === "reply" && <div>{renderComments}</div>}
+              <div className={style.messageBlock}>
+                <Avatar />
+                <textarea
+                  value={message}
+                  onChange={handleChangeMessage}
+                  placeholder="Enter text..."
+                  className={style.textarea}
+                ></textarea>
               </div>
-            )}
-          </div>
-        )}
+
+              {post?.type === "repost" && (
+                <div className={style.repostBlockWrapper}>
+                  <RepostBlock postHash={post.target?.postHash} />
+                </div>
+              )}
+            </div>
+          )}
         {uploadedImg.length > 0 && !replyingPage && (
           <div className={style.wrapperPreview}>
             <Preview
@@ -426,7 +420,7 @@ const NewPost = ({ toggleTheme }) => {
         </div>
         <div className={style.buttonWrapper}>
           <Button isLoading={isLoading} disabled={isLoading} className="primary withIcon " onClick={() => {
-            setIsLoading(true)
+            (post.type !== 'reply' && !replyingPage) && setIsLoading(true)
             handlePublicPost()
           }}>
             <img
