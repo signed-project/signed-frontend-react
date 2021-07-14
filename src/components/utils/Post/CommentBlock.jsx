@@ -40,7 +40,7 @@ const CommentBlock = ({ post, img, name, type, text, createdAt, mention,
                 </div>
                 <div className={styles.commentBodyWrapper}>
                     {/* {imgPreview.length > 0 && <img src={imgPreview[0]?.imagePreviewUrl} alt="" className={styles.imgCommentPreview} />} */}
-                    <PostContent sourceAddress={hash} text={text} type={type} imgPrevSrc={imgPreview[0]?.imagePreviewUrl} />
+                    <PostContent hostAssets={post.source.hosts[0].assets} postHash={hash} text={text} type={type} imgPrevSrc={imgPreview[0]?.imagePreviewUrl} />
                 </div>
                 <Reaction
                     likesCount={likesCount}

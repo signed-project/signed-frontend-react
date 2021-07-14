@@ -81,13 +81,14 @@ const getUser = async ({ axios, token }) => {
     res = await axios.post(userApi.GET_USER, data);
   } catch (error) {
     console.log("[getUserInfo][error]", error);
+    return res;
   }
   return res;
 };
 
-
 // function* workerGetBook(action) {
 export default function* watchGetBook() {
+  let userExist = false;
   const accessToken = sessionStorage.getItem("accessToken");
   const wif = sessionStorage.getItem("wif");
   const accessTokenDecoded = jwt.decode(accessToken);
@@ -115,7 +116,6 @@ export default function* watchGetBook() {
         myPosts = [];
         console.warn("[workerGetBook][getMyBook]", e);
       }
-
       try {
         if (Array.isArray(data.subscribed)) {
           gatheredPosts = yield call(getSubscribedBook, { subscribed: data.subscribed });
@@ -131,10 +131,16 @@ export default function* watchGetBook() {
       } catch (e) {
         console.warn('Destructuring myPost, hostPost, hostsSources', e)
       }
+      userExist = true;
     }
     // dispatch(postActions.getBook({ isRegistered: false }));
   }
-  else {
+  if (!userExist) {
+    console.log('userExist', userExist);
+    console.log('userExist', userExist);
+    console.log('userExist', userExist);
+    console.log('userExist', userExist);
+    console.log('userExist', userExist);
     try {
       arrPosts = yield call(getAllHostsBook);
     } catch (e) {
@@ -146,9 +152,7 @@ export default function* watchGetBook() {
   const hostsSources = dummyBook.source;
   arrSources = [...hostsSources];
   if (!arrPosts) { return }
-  console.log('arrPosts----2', arrPosts);
   const book = yield call(getCashData, arrPosts, arrSources);
-  console.log('book----get --book', book);
   yield put({ type: POST_ACTIONS.SET_POST_STREAM, payload: book.stream });
   yield put({ type: POST_ACTIONS.SET_POST_HASH, payload: book.hashedPost });
   yield put({ type: POST_ACTIONS.SET_POST_LATEST, payload: book.latestPost });
@@ -161,8 +165,8 @@ export default function* watchGetBook() {
     payload: book.latestSource,
   });
 }
-
 // export default function* watchGetBook() {
 //   yield takeEvery(POST_ACTIONS.GET_BOOK, workerGetBook);
-
 // }
+
+

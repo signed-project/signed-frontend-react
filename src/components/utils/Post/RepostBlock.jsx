@@ -26,7 +26,7 @@ const RepostBlock = ({ postHash, type }) => {
             <div className={styles.wrapperContent}>
                 {currentPost && <AuthorBlock name={currentPost?.source?.name} imgSmall={true} createdAt={getReadFormat(currentPost?.createdAt)} />}
             </div>
-            <PostContent text={targetPost.text} sourceAddress={targetPost.hash} />
+            <PostContent text={targetPost.text}  />
             { imgSources && <Preview uploadImgArr={imgSources} postHash={targetPost.hash} />}
         </div>
     )

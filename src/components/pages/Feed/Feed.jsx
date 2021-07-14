@@ -81,7 +81,7 @@ const Feed = ({ toggleTheme }) => {
 
   return (
     <>
-      <div className={style.feed} onClick={(e) => handleMenuClose(e)}>
+      <div onClick={(e) => handleMenuClose(e)}>
         {posts && renderPosts}
       </div>
     </>

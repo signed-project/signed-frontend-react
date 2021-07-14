@@ -12,19 +12,7 @@ import Notification from '../pages/Notification/Notification';
 import routes from '../../config/routes.config';
 import Login from '../pages/Login/Login';
 import Register from '../pages/Register/Register';
-import jwt from 'jsonwebtoken';
-import { userActions } from '../../api/storage/user';
-import { postActions } from '../../api/storage/post';
 const MainRouts = () => {
-    let location = useLocation();
-    let history = useHistory();
-    // const user = useSelector((state) => state.user);
-    useEffect(() => { history.push(routes.feed) }, [])
-    console.log('location.pathname', location.pathname);
-    console.log('location.pathname', location.pathname);
-    console.log('location.pathname', location.pathname);
-    const path = window.location.pathname.replace('index.html', '');
-
     return (
         <>
             <LayoutProvider.Consumer >

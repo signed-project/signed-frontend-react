@@ -6,6 +6,7 @@ import profile from './profile.svg';
 import info from './info.svg';
 import tickOne from './tickOne.svg';
 import menu from './menu.svg';
+import menuGear from './menuGear.svg';
 import like from './like.svg';
 import likeMark from './likeMark.svg';
 import comment from './comment.svg';
@@ -24,6 +25,7 @@ export default {
     info,
     tickOne,
     menu,
+    menuGear,
     like,
     likeMark,
     comment,

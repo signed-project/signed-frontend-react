@@ -23,9 +23,6 @@ const NavItem = ({ to, icon, alt, title }) => {
 
 
 const Navigation = (props) => {
-
-  console.log('window.location.origin------window.location.origin---------window.location.origin', window.location.origin);
-  console.log('_dirname', __dirname);
   return (
     <div className={styles.bar}>
       <NavItem
@@ -37,7 +34,6 @@ const Navigation = (props) => {
 
       <NavItem
         to={routes.search}
-        // to={`${window.location.origin}/${icons.search}`}
         icon={icons.search}
         alt={'Search icon'}
         title={'Search'}

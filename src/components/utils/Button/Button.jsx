@@ -16,7 +16,7 @@ const Button = ({ className, onClick, disabled = false, type, children, isLoadin
       buttonClasses = [...buttonClasses, styles[type]]
     })
   }
- 
+
   return (
     <button
       className={buttonClasses.join(' ')}

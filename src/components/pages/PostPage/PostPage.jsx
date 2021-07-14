@@ -17,6 +17,7 @@ import Preview from '../../utils/Preview/Preview';
 import Avatar from '../../utils/Avatar/Avatar';
 import InfoAuthor from '../../utils/InfoAuthor/InfoAuthor';
 import Slider from '../../utils/Slider/Slider';
+import routes from '../../../config/routes.config';
 
 
 // TODO: refactor this component to use module Post if it possible
@@ -94,7 +95,7 @@ const PostPage = ({ toggleTheme }) => {
             :
             <>
                 <div div className={styles.backBlock} >
-                    <img src={icon.arrowBack} onClick={() => history.goBack()} alt="arrow back icon" />
+                    <img src={icon.arrowBack} onClick={() => history.push(routes.feed)} alt="arrow back icon" />
                 </div >
                 {
                     post &&
@@ -113,7 +114,10 @@ const PostPage = ({ toggleTheme }) => {
                                 </div>
                                 <div className={styles.bodyWrapper}>
                                     {/* TODO: find out name sourceAddress,are is better  hash ?  */}
-                                    <PostContent sourceAddress={post.hash} text={post.text} type={post.type} />
+                                    <PostContent
+                                        hostAssets={post.source.hosts[0].assets}
+                                        postHash={post.hash}
+                                        text={post.text} type={post.type} />
                                     <Preview uploadImgArr={imgPreview} handleFullSlider={handleFullSlider} />
                                 </div>
                                 <Reaction

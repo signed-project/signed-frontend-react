@@ -10,4 +10,5 @@ export default {
   register: '/register',
   login: '/login',
   passwordRecovery: '/password-recovery',
+  source: '/source',
 };

@@ -50,7 +50,7 @@
     "start_craco": "craco start",
     "build_craco": "craco build"
   },
-  "homepage": ".",
+  "homepage": "/",
   "eslintConfig": {
     "extends": [
       "react-app",

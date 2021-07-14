@@ -96,7 +96,7 @@ const NewPost = ({ toggleTheme }) => {
         (p) => p.hash === hash
       );
       if (
-        filterComment.type === "reply" &&
+        filterComment?.type === "reply" &&
         !commentWay.find((p) => p.hash === filterComment.hash)
       ) {
         commentWay.push(filterComment);
@@ -111,11 +111,13 @@ const NewPost = ({ toggleTheme }) => {
   };
 
   useEffect(() => {
-    if (post.target?.postHash && hashedPost) {
+    if (post?.target?.postHash && hashedPost) {
       const commentsKnitFlow = getCommentStoryKnots(hashedPost, post.target?.postHash);
       const commentsCheckbox = commentsKnitFlow.map((comment) => {
-        comment.isMention = false;
-        return comment;
+        if (comment) {
+          comment.isMention = false;
+          return comment;
+        }
       });
       setComments(commentsCheckbox);
     }
@@ -266,9 +268,6 @@ const NewPost = ({ toggleTheme }) => {
     setComments(newComments);
   };
 
-
-  console.log('comments_____________________________', comments);
-
   const renderReplyingUser = comments.map((post, i) => {
     if (i > 0) {
       return (
@@ -315,6 +314,8 @@ const NewPost = ({ toggleTheme }) => {
     }
   };
 
+
+
   return isFullImgPrev ? (
     <Slider
       uploadImgArr={uploadedImg}
@@ -337,7 +338,7 @@ const NewPost = ({ toggleTheme }) => {
         ) : (
           <img
             src={icon.arrowBack}
-            onClick={() => history.goBack()}
+            onClick={() => history.push(routes.feed)}
             alt="arrow back icon"
           />
         )}
@@ -371,7 +372,7 @@ const NewPost = ({ toggleTheme }) => {
             </div>
           ) : (
             <div className={style.newPostPage}>
-              {post.type === "reply" && <div>{renderComments}</div>}
+              {post.type === "reply" && comments && <div>{renderComments}</div>}
               <div className={style.messageBlock}>
                 <Avatar />
                 <textarea
@@ -401,7 +402,7 @@ const NewPost = ({ toggleTheme }) => {
       </div>
 
       <div className={style.toolsBlock}>
-        <div className={style.uploadBlock}>
+        {!replyingPage && <div className={style.uploadBlock}>
           <input
             accept="image/*"
             multiple
@@ -417,10 +418,10 @@ const NewPost = ({ toggleTheme }) => {
               style={{ marginRight: "8px" }}
             />
           </label>
-        </div>
-        <div className={style.buttonWrapper}>
-          <Button isLoading={isLoading} disabled={isLoading} className="primary withIcon " onClick={() => {
-            (post.type !== 'reply' && !replyingPage) && setIsLoading(true)
+        </div>}
+        {!replyingPage && <div className={style.buttonWrapper}>
+          <Button isLoading={isLoading} disabled={isLoading} className="primary withIcon" onClick={() => {
+            (post?.type !== 'reply' && !replyingPage) && setIsLoading(true)
             handlePublicPost()
           }}>
             <img
@@ -431,6 +432,15 @@ const NewPost = ({ toggleTheme }) => {
             Publish
           </Button>
         </div>
+        }
+        {replyingPage && <div className={style.buttonWrapperDone}>
+          <Button isLoading={isLoading} disabled={isLoading} className="primary fullWidth" onClick={() => {
+            handlePublicPost()
+          }}>
+            Done
+          </Button>
+        </div>
+        }
       </div>
     </>
   );

@@ -10,18 +10,13 @@ const App = () => {
   const [basename, setBasename] = useState('/');
   // const isAuth = useSelector(state => state.user.isAuth);
 
-  useEffect(() => {
-    setBasename(window.location.pathname.replace('/index.html', ''))
-  }, [])
-
   const state = {
     theme: themeVal,
     toggleTheme: (val) => setThemeVal(val)
   };
-  // const basename = window.location.pathname.replace('/index.html', '');
+
   return (
-    <BrowserRouter basename={basename} >
-      {/* <BrowserRouter basename={window.location.pathname.replace('/index.html', '')} > */}
+    <BrowserRouter basename={'/'} >
       <LayoutProvider.Provider value={state}>
         <MainRouts />
       </LayoutProvider.Provider>

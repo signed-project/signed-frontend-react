@@ -130,7 +130,8 @@ const Post = ({
         <>
           <div className={styles.typePost}>
             <div className={styles.avatarBlock}>
-              <Avatar />
+              <Avatar source={post.source}
+              />
               <div
                 className={`${styles.verticalLine}  ${comments.length === 0 && styles.verticalLineRemove
                   }`}
@@ -151,7 +152,7 @@ const Post = ({
                 )}
               </div>
               <div className={styles.bodyWrapper}>
-                <PostContent hostAssets={post.source.hosts[0].assets} postHash={hash} text={text} type={type} imgPrevSrc={imgPreview[0]?.imagePreviewUrl} />
+                <PostContent hostAssets={post.source.hosts[0].assets} postHash={hash} text={text} type={type} imgHostArr={imgPreview} />
                 <Preview uploadImgArr={imgPreview} postHash={hash} />
               </div>
               {reactionBlock()}
