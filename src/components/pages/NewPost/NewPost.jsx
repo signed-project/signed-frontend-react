@@ -315,7 +315,6 @@ const NewPost = ({ toggleTheme }) => {
   };
 
 
-
   return isFullImgPrev ? (
     <Slider
       uploadImgArr={uploadedImg}

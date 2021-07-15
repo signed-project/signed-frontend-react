@@ -27,4 +27,5 @@ export const userApi = {
   GET_USER: '/user',
   GET_TOKEN_PAIR: '/tokens-pair',
   SUBSCRIBED: '/subscribed',
+  UPDATE_USER: '/user/update',
 };

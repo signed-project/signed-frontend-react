@@ -30,13 +30,15 @@ const sendUserData = async (axios, data) => {
 export function* workerRegister(action) {
     yield put({ type: ACTIONS_USER.SET_LOADING, payload: true });
     let user;
-    console.log('workerRegister', workerRegister);
+
     const axios = yield select((state) => state.axios.axios);
     const { userName, password, history } = action.payload;
     const srpData = getDataSrp({ userName: userName, password: password });
     const userBitcoinData = getRegisterUserData({ password: action.payload.password, wifString: action.payload.wif });
+
     const hosts =
         [{ assets: process.env.REACT_APP_API_HOST_ASSETS, index: `${process.env.REACT_APP_API_HOST}/prod/${userBitcoinData.address}` }];
+
     const data = {
         salt: srpData.salt,
         verifier: srpData.verifier,
@@ -45,6 +47,8 @@ export function* workerRegister(action) {
         encryptedWif: userBitcoinData.encryptedWif,
         hosts: hosts
     }
+
+
 
     const userResponse = yield call(sendUserData, axios, data);
     if (userResponse?.data) {

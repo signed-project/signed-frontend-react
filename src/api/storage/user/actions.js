@@ -41,6 +41,11 @@ export const setLoading = (payload) => ({
     type: ACTIONS.SET_LOADING,
     payload
 });
- 
+
+export const updateUser = (payload) => ({
+    type: ACTIONS.UPDATE_USER,
+    payload
+});
+
 
 

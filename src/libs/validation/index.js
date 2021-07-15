@@ -82,7 +82,7 @@ export const sourceSchema = {
     address: { type: "string" },
     name: { type: "string" },
     updatedAt: { type: "integer" },
-    avatar: mediaSchema,
+    // avatar: mediaSchema,
     hosts: {
       "type": "array",
       "items": hostSchema

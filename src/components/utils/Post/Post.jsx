@@ -152,7 +152,7 @@ const Post = ({
                 )}
               </div>
               <div className={styles.bodyWrapper}>
-                <PostContent hostAssets={post.source.hosts[0].assets} postHash={hash} text={text} type={type} imgHostArr={imgPreview} />
+                <PostContent hostAssets={post.source?.hosts[0]?.assets} postHash={hash} text={text} type={type} imgHostArr={imgPreview} />
                 <Preview uploadImgArr={imgPreview} postHash={hash} />
               </div>
               {reactionBlock()}
