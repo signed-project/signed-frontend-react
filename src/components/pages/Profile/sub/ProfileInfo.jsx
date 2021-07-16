@@ -64,7 +64,7 @@ const ProfileInfo = () => {
                     console.warn("[ProfileInfo][uploadFile]", e);
                 }
             }
-
+            console.log('currentUser=======', currentUser);
             const userObject = {
                 ...currentUser,
                 source: {
@@ -74,9 +74,12 @@ const ProfileInfo = () => {
                 }
             };
             const userModel = new User({});
+            console.log('3333333333userObject3333333333', userObject);
             userModel.setUserData = userObject;
             const newUser = userModel.newUser;
-            dispatch(userActions.updateUser(newUser.source));
+            console.log('newUser=======', newUser);
+
+            dispatch(userActions.updateUser(newUser));
         })();
 
         // const newPost = postInstance.newPost;

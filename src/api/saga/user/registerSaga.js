@@ -39,34 +39,39 @@ export function* workerRegister(action) {
     const hosts =
         [{ assets: process.env.REACT_APP_API_HOST_ASSETS, index: `${process.env.REACT_APP_API_HOST}/prod/${userBitcoinData.address}` }];
 
+    const userModel = new User({
+        isAuth: true,
+        address: userBitcoinData.address,
+        name: userName,
+        wif: userBitcoinData.wif,
+        hosts
+    });
+    user = userModel.newUser;
+
     const data = {
         salt: srpData.salt,
         verifier: srpData.verifier,
         userName: userName,
         address: userBitcoinData.address,
         encryptedWif: userBitcoinData.encryptedWif,
-        hosts: hosts
+        source: user.source
     }
-
-
 
     const userResponse = yield call(sendUserData, axios, data);
     if (userResponse?.data) {
-        // getSignatures()
-
-        const userModel = new User({
-            isAuth: true,
-            address: userResponse.data.address,
-            name: userResponse.data.userName,
-            wif: userBitcoinData.wif,
-            subscribed: userResponse.data.subscribed,
-            hosts
-        });
-        user = userModel.newUser;
         sessionStorage.setItem('accessToken', userResponse.data.accessToken);
         sessionStorage.setItem('wif', userBitcoinData.wif);
-
-        yield put({ type: ACTIONS_USER.SET_USER, payload: user });
+        const userObject = {
+            ...user,
+            subscribed: userResponse.data.subscribed,
+            source: {
+                ...user.source,
+            }
+        };
+        const currentUser = new User({})
+        currentUser.setUserData = userObject;
+        const userToStore = currentUser.newUser;
+        yield put({ type: ACTIONS_USER.SET_USER, payload: userToStore });
         yield put({ type: ACTIONS_POST.GET_BOOK, payload: { isRegistered: true } });
         history.push(routes.feed);
     }

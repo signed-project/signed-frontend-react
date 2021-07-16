@@ -7,6 +7,8 @@ import { User } from '../../models/user';
 import routes from '../../../config/routes.config';
 import wif from 'wif';
 import bip38 from 'bip38';
+import { parseJson } from '../../../libs/json';
+
 
 const sendUserData = async (axios, data) => {
     try {
@@ -92,17 +94,21 @@ function* workerLogin(action) {
                 sessionStorage.setItem('accessToken', data?.token);
                 sessionStorage.setItem('wif', wifEncode);
 
-                const userModel = new User({
+                const source = parseJson(data.source);
+                const userModel = new User({});
+                const userObject = {
                     isAuth: true,
-                    address: data.address,
-                    name: data.login,
                     wif: wifEncode,
                     subscribed: data.subscribed,
-                    hosts: data.hosts
-                })
-                const userItem = userModel.newUser;
-                console.log('userItem', userItem);
-                yield put({ type: ACTIONS_USER.SET_USER, payload: userItem });
+                    source: {
+                        ...source,
+                    }
+                };
+                userModel.setUserData = userObject;
+                const user = userModel.newUser;
+
+                console.log('user', user);
+                yield put({ type: ACTIONS_USER.SET_USER, payload: user });
                 yield put({ type: ACTIONS_POST.GET_BOOK, payload: { isRegistered: true } });
                 action.payload.history.push(routes.feed);
             }

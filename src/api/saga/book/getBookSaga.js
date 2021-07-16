@@ -5,6 +5,7 @@ import { ACTIONS as USER_ACTIONS } from "../../storage/user";
 import { ACTIONS as SOURCE_ACTIONS } from "../../storage/source";
 import { dummyBook } from "../../../dummyData/dummyIndex";
 import { getCashData } from "./_aggregationBook";
+import { parseJson } from '../../../libs/json';
 import axios from "axios";
 import jwt from 'jsonwebtoken';
 import { User } from '../../models/user';
@@ -98,15 +99,23 @@ export default function* watchGetBook() {
     const resData = yield call(getUser, { axios: axios, token: accessToken });
     if (resData) {
       const { data } = resData;
-      const userModel = new User({
+      const source = parseJson(data.source);
+      const userModel = new User({});
+      const userObject = {
         isAuth: true,
-        address: data.address,
-        name: data.userName,
         wif: wif,
         subscribed: data.subscribed,
-        hosts: data.hosts
-      });
+        source: {
+          ...source,
+        }
+      };
+      userModel.setUserData = userObject;
       const user = userModel.newUser;
+      console.log('----------user------------', user);
+      console.log('----------user------------', user);
+      console.log('----------user------------', user);
+      console.log('----------user------------', user);
+
       yield put({ type: USER_ACTIONS.SET_USER, payload: user });
 
       try {

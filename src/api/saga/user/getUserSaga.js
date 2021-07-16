@@ -3,6 +3,8 @@ import { userApi } from "../../../config/http.config";
 import { ACTIONS as ACTIONS_USER } from "../../storage/user";
 import { ACTIONS as ACTIONS_POST } from "../../storage/post";
 import { User } from '../../models/user';
+import { parseJson } from '../../../libs/json';
+
 
 const getTokenPair = async (axios, token) => {
     try {
@@ -35,14 +37,26 @@ export function* workerGetUserData(action) {
     const resData = yield call(getUser, axios, accessToken);
     if (resData) {
         const { data } = resData;
-        const userModel = new User({
+        const source = parseJson(data.source);
+        const userModel = new User({});
+        const userStoreData = {
             isAuth: true,
             address: data.address,
             name: data.userName,
             wif: wif,
             subscribed: data.subscribed,
             hosts: data.hosts
-        });
+        };
+
+        const userObject = {
+            isAuth: true,
+            wif: wif,
+            subscribed: data.subscribed,
+            source: {
+                ...source,
+            }
+        };
+        userModel.setUserData = userObject;
         const user = userModel.newUser;
         yield put({ type: ACTIONS_USER.SET_USER, payload: user });
         yield put({ type: ACTIONS_POST.GET_BOOK, payload: { isRegistered: true, history } });

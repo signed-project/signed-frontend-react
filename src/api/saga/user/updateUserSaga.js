@@ -3,9 +3,9 @@ import { userApi } from "../../../config/http.config";
 import { ACTIONS as ACTIONS_USER } from "../../storage/user";
 
 
-const sendUserData = async (axios, data) => {
+const sendUserData = async ({ axios, source }) => {
     try {
-        let res = await axios.post(userApi.UPDATE_USER, data);
+        let res = await axios.post(userApi.UPDATE_USER, { source });
         return res;
     } catch (error) {
         console.log("[updateUserSaga][sendUserData]", error);
@@ -20,7 +20,8 @@ export function* workerUpdateUser(action) {
     let user;
     const axios = yield select((state) => state.axios.axios);
 
-    const userResponse = yield call(sendUserData, axios, action.payload);
+    const userResponse = yield call(sendUserData, { axios, source: action.payload.source });
+
     // what is get as result
     if (userResponse?.data) {
         yield put({ type: ACTIONS_USER.SET_USER, payload: action.payload });
