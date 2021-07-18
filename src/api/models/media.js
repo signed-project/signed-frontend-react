@@ -3,7 +3,7 @@ import mime from "mime/lite";
 export class Media {
   constructor(data) {
     this.data = {
-      contentType: data.type ? data.type : "",
+      contentType: data.contentType ? data.contentType : "",
       hash: data.hash ? data.hash : "",
       width: data.width ? data.width : "",
       height: data.height ? data.height : "",

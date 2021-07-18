@@ -1,6 +1,10 @@
+@import "/src/assets/css/index.scss";
+
 .imgAvatar {
   border-radius: 50%;
   width: 36px;
+  height: 36px;
+  background: $colorGrey400;
 }
 
 .imgAvatarSmall {

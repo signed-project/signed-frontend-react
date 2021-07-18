@@ -10,14 +10,14 @@ const Feed = ({ toggleTheme }) => {
   const hashedPostMap = useSelector((state) => state.post.hashed);
   const stream = useSelector((state) => state.post.stream);
 
-  console.log('stream-------stream---------stream---------stream', stream);
+  console.log("stream-------stream---------stream---------stream", stream);
 
   const [openMenuHash, setOpenMenuHash] = useState(null);
 
   const [posts, setPosts] = useState([]);
   let history = useHistory();
 
-  console.log('________stream________feed--------!!!', stream);
+  console.log("________stream________feed--------!!!", stream);
 
   useEffect(() => {
     toggleTheme(true);
@@ -27,7 +27,7 @@ const Feed = ({ toggleTheme }) => {
     setPosts(stream);
   }, [stream]);
 
-  console.log('posts', posts);
+  console.log("posts", posts);
 
   const handleShowMenu = (hash) => {
     setOpenMenuHash(hash);
@@ -55,10 +55,10 @@ const Feed = ({ toggleTheme }) => {
     .slice()
     // .reverse()
     .map((p, i) => {
-
       return (
         <Post
           post={p}
+          avatar={p.source.avatar}
           key={i}
           renderKey={i}
           type={p.type}
@@ -77,13 +77,11 @@ const Feed = ({ toggleTheme }) => {
       );
     });
 
-  console.log('renderPosts', renderPosts);
+  console.log("renderPosts", renderPosts);
 
   return (
     <>
-      <div onClick={(e) => handleMenuClose(e)}>
-        {posts && renderPosts}
-      </div>
+      <div onClick={(e) => handleMenuClose(e)}>{posts && renderPosts}</div>
     </>
   );
 };

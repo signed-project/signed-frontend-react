@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import {
-  animateScroll as scroll,
-} from "react-scroll";
+import { animateScroll as scroll } from "react-scroll";
 import icon from "../../../assets/svg/icon";
 // import icon from "@/assets/svg/icon";
-import logo from './logo.svg';
+import logo from "./logo.svg";
 
 import Avatar from "../../utils/Avatar/Avatar";
 import style from "./newPost.module.scss";
@@ -48,7 +46,7 @@ const NewPost = ({ toggleTheme }) => {
   } = queryString.parse(location.search);
 
   const { uploadFile } = useFiles();
-  const isLoginProcess = useSelector(state => state.user.isLoginProcess);
+  const isLoginProcess = useSelector((state) => state.user.isLoginProcess);
   const history = useHistory();
   const dispatch = useDispatch();
   const [message, setMessage] = useState("");
@@ -68,7 +66,7 @@ const NewPost = ({ toggleTheme }) => {
   });
 
   useEffect(() => {
-    setIsLoading(isLoginProcess)
+    setIsLoading(isLoginProcess);
   }, [isLoginProcess]);
 
   useEffect(() => {
@@ -84,7 +82,7 @@ const NewPost = ({ toggleTheme }) => {
     setPost((prev) => ({
       ...prev,
       type,
-      target: { sourceHash: source, postHash: hash }
+      target: { sourceHash: source, postHash: hash },
     }));
   }, [hash, source, type]);
 
@@ -112,7 +110,10 @@ const NewPost = ({ toggleTheme }) => {
 
   useEffect(() => {
     if (post?.target?.postHash && hashedPost) {
-      const commentsKnitFlow = getCommentStoryKnots(hashedPost, post.target?.postHash);
+      const commentsKnitFlow = getCommentStoryKnots(
+        hashedPost,
+        post.target?.postHash
+      );
       const commentsCheckbox = commentsKnitFlow.map((comment) => {
         if (comment) {
           comment.isMention = false;
@@ -134,7 +135,7 @@ const NewPost = ({ toggleTheme }) => {
       setMessage(editedPost?.text);
 
       setPost((prev) => ({
-        ...editedPost
+        ...editedPost,
       }));
     }
   }, [edit, hashedPost]);
@@ -178,7 +179,7 @@ const NewPost = ({ toggleTheme }) => {
 
   const handlePublicPost = () => {
     if (isLoading) {
-      return
+      return;
     }
     if (post.type === "reply" && !replyingPage) {
       setReplyingPage(true);
@@ -192,7 +193,10 @@ const NewPost = ({ toggleTheme }) => {
             let data, newMedia;
             try {
               ({ data } = await uploadFile(val.file));
-              const media = new Media({ type: data.type, hash: data.hash });
+              const media = new Media({
+                contentType: data.contentType,
+                hash: data.hash,
+              });
               newMedia = media.newMedia;
             } catch (e) {
               console.warn("[NewPost][attachments]", e);
@@ -206,13 +210,13 @@ const NewPost = ({ toggleTheme }) => {
       );
 
       const postInstance = new PostModel({
-        id: post.id ? post.id : '',
+        id: post.id ? post.id : "",
         source: user.source,
         type: post.type,
         text: message,
         target: {
-          postHash: post.target?.postHash ? post.target?.postHash : '',
-          sourceHash: post.target?.sourceHash ? post.target?.sourceHash : '',
+          postHash: post.target?.postHash ? post.target?.postHash : "",
+          sourceHash: post.target?.sourceHash ? post.target?.sourceHash : "",
         },
         // target: post.hash ? { postHash: post.hash, sourceHash: post.source } : "",
         mentions: mentions?.length ? mentions : "",
@@ -221,12 +225,11 @@ const NewPost = ({ toggleTheme }) => {
       });
 
       const newPost = postInstance.newPost;
-      setMessage('');
+      setMessage("");
       setUploadedImg([]);
       dispatch(postActions.sendPost(newPost));
       history.push(routes.feed);
-    })()
-
+    })();
   };
 
   const renderComments = comments
@@ -280,7 +283,7 @@ const NewPost = ({ toggleTheme }) => {
         />
       );
     }
-    return '';
+    return "";
   });
 
   const handleChangeFile = (e) => {
@@ -304,7 +307,6 @@ const NewPost = ({ toggleTheme }) => {
     setFirstSlide(i);
   };
 
-
   const handleDeleteImgPreview = (i) => {
     const newUploadedImg = uploadedImg.filter((img, index) => index !== i);
 
@@ -313,7 +315,6 @@ const NewPost = ({ toggleTheme }) => {
       setIsFullImgPrev(false);
     }
   };
-
 
   return isFullImgPrev ? (
     <Slider
@@ -344,7 +345,6 @@ const NewPost = ({ toggleTheme }) => {
       </div>
 
       <div className={style.bodyBlock}>
-
         {
           // replyingPage
           replyingPage ? (
@@ -373,7 +373,7 @@ const NewPost = ({ toggleTheme }) => {
             <div className={style.newPostPage}>
               {post.type === "reply" && comments && <div>{renderComments}</div>}
               <div className={style.messageBlock}>
-                <Avatar />
+                <Avatar avatar={post.source.avatar} />
                 <textarea
                   value={message}
                   onChange={handleChangeMessage}
@@ -388,7 +388,8 @@ const NewPost = ({ toggleTheme }) => {
                 </div>
               )}
             </div>
-          )}
+          )
+        }
         {uploadedImg.length > 0 && !replyingPage && (
           <div className={style.wrapperPreview}>
             <Preview
@@ -401,45 +402,59 @@ const NewPost = ({ toggleTheme }) => {
       </div>
 
       <div className={style.toolsBlock}>
-        {!replyingPage && <div className={style.uploadBlock}>
-          <input
-            accept="image/*"
-            multiple
-            id="icon-button-file"
-            type="file"
-            style={{ display: "none" }}
-            onChange={(e) => handleChangeFile(e)}
-          />
-          <label htmlFor="icon-button-file">
-            <img
-              src={icon.uploadImg}
-              alt="send message icon"
-              style={{ marginRight: "8px" }}
+        {!replyingPage && (
+          <div className={style.uploadBlock}>
+            <input
+              accept="image/*"
+              multiple
+              id="icon-button-file"
+              type="file"
+              style={{ display: "none" }}
+              onChange={(e) => handleChangeFile(e)}
             />
-          </label>
-        </div>}
-        {!replyingPage && <div className={style.buttonWrapper}>
-          <Button isLoading={isLoading} disabled={isLoading} className="primary withIcon" onClick={() => {
-            (post?.type !== 'reply' && !replyingPage) && setIsLoading(true)
-            handlePublicPost()
-          }}>
-            <img
-              src={icon.messageSend}
-              alt="send message icon"
-              style={{ marginRight: "8px" }}
-            />
-            Publish
-          </Button>
-        </div>
-        }
-        {replyingPage && <div className={style.buttonWrapperDone}>
-          <Button isLoading={isLoading} disabled={isLoading} className="primary fullWidth" onClick={() => {
-            handlePublicPost()
-          }}>
-            Done
-          </Button>
-        </div>
-        }
+            <label htmlFor="icon-button-file">
+              <img
+                src={icon.uploadImg}
+                alt="send message icon"
+                style={{ marginRight: "8px" }}
+              />
+            </label>
+          </div>
+        )}
+        {!replyingPage && (
+          <div className={style.buttonWrapper}>
+            <Button
+              isLoading={isLoading}
+              disabled={isLoading}
+              className="primary withIcon"
+              onClick={() => {
+                post?.type !== "reply" && !replyingPage && setIsLoading(true);
+                handlePublicPost();
+              }}
+            >
+              <img
+                src={icon.messageSend}
+                alt="send message icon"
+                style={{ marginRight: "8px" }}
+              />
+              Publish
+            </Button>
+          </div>
+        )}
+        {replyingPage && (
+          <div className={style.buttonWrapperDone}>
+            <Button
+              isLoading={isLoading}
+              disabled={isLoading}
+              className="primary fullWidth"
+              onClick={() => {
+                handlePublicPost();
+              }}
+            >
+              Done
+            </Button>
+          </div>
+        )}
       </div>
     </>
   );
