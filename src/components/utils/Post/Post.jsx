@@ -234,7 +234,7 @@ const Post = ({
               </div>
               <div className={styles.bodyWrapper}>
                 <PostContent
-                  hostAssets={post.source.hosts[0].assets}
+                  hostAssets={post?.source?.hosts[0]?.assets}
                   postHash={hash}
                   text={text}
                   type={type}
