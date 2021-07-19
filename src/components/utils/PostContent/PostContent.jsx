@@ -7,6 +7,8 @@ import { getFilePath } from "../../customHooks/getImgSources";
 const PostContent = ({ text, type, postHash, imgPrevSrc, hostAssets, imgHostArr }) => {
   let history = useHistory();
   const post_url = getFilePath({ hash: postHash, fileExtension: 'json' });
+
+
   const title = text ? text.slice(0, 140) : '';
   console.log('imgHostArr', imgHostArr);
   const img = imgHostArr ? imgHostArr[0]?.imagePreviewUrl : '';

@@ -102,7 +102,7 @@ const PostPage = ({ toggleTheme }) => {
                     <div className={styles.bodyBlock}>
                         <div className={styles.typePost}>
                             <div className={styles.avatarBlock}>
-                                <Avatar />
+                                <Avatar avatar={post.source.avatar} />
                                 {/*  ${styles.verticalLineRemove} */}
                                 <div className={`${styles.verticalLine} 
                              ${comments.length === 0 && styles.verticalLineRemove}`}></div>
@@ -119,6 +119,10 @@ const PostPage = ({ toggleTheme }) => {
                                         postHash={post.hash}
                                         text={post.text} type={post.type} />
                                     <Preview uploadImgArr={imgPreview} handleFullSlider={handleFullSlider} />
+                                    {post?.type === 'repost' &&
+                                        <div className={styles.repostBlockWrapper}>
+                                            <RepostBlock postHash={post.target.postHash} />
+                                        </div>}
                                 </div>
                                 <Reaction
                                     likesCount={post.likesCount}
@@ -128,10 +132,7 @@ const PostPage = ({ toggleTheme }) => {
                                     handleReply={() => reaction.handleReply(post)} />
                             </div>
                         </div>
-                        {post?.type === 'repost' &&
-                            <div className={styles.repostBlockWrapper}>
-                                <RepostBlock postHash={post.target.postHash} />
-                            </div>}
+
                         {comments.length > 0 &&
                             <div className={styles.commentsWrapper}>
                                 {renderComments}

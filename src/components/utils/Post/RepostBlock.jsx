@@ -13,6 +13,12 @@ const RepostBlock = ({ postHash, type }) => {
     const [currentPost, setCurrentPost] = useState('');
     const [imgSources, setImgSources] = useState([]);
     const targetPost = useTargetPost(postHash);
+
+    console.log('currentPos222222222t', currentPost);
+    console.log('currentPos222222222t', currentPost);
+    console.log('currentPos222222222t', currentPost);
+    console.log('currentPos222222222t', currentPost);
+
     useEffect(() => {
         setCurrentPost(targetPost);
         if (targetPost?.attachments?.length > 0) {
@@ -21,13 +27,21 @@ const RepostBlock = ({ postHash, type }) => {
         }
     }, [targetPost])
 
+
+
     return (
         <div className={styles.repostBlock}>
             <div className={styles.wrapperContent}>
-                {currentPost && <AuthorBlock name={currentPost?.source?.name} imgSmall={true} createdAt={getReadFormat(currentPost?.createdAt)} />}
+                {currentPost && <AuthorBlock avatar={currentPost.source.avatar} name={currentPost?.source?.name} imgSmall={true} createdAt={getReadFormat(currentPost?.createdAt)} />}
             </div>
-            <PostContent text={targetPost.text}  />
-            { imgSources && <Preview uploadImgArr={imgSources} postHash={targetPost.hash} />}
+            <PostContent
+                text={currentPost.text}
+                hostAssets={currentPost.source?.hosts[0]?.assets}
+                postHash={currentPost.hash}
+                type={currentPost.type}
+                imgHostArr={imgSources}
+            />
+            {imgSources && <Preview uploadImgArr={imgSources} postHash={targetPost.hash} />}
         </div>
     )
 }

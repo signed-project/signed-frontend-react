@@ -8,7 +8,7 @@ const ReplyingUser = ({ name, avatar, checked, checkBoxName, onChange }) => {
     return (
         <div className={style.authorRow}>
             <div className={style.authorInfoBlock}>
-                <Avatar />
+                <Avatar avatar={avatar} />
                 <InfoAuthor name={name} />
             </div>
             <div className={style.checkboxWrapper}>

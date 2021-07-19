@@ -9,15 +9,24 @@ import routes from '../../../config/routes.config';
 import { userApi } from '../../../config/http.config';
 import { userActions } from '../../../api/storage/user';
 import { isWifFormat } from '../../../libs/signature';
+import ChangeUserPic from '../../utils/ChangeUserPic/ChangeUserPic';
+import userPlaceHolder from "../../../assets/svg/icon/userPlaceHolder.jpg"
+import useFiles from "../../customHooks/useFiles";
+
 
 const Register = ({ toggleTheme }) => {
   const typeMap = {
     createAddress: 'createAddress',
     haveAddress: 'haveAddress'
   };
+  const avatarInitial = {
+    file: '',
+    imageSrc: userPlaceHolder,
+  }
   const initialForm = {
     wif: { value: '', warning: '' },
     userName: { value: '', warning: '' },
+    publicName: { value: '', warning: '' },
     password: { value: '', warning: '' },
     passwordRepeat: { value: '', warning: '' }
   }
@@ -30,7 +39,9 @@ const Register = ({ toggleTheme }) => {
   const [chooseTypeRegistration, setChooseTypeRegistration] = useState(true);
   const [typeRegistration, setTypeRegistration] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [avatar, setAvatar] = useState(avatarInitial);
 
+  const { uploadFile } = useFiles();
 
   useEffect(() => {
     toggleTheme(false);
@@ -66,7 +77,14 @@ const Register = ({ toggleTheme }) => {
     setForm(newForm);
   }
 
-
+  const handleChangeFile = (e) => {
+    let file = e.target.files[0];
+    const filePrev = {
+      file: file,
+      imageSrc: URL.createObjectURL(file),
+    };
+    setAvatar(filePrev);
+  };
   console.log('form', form);
 
 
@@ -85,7 +103,7 @@ const Register = ({ toggleTheme }) => {
           ...prev,
           userName: { ...userNameItem, warning: warningMessage }
         })
-      })
+      });
       return isFreeLogin;
     } catch (e) {
       console.warn('[checkIsLoginFree]', e);
@@ -130,6 +148,7 @@ const Register = ({ toggleTheme }) => {
   }
 
   const handleSendForm = async () => {
+    let uploadAvatarData;
     if (!formValidate()) {
       return;
     }
@@ -139,6 +158,15 @@ const Register = ({ toggleTheme }) => {
       dispatch(userActions.setLoading(false));
       return;
     }
+    if (avatar.file) {
+      try {
+        ({ data: uploadAvatarData } = await uploadFile(avatar.file));
+        console.log('uploadAvatarData', uploadAvatarData);
+      } catch (e) {
+        console.warn("[handleSendForm][uploadFile]", e);
+      }
+    }
+
 
     let data = {};
     Object.keys(form).map(field => {
@@ -146,7 +174,8 @@ const Register = ({ toggleTheme }) => {
         data[field] = form[field].value;
       }
     });
-    data = { ...data, history };
+
+    data = { ...data, history, avatar: uploadAvatarData ? uploadAvatarData : '' };
     dispatch(userActions.sendRegisterData(data));
     // formClear();
   }
@@ -166,6 +195,9 @@ const Register = ({ toggleTheme }) => {
       default: return
     }
   }
+
+  console.log('avatar1111111', avatar);
+
 
   return (
     <>
@@ -188,8 +220,10 @@ const Register = ({ toggleTheme }) => {
             </>
             :
             <div className={styles.formWrapper}>
+              <ChangeUserPic srcData={avatar.imageSrc} handleChangeFile={handleChangeFile} />
               {typeRegistration === typeMap.haveAddress && <Input title={'Enter Bitcoin address'} name={'wif'} warning={form.wif.warning} type={'text'} handleChange={handleForm} value={form.wif.value} />}
-              <Input title={'Nickname'} name={'userName'} warning={form.userName.warning} type={'text'} handleChange={handleForm} value={form.userName.value} />
+              <Input title={'PublicName'} name={'publicName'} warning={form.publicName.warning} type={'text'} handleChange={handleForm} value={form.publicName.value} />
+              <Input title={'UserName'} name={'userName'} warning={form.userName.warning} type={'text'} handleChange={handleForm} value={form.userName.value} />
               <Input title={'Password'} type={'password'} warning={form.password.warning} name={'password'} handleChange={handleForm} value={form.password.value} />
               <Input title={'Repeat password'} type={'password'} warning={form.passwordRepeat.warning} name={'passwordRepeat'} handleChange={handleForm} value={form.passwordRepeat.value} />
               <NavLink to={routes.passwordRecovery} className={styles.passForgot}> Forgot your password?</NavLink>

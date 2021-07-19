@@ -137,9 +137,8 @@ const Post = ({
             <div className={styles.avatarBlock}>
               <Avatar avatar={avatar} />
               <div
-                className={`${styles.verticalLine}  ${
-                  comments.length === 0 && styles.verticalLineRemove
-                }`}
+                className={`${styles.verticalLine}  ${comments.length === 0 && styles.verticalLineRemove
+                  }`}
               ></div>
             </div>
             <div className={styles.postMain}>
@@ -178,11 +177,10 @@ const Post = ({
             <LikeMark createdAt={getReadFormat(createdAt)} name={name} />
             <div className={styles.avatarWrapper}>
               <div className={styles.avatarBlock}>
-                <Avatar />
+                <Avatar avatar={avatar} />
                 <div
-                  className={`${styles.verticalLine}    ${
-                    type === "like" && styles.verticalLineRemove
-                  }`}
+                  className={`${styles.verticalLine}    ${type === "like" && styles.verticalLineRemove
+                    }`}
                 ></div>
               </div>
               <div className={styles.postBody}>
@@ -216,11 +214,10 @@ const Post = ({
         <>
           <div className={styles.typePost}>
             <div className={styles.avatarBlock}>
-              <Avatar />
+              <Avatar avatar={avatar} />
               <div
-                className={`${styles.verticalLine}  ${
-                  comments.length === 0 && styles.verticalLineRemove
-                }`}
+                className={`${styles.verticalLine}  ${comments.length === 0 && styles.verticalLineRemove
+                  }`}
               ></div>
             </div>
             <div className={styles.postMain}>

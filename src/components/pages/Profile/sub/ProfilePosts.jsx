@@ -37,6 +37,7 @@ const ProfilePosts = ({ ownPost }) => {
         return (
             <Post
                 post={p}
+                avatar={p.source.avatar}
                 key={i}
                 renderKey={i}
                 type={p.type}

@@ -32,7 +32,7 @@ export function* workerRegister(action) {
     let user;
 
     const axios = yield select((state) => state.axios.axios);
-    const { userName, password, history } = action.payload;
+    const { userName, publicName, password, history, avatar } = action.payload;
     const srpData = getDataSrp({ userName: userName, password: password });
     const userBitcoinData = getRegisterUserData({ password: action.payload.password, wifString: action.payload.wif });
 
@@ -66,6 +66,8 @@ export function* workerRegister(action) {
             subscribed: userResponse.data.subscribed,
             source: {
                 ...user.source,
+                publicName,
+                avatar
             }
         };
         const currentUser = new User({})

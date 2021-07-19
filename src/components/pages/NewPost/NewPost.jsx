@@ -140,6 +140,10 @@ const NewPost = ({ toggleTheme }) => {
     }
   }, [edit, hashedPost]);
 
+
+
+  console.log('avatar={post.source.avatar}', post.source);
+
   /**
    *    /*   let reader = new FileReader();
          reader.onloadend = () => {
@@ -276,6 +280,7 @@ const NewPost = ({ toggleTheme }) => {
       return (
         <ReplyingUser
           key={i}
+          avatar={post.source.avatar}
           name={post.source.name}
           checked={post.isMention}
           checkBoxName={post.hash}
@@ -350,6 +355,7 @@ const NewPost = ({ toggleTheme }) => {
           replyingPage ? (
             <div className={style.replyingBlock}>
               <ReplyingUser
+                avatar={comments[0].source.avatar}
                 name={comments[0].source.name}
                 checked={comments[0].isMention}
                 checkBoxName={comments[0].hash}
@@ -373,7 +379,7 @@ const NewPost = ({ toggleTheme }) => {
             <div className={style.newPostPage}>
               {post.type === "reply" && comments && <div>{renderComments}</div>}
               <div className={style.messageBlock}>
-                <Avatar avatar={post.source.avatar} />
+                <Avatar avatar={user.source.avatar} />
                 <textarea
                   value={message}
                   onChange={handleChangeMessage}

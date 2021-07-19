@@ -3,12 +3,18 @@
 .imgAvatar {
   border-radius: 50%;
   width: 36px;
-  // height: 36px;
+  height: 36px;
   background: $colorGrey400;
 }
 
 .imgAvatarSmall {
   width: 24px;
+  height: 24px;
+}
+
+.imgAvatarBig {
+  height: 72px;
+  width: 72px;
 }
 .imgAvatarWrapper {
   //   clip-path: circle(36px at center);

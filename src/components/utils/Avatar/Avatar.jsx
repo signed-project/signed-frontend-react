@@ -6,28 +6,29 @@ import routs from "../../../config/routes.config";
 import { getFilePath } from "../../customHooks/getImgSources";
 import userPlaceHolder from "../../../assets/svg/icon/userPlaceHolder.jpg";
 
-const Avatar = ({ imgSmall = false, avatar }) => {
+const Avatar = ({ imgSmall = false, imgBig = false, avatar, srcData }) => {
   const history = useHistory();
 
   const [src, setSrc] = useState(userPlaceHolder);
-
+  console.log('srcData333333333333', srcData);
   useEffect(() => {
-    console.log("avatar---------------", avatar);
-
+    let srcImg
     if (avatar && avatar.hash && avatar.contentType) {
       const extension = mime.getExtension(avatar.contentType);
-      const srcImg = getFilePath({
+      srcImg = getFilePath({
         hash: avatar?.hash,
         fileExtension: extension,
       });
-      console.log("srcImg", srcImg);
-      const image = new Image();
-      image.src = srcImg;
-      image.onload = function () {
-        setSrc(srcImg);
-      };
     }
-  }, [avatar]);
+    if (srcData) {
+      srcImg = srcData
+    }
+    const image = new Image();
+    image.src = srcImg;
+    image.onload = function () {
+      setSrc(srcImg);
+    };
+  }, [avatar, srcData]);
 
   return (
     <div
@@ -40,7 +41,7 @@ const Avatar = ({ imgSmall = false, avatar }) => {
         src={src}
         // src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/Hary-Potter-1-.jpg"
         alt=""
-        className={`${styles.imgAvatar}  ${imgSmall && styles.imgAvatarSmall}`}
+        className={`${styles.imgAvatar}  ${imgSmall && styles.imgAvatarSmall}  ${imgBig && styles.imgAvatarBig}`}
       ></img>
     </div>
   );
