@@ -222,8 +222,8 @@ const Register = ({ toggleTheme }) => {
             <div className={styles.formWrapper}>
               <ChangeUserPic srcData={avatar.imageSrc} handleChangeFile={handleChangeFile} />
               {typeRegistration === typeMap.haveAddress && <Input title={'Enter Bitcoin address'} name={'wif'} warning={form.wif.warning} type={'text'} handleChange={handleForm} value={form.wif.value} />}
-              <Input title={'PublicName'} name={'publicName'} warning={form.publicName.warning} type={'text'} handleChange={handleForm} value={form.publicName.value} />
-              <Input title={'UserName'} name={'userName'} warning={form.userName.warning} type={'text'} handleChange={handleForm} value={form.userName.value} />
+              <Input title={'Public name'} name={'publicName'} warning={form.publicName.warning} type={'text'} handleChange={handleForm} value={form.publicName.value} />
+              <Input title={'User name'} name={'userName'} warning={form.userName.warning} type={'text'} handleChange={handleForm} value={form.userName.value} />
               <Input title={'Password'} type={'password'} warning={form.password.warning} name={'password'} handleChange={handleForm} value={form.password.value} />
               <Input title={'Repeat password'} type={'password'} warning={form.passwordRepeat.warning} name={'passwordRepeat'} handleChange={handleForm} value={form.passwordRepeat.value} />
               <NavLink to={routes.passwordRecovery} className={styles.passForgot}> Forgot your password?</NavLink>

@@ -2,8 +2,8 @@
 .bar {
   position: fixed;
   height: 47px;
-  left: 0;
-  right: 0;
+  // left: 0;
+  // right: 0;
   bottom: 0;
   background-color: white;
   width: 100%;
@@ -13,6 +13,7 @@
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
+  max-width: 450px;
 }
 
 .imgWrapper {

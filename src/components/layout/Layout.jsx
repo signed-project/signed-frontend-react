@@ -6,6 +6,7 @@ import Header from './Header/Header';
 import Navigation from './Navigation/Navigation';
 import WelcomeSing from './WelcomeSign/WelcomeSign';
 import router from '../../config/routes.config';
+import styles from './layout.module.scss';
 
 // import queryString from "query-string";
 const Layout = ({ children, theme }) => {
@@ -14,8 +15,6 @@ const Layout = ({ children, theme }) => {
   const user = useSelector(state => state.user);
   // const user = { isAuth: false }
   const location = useLocation();
-
-
 
 
   useEffect(() => {
@@ -28,10 +27,11 @@ const Layout = ({ children, theme }) => {
     }
   }, [location])
 
-
+  // style={{ height: '100%' }}
   return (
-    <div style={{ height: '100%' }}>
-      {theme && <Header title='KUKU' />}
+    // <div className={styles.appWrapper} >
+    <div className={styles.app}>
+      {theme && <Header title=' signed.移动' />}
       <main >
         {children}
       </main>
@@ -39,7 +39,9 @@ const Layout = ({ children, theme }) => {
       {theme && user.isAuth && <Navigation />}
       {!user.isAuth && !isAuthPage && < WelcomeSing />}
       {/* {!user.isAuth && < WelcomeSing />} */}
-    </div >
+    </div>
+
+    // </div >
   );
 };
 

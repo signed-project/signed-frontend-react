@@ -24,40 +24,43 @@ const NavItem = ({ to, icon, alt, title }) => {
 
 const Navigation = (props) => {
   return (
-    <div className={styles.bar}>
-      <NavItem
-        to={routes.feed}
-        icon={icons.feed}
-        alt={'feed icon'}
-        title={'Feed'}
-      />
+    <div className={styles.barWrapper}>
+      <div className={styles.bar}>
+        <NavItem
+          to={routes.feed}
+          icon={icons.feed}
+          alt={'feed icon'}
+          title={'Feed'}
+        />
 
-      <NavItem
-        to={routes.search}
-        icon={icons.search}
-        alt={'Search icon'}
-        title={'Search'}
-      />
+        <NavItem
+          to={routes.search}
+          icon={icons.search}
+          alt={'Search icon'}
+          title={'Search'}
+        />
 
-      <NavItem
-        to={`${routes.newPost}?type=post`}
-        icon={icons.addNew}
-        alt={'New post icon'}
-        title={''}
-      />
+        <NavItem
+          to={`${routes.newPost}?type=post`}
+          icon={icons.addNew}
+          alt={'New post icon'}
+          title={''}
+        />
 
-      <NavItem
-        to={routes.profile}
-        icon={icons.profile}
-        alt={'Profile icon'}
-        title={'Profile'}
-      />
-      <NavItem
-        to={routes.notification}
-        icon={icons.notification}
-        alt={'Notification icon'}
-        title={'Notification'}
-      />
+        <NavItem
+          to={routes.profile}
+          icon={icons.profile}
+          alt={'Profile icon'}
+          title={'Profile'}
+        />
+        <NavItem
+          to={routes.notification}
+          icon={icons.notification}
+          alt={'Notification icon'}
+          title={'Notification'}
+        />
+      </div>
+
 
     </div>
   );

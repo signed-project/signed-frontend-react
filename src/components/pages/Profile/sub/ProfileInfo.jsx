@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import mime from "mime";
 import styles from '../profile.module.scss';
 import { getFilePath } from '../../../customHooks/getImgSources.js';
-import InputPlain from '../../../utils/Input/InputPlain/InputPlain';
+import Input from '../../../utils/Input/Input';
 import Button from "../../../utils/Button/Button";
 import useFiles from "../../../customHooks/useFiles";
 import { User } from '../../../../api/models/user';
@@ -102,14 +102,13 @@ const ProfileInfo = () => {
     }
 
 
-
     return (
         <>
             <div className={styles.userPicWrapper}>
                 <ChangeUserPic srcData={avatar.imageSrc} handleChangeFile={handleChangeFile} />
             </div>
             <div className={styles.fields}>
-                <InputPlain title={'Public name'} type={'text'} name={'publicName'} value={form.publicName.value} handleChange={handleForm} warning={form.publicName.warning} />
+                <Input title={'Public name'} name={'publicName'} warning={form.publicName.warning} type={'text'} handleChange={handleForm} value={form.publicName.value} />
             </div>
             <div className={styles.buttonWrapper}>
                 <Button

@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
@@ -47,9 +48,6 @@ const Post = ({
   const [imgPreview, setImgPreview] = useState([]);
   const postMapState = useSelector((state) => state.post.hashed);
 
-  // console.log("avatar: ", avatar);
-  // console.log("post: ", post.source.avatar.hash);
-  // console.log("post: ", post.text);
 
   useEffect(() => {
     setPostMap(postMapState);
@@ -209,7 +207,6 @@ const Post = ({
           </div>
         </>
       )}
-
       {type === "repost" && targetPost && (
         <>
           <div className={styles.typePost}>

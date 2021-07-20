@@ -1,7 +1,7 @@
 @import "/src/assets/css/index.scss";
 
 .post {
-  padding: 16px 16px 0 16px;
+  padding: 12px 12px 0 12px;
   word-wrap: break-word;
   // margin-top: 16px;
   // margin-bottom: 16px;
@@ -58,6 +58,7 @@
   background: $colorGrey400;
   // min-width: 288px;
   margin-bottom: 16px;
+  border-radius: 4px;
 }
 
 .commentBlock {
@@ -69,13 +70,13 @@
 .dotsVerticalLine {
   border-left: 1px dashed $colorGrey200;
   height: 110%;
-  margin: -3px 0 -3px -25px;
+  margin: $marginVerticalLine;
 }
 
 .verticalLine {
   border-left: 1px solid $colorGrey200;
   height: 100%;
-  margin: -3px 0 -3px -25px;
+  margin: $marginVerticalLine;
 }
 
 .verticalLineRemove {

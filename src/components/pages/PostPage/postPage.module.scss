@@ -63,15 +63,15 @@
 }
 .dotsVerticalLine {
   border-left: 1px dashed $colorGrey200;
-  height: 110%;
-  margin: -3px 0 -3px -25px;
+  height: 120%;
+  margin: $marginVerticalLine;
   z-index: -1;
 }
 
 .verticalLine {
   border-left: 1px solid $colorGrey200;
   height: 100%;
-  margin: -3px 0 -3px -25px;
+  margin: $marginVerticalLine;
 }
 
 .verticalLineRemove {
