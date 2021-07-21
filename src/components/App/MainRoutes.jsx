@@ -12,6 +12,10 @@ import Notification from '../pages/Notification/Notification';
 import routes from '../../config/routes.config';
 import Login from '../pages/Login/Login';
 import Register from '../pages/Register/Register';
+import Source from '../pages/Source/Source';
+
+
+
 const MainRouts = () => {
     return (
         <>
@@ -31,6 +35,9 @@ const MainRouts = () => {
                                 />
                                 <Route path={routes.postHash}
                                     component={() => <PostPage theme={theme} toggleTheme={toggleTheme} />}
+                                />
+                                <Route path={routes.source}
+                                    component={() => <Source theme={theme} toggleTheme={toggleTheme} />}
                                 />
                                 <Route path={routes.profile} exact
                                     component={() => <Profile theme={theme} toggleTheme={toggleTheme} />}

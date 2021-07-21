@@ -32,7 +32,7 @@ const Avatar = ({ imgSmall = false, imgBig = false, avatar, srcData }) => {
 
   return (
     <div
-      className={styles.imgAvatarWrapper}
+      className={`${!imgBig && styles.imgAvatarWrapper}`}
       onClick={() => {
         history.push(routs.source);
       }}

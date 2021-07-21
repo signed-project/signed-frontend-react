@@ -44,7 +44,9 @@ export function* workerRegister(action) {
         address: userBitcoinData.address,
         name: userName,
         wif: userBitcoinData.wif,
-        hosts
+        hosts,
+        avatar,
+        publicName
     });
     user = userModel.newUser;
 
@@ -73,6 +75,8 @@ export function* workerRegister(action) {
         const currentUser = new User({})
         currentUser.setUserData = userObject;
         const userToStore = currentUser.newUser;
+        console.log('userToStore==================', userToStore);
+        console.log('userToStore==================', userToStore);
         yield put({ type: ACTIONS_USER.SET_USER, payload: userToStore });
         yield put({ type: ACTIONS_POST.GET_BOOK, payload: { isRegistered: true } });
         history.push(routes.feed);

@@ -142,13 +142,19 @@ const Post = ({
             <div className={styles.postMain}>
               <div className={styles.hover}>
                 <InfoAuthor createdAt={getReadFormat(createdAt)} name={name} />
-                <img
-                  src={icon.menu}
-                  alt="menu icon"
-                  className={styles.menuIcon}
+                <div className={styles.menuIconWrapper}
                   onClick={() => handleShowMenu(hash)}
                   data-hash={hash}
-                />
+                >
+                  <img
+                    src={icon.menu}
+                    alt="menu icon"
+                    className={styles.menuIcon}
+                    onClick={() => handleShowMenu(hash)}
+                    data-hash={hash}
+                  />
+                </div>
+
                 {isShowMenu(hash) && (
                   <MenuPost dataHash={hash} handleEditPost={handleEditPost} />
                 )}

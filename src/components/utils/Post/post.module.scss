@@ -37,6 +37,13 @@
   justify-content: flex-start;
 }
 
+.menuIconWrapper {
+  width: 30px;
+  display: flex;
+  flex-direction: row;
+   justify-content: flex-end;
+}
+
 .menuIcon {
   margin-right: 14px;
   height: 15px;

@@ -20,6 +20,8 @@ input[type="submit"] {
   text-decoration: none;
   display: inline-block;
   outline: none;
+  font-weight: 400;
+  font: $mainFont;
 }
 
 .button.withIcon {
@@ -65,6 +67,7 @@ button.agree:hover .iconGreen {
   background: #fff;
   color: $colorPrimary100;
   border: 1px solid $colorPrimary100;
+  font-weight: 400;
 }
 
 .button.clean:disabled,
