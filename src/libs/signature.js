@@ -99,10 +99,8 @@ export const getJsonStringFromObj = ({ objData }) => {
     let jsonData;
     try {
         let objCopy = JSON.parse(JSON.stringify(objData));
-        if (objCopy.hash || objCopy.signatures) {
-            delete objCopy.hash;
-            delete objCopy.signatures;
-        }
+        delete objCopy.hash;
+        delete objCopy.signatures;
         objCopy = sortKeys(objCopy);
         jsonData = stringify(objCopy);
     } catch (e) {
@@ -126,7 +124,7 @@ export const getSignatures = ({ data, wif }) => {
         signatureString = ''
     }
     return signatureString;
-}
+};
 
 export const getHash = ({ data }) => {
     const dataJson = getJsonStringFromObj({ objData: data });
@@ -139,6 +137,7 @@ export const getHash = ({ data }) => {
     } catch (e) {
         console.error('[getHash]', e);
     }
+
     return resHash;
 }
 
@@ -147,10 +146,13 @@ export const generateId = () => {
     return nanoid();
 }
 
-export const isSignatureValid = ({ data }) => {
-    const { address } = data.source;
+export const isSignatureValid = ({ data, address }) => {
     const { signatures } = data;
     const jsonString = getJsonStringFromObj({ objData: data });
+
+    console.log('data', data);
+    console.log('address', address);
+    console.log('jsonString', jsonString);
     let isValid;
     try {
         isValid = bitcoinMessage.verify(jsonString, address, signatures);

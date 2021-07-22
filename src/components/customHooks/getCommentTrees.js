@@ -11,6 +11,7 @@ const getCommentTreas = ({ hashMap, currentHash }) => {
                 comments.push(post);
                 recursion(post.hash);
             }
+            return post;
         })
     }
     recursion(currentHash);

@@ -15,6 +15,8 @@ import uploadImg from './uploadImg.svg';
 import cancel from './cancel.svg';
 import del from './del.svg';
 
+
+
 export default {
     notification,
     feed,

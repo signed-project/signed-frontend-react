@@ -29,9 +29,9 @@ export class User {
         avatar: data.source.avatar
           ? data.source.avatar
           : {
-              contentType: "",
-              hash: "",
-            },
+            contentType: "",
+            hash: "",
+          },
         publicName: data.source.publicName ? data.source.publicName : "",
         hosts: data.source.hosts ? data.source.hosts : [],
         signatures: data.source.signatures ? data.source.signatures : "",

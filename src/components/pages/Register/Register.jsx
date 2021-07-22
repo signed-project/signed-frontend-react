@@ -161,7 +161,6 @@ const Register = ({ toggleTheme }) => {
     if (avatar.file) {
       try {
         ({ data: uploadAvatarData } = await uploadFile(avatar.file));
-        console.log('uploadAvatarData', uploadAvatarData);
       } catch (e) {
         console.warn("[handleSendForm][uploadFile]", e);
       }
@@ -196,7 +195,6 @@ const Register = ({ toggleTheme }) => {
     }
   }
 
-  console.log('avatar1111111', avatar);
 
 
   return (

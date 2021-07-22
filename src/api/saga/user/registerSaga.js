@@ -1,12 +1,10 @@
 import { takeEvery, call, select, put } from "redux-saga/effects";
 import { userApi } from "../../../config/http.config";
 import { ACTIONS as ACTIONS_USER } from "../../storage/user";
-import { ACTIONS as ACTIONS_POST } from "../../storage/post";
 import srp from 'secure-remote-password/client';
-import { getRegisterUserData, getSignatures, getHash } from '../../../libs/signature.js';
+import { getRegisterUserData } from '../../../libs/signature.js';
 import { User } from '../../models/user';
 import routes from '../../../config/routes.config';
-// import routes from '../../../config/routes.config';
 
 const getDataSrp = ({ userName, password }) => {
     const salt = srp.generateSalt();
@@ -78,7 +76,7 @@ export function* workerRegister(action) {
         console.log('userToStore==================', userToStore);
         console.log('userToStore==================', userToStore);
         yield put({ type: ACTIONS_USER.SET_USER, payload: userToStore });
-        yield put({ type: ACTIONS_POST.GET_BOOK, payload: { isRegistered: true } });
+        // yield put({ type: ACTIONS_POST.GET_BOOK, payload: { isRegistered: true } });
         history.push(routes.feed);
     }
     yield put({ type: ACTIONS_USER.SET_LOADING, payload: false });

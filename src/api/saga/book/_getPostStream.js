@@ -1,5 +1,4 @@
 import { isPostFieldValid } from '../../../libs/validation';
-import { isSignatureValid } from '../../../libs/signature';
 
 
 const sortPostUpdateAt = (arr) => {
@@ -18,7 +17,6 @@ const sortPostUpdateAt = (arr) => {
     };
 
     if (arr)
-
         arr.map(post => {
             if (arr.filter(p => post.id === p.id).length > 1
                 && !isAlreadyExist(post.id)) {
@@ -46,11 +44,10 @@ const sortPostUpdateAt = (arr) => {
     // })
     return sortUniquePost
 }
-
+// && isSignatureValid({ data: post })
 const getPostStream = (arr) => {
-    console.log('arr----------getPostStream', arr);
     const newArr = arr.filter(post => {
-        if (isPostFieldValid(post) && isSignatureValid({ data: post }) && post.type !== 'reply') {
+        if (isPostFieldValid(post) && post.type !== 'reply') {
             return true
         }
         else {
@@ -58,8 +55,6 @@ const getPostStream = (arr) => {
             return false;
         }
     });
-    console.log('newArr---hobbit-2', newArr);
-    console.log(' sortPostUpdateAt(newArr)', sortPostUpdateAt(newArr));
     return sortPostUpdateAt(newArr);
 }
 

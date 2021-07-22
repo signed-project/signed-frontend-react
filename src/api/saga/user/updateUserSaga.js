@@ -14,15 +14,10 @@ const sendUserData = async ({ axios, source }) => {
 
 export function* workerUpdateUser(action) {
     // yield put({ type: ACTIONS_USER.SET_LOADING, payload: true });
-    console.log(' yield put({ type: ACTIONS_USER.SET_LOADING, payload: true });');
-    console.log(' yield put({ type: ACTIONS_USER.SET_LOADING, payload: true });');
-    console.log(' yield put({ type: ACTIONS_USER.SET_LOADING, payload: true });');
-    let user;
     const axios = yield select((state) => state.axios.axios);
 
     const userResponse = yield call(sendUserData, { axios, source: action.payload.source });
 
-    // what is get as result
     if (userResponse?.data) {
         yield put({ type: ACTIONS_USER.SET_USER, payload: action.payload });
     }

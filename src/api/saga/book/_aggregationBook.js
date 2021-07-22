@@ -1,6 +1,6 @@
 
 import getPostStream from './_getPostStream';
-import { getHash } from '../../../libs/signature';
+import { getHash, isSignatureValid } from '../../../libs/signature';
 
 
 
@@ -10,8 +10,21 @@ const getHashedData = (arr) => {
     return Object.fromEntries(hashMap);
 }
 
-const getPostsHashValid = (arr) => {
-    return arr.filter(post => post.hash === getHash({ data: post }))
+const getDataHashValid = (arr) => {
+    return Array.isArray(arr) ?
+        arr.filter(obj => {
+            return obj.hash === getHash({ data: obj })
+        })
+        : [];
+}
+
+const getDataSignatureValid = ({ arr, isPost = false }) => {
+    return Array.isArray(arr) ?
+        arr.filter(obj => {
+            let address = isPost ? obj.source.address : obj.address;
+            return isSignatureValid({ data: obj, address: address })
+        })
+        : [];
 }
 
 const getLatestPost = (arr) => {
@@ -24,7 +37,22 @@ const getLatestPost = (arr) => {
     return Object.fromEntries(latestPost);
 };
 
+const getPostUpdateAtFilter = (arr) => {
+    let result = [];
+    if (!Array.isArray(arr)) return result;
+
+    // arr.map(src => { })
+
+
+}
+
+
 const getLatestSource = (arr) => {
+    // sort for apdate at, check signature
+
+
+
+
     let hashMap = new Map();
     arr.map(val => {
         hashMap.set(val.address, val)
@@ -33,16 +61,18 @@ const getLatestSource = (arr) => {
     return Object.fromEntries(hashMap);
 }
 
-export const getCashData = (posts, sources) => {
-    const postHashValid = getPostsHashValid(posts);
-    console.log('Hobbit---postHashValid', postHashValid);
-    // TOOD: check sourcesHashValid add react signatures to source
-    const sourcesHashValid = sources;
+export const getCashData = ({ arrPosts, arrSources }) => {
+    const postHashValid = getDataHashValid(arrPosts);
+    const sourcesHashValid = getDataHashValid(arrSources);
+
+    const postSignatureValid = getDataSignatureValid({ arr: postHashValid, isPost: true });
+    const sourcesSignatureValid = getDataSignatureValid({ arr: sourcesHashValid, isPost: false });
+
     return {
-        latestSource: getLatestSource(sourcesHashValid),
-        hashedSource: getHashedData(sourcesHashValid),
-        latestPost: getLatestPost(postHashValid),
-        hashedPost: getHashedData(postHashValid),
-        stream: getPostStream(postHashValid)
+        latestSource: getLatestSource(sourcesSignatureValid),
+        hashedSource: getHashedData(sourcesSignatureValid),
+        latestPost: getLatestPost(postSignatureValid),
+        hashedPost: getHashedData(postSignatureValid),
+        stream: getPostStream(postSignatureValid)
     }
 }

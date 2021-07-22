@@ -42,7 +42,7 @@ function* workerLogin(action) {
     const axios = yield select((state) => state.axios.axios);
     let resFirstStep, isProof, serverSessionProof, sendData;
     const clientEphemeral = srp.generateEphemeral()
-    const { password, userName, history } = action.payload;
+    const { password, userName } = action.payload;
     const loginError = 'Nickname or password is invalid';
     yield put({ type: ACTIONS_USER.SET_LOGIN_ERROR, payload: '' });
     try {

@@ -5,18 +5,6 @@ import { ACTIONS as ACTIONS_POST } from "../../storage/post";
 import { User } from '../../models/user';
 import { parseJson } from '../../../libs/json';
 
-
-const getTokenPair = async (axios, token) => {
-    try {
-        const data = {
-            token
-        };
-        let res = await axios.post(userApi.GET_TOKEN_PAIR, data);
-        return res;
-    } catch (error) {
-        console.log("[getTokenPair][error]", error);
-    }
-};
 const getUser = async (axios, token) => {
     let res;
     try {
@@ -39,15 +27,6 @@ export function* workerGetUserData(action) {
         const { data } = resData;
         const source = parseJson(data.source);
         const userModel = new User({});
-        const userStoreData = {
-            isAuth: true,
-            address: data.address,
-            name: data.userName,
-            wif: wif,
-            subscribed: data.subscribed,
-            hosts: data.hosts
-        };
-
         const userObject = {
             isAuth: true,
             wif: wif,

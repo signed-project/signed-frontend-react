@@ -10,7 +10,6 @@ const Avatar = ({ imgSmall = false, imgBig = false, avatar, srcData }) => {
   const history = useHistory();
 
   const [src, setSrc] = useState(userPlaceHolder);
-  console.log('srcData333333333333', srcData);
   useEffect(() => {
     let srcImg
     if (avatar && avatar.hash && avatar.contentType) {

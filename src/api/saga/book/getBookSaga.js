@@ -1,9 +1,8 @@
-import { takeEvery, call, select, put } from "redux-saga/effects";
+import { call, select, put } from "redux-saga/effects";
 import { publicApi, userApi } from "../../../config/http.config";
 import { ACTIONS as POST_ACTIONS } from "../../storage/post";
 import { ACTIONS as USER_ACTIONS } from "../../storage/user";
 import { ACTIONS as SOURCE_ACTIONS } from "../../storage/source";
-import { dummyBook } from "../../../dummyData/dummyIndex";
 import { getCashData } from "./_aggregationBook";
 import { parseJson } from '../../../libs/json';
 import axios from "axios";
@@ -18,7 +17,10 @@ const getMyBook = async (address) => {
   try {
     let res = await axios.get(`${publicApiHost}${publicApi.GET_INDEX}/${address}`);
     // let res = await axios.post('https://699m468ak3.execute-api.us-west-2.amazonaws.com/post');
-    return res.data.posts;
+    return {
+      myPosts: res.data.posts,
+      mySource: res.data.source
+    };
   } catch (error) {
     console.log("[getMyBook][error]", error);
     return []
@@ -29,13 +31,17 @@ const getMyBook = async (address) => {
 
 // TODO rename
 const getSubscribedBook = async ({ subscribed }) => {
-  let postSubscribed = [], combinePosts = [];
+  let postSubscribed = [], gatheredPosts = [], hostSources = [];
   try {
     await Promise.all(subscribed.map(async (sbs) => {
       try {
         let res = await axios.get(`${sbs.url}`);
         if (res?.data?.posts) {
           postSubscribed.push(res?.data?.posts);
+        }
+        if (res?.data?.source) {
+          console.log('res?.data?.source', res?.data?.source);
+          hostSources.push(res?.data?.source);
         }
       } catch (e) {
         console.warn("[getSubscribedBook][postSubscribed.push]", e);
@@ -47,13 +53,15 @@ const getSubscribedBook = async ({ subscribed }) => {
 
   try {
     postSubscribed.map(posts => {
-      combinePosts = [...combinePosts, ...posts]
+      gatheredPosts = [...gatheredPosts, ...posts]
+      return posts;
     })
   }
   catch (e) {
-    console.warn("[getHostsBook][combinePosts]", e);
+    console.warn("[getHostsBook][gatheredPosts]", e);
   }
-  return combinePosts;
+
+  return { gatheredPosts, hostSources };
 };
 
 const getAllHostsBook = async () => {
@@ -65,12 +73,12 @@ const getAllHostsBook = async () => {
   }
 
   try {
-    return await getSubscribedBook({ subscribed: data });
+    const { gatheredPosts } = await getSubscribedBook({ subscribed: data });
+    return gatheredPosts;
   } catch (e) {
     console.warn("[getBookSaga][getAllHostsBook][getSubscribedBook]", e);
     return []
   }
-
 };
 
 const getUser = async ({ axios, token }) => {
@@ -94,7 +102,7 @@ export default function* watchGetBook() {
   const wif = sessionStorage.getItem("wif");
   const accessTokenDecoded = jwt.decode(accessToken);
   const axios = yield select((state) => state.axios.axios);
-  let gatheredPosts = [], arrPosts, arrSources, myPosts;
+  let gatheredPosts = [], arrPosts, arrSources, myPosts, userSubscribedSources, hostSources;
   if (wif && accessToken && accessTokenDecoded.exp * 1000 > new Date().getTime()) {
     const resData = yield call(getUser, { axios: axios, token: accessToken });
     if (resData) {
@@ -111,15 +119,19 @@ export default function* watchGetBook() {
       };
       userModel.setUserData = userObject;
       const user = userModel.newUser;
-      console.log('----------user------------', user);
-      console.log('----------user------------', user);
-      console.log('----------user------------', user);
-      console.log('----------user------------', user);
-
       yield put({ type: USER_ACTIONS.SET_USER, payload: user });
 
       try {
-        myPosts = yield call(getMyBook, data.address);
+        userSubscribedSources = data.subscribed.map(sub => {
+          return parseJson(sub.source);
+        });
+      } catch (e) {
+        console.warn('[getBookSaga][data.subscribed.map]', e);
+      }
+
+
+      try {
+        ({ myPosts } = yield call(getMyBook, data.address));
       }
       catch (e) {
         myPosts = [];
@@ -127,29 +139,22 @@ export default function* watchGetBook() {
       }
       try {
         if (Array.isArray(data.subscribed)) {
-          gatheredPosts = yield call(getSubscribedBook, { subscribed: data.subscribed });
+          ({ gatheredPosts, hostSources } = yield call(getSubscribedBook, { subscribed: data.subscribed }));
         }
       } catch (e) {
         console.warn("[workerGetBook][getSubscribedBook]", e);
       }
 
-
       try {
-        // arrPosts = [...myPosts];
+        arrSources = [...userSubscribedSources, ...hostSources];
         arrPosts = [...myPosts, ...gatheredPosts];
       } catch (e) {
-        console.warn('Destructuring myPost, hostPost, hostsSources', e)
+        console.warn('[getBookSaga][Destructuring myPost, hostPost, hostsSources]', e)
       }
       userExist = true;
     }
-    // dispatch(postActions.getBook({ isRegistered: false }));
   }
   if (!userExist) {
-    console.log('userExist', userExist);
-    console.log('userExist', userExist);
-    console.log('userExist', userExist);
-    console.log('userExist', userExist);
-    console.log('userExist', userExist);
     try {
       arrPosts = yield call(getAllHostsBook);
     } catch (e) {
@@ -158,10 +163,9 @@ export default function* watchGetBook() {
     }
   }
 
-  const hostsSources = dummyBook.source;
-  arrSources = [...hostsSources];
+
   if (!arrPosts) { return }
-  const book = yield call(getCashData, arrPosts, arrSources);
+  const book = yield call(getCashData, { arrPosts, arrSources });
   yield put({ type: POST_ACTIONS.SET_POST_STREAM, payload: book.stream });
   yield put({ type: POST_ACTIONS.SET_POST_HASH, payload: book.hashedPost });
   yield put({ type: POST_ACTIONS.SET_POST_LATEST, payload: book.latestPost });
