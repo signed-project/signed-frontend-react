@@ -90,12 +90,11 @@ export const isWifFormat = ({ wif }) => {
         console.warn('[isWifFormat]', e);
         return false;
     }
-
-
 }
 
 
 export const getJsonStringFromObj = ({ objData }) => {
+    console.log('objData-------objData----------objData', objData);
     let jsonData;
     try {
         let objCopy = JSON.parse(JSON.stringify(objData));

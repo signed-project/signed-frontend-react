@@ -47,11 +47,41 @@ const getPostUpdateAtFilter = (arr) => {
 }
 
 
+
+// ! TODO add unit test 
 const getLatestSource = (arr) => {
     // sort for apdate at, check signature
+    let uniqueArr = [];
+    let samesArr = [];
 
+    const isAlreadyExist = address => {
+        let isExist = false;
+        uniqueArr.map(uArr => {
+            if (uArr.length > 1 && uArr.filter(src => src.address = address).length > 1) {
+                isExist = true
+            }
+            return uArr;
+        });
+        return isExist;
+    };
 
+    arr.map(source => {
+        if (arr.filter(s => source.address === s.address).length > 1
+            && !isAlreadyExist(source.address)) {
+            samesArr = [];
+            arr.filter(s => s.address === source.address).map(src => {
+                samesArr.push(src);
+                return src;
+            });
+            const samePostSort = samesArr.sort((a, b) => b.updatedAt - a.updatedAt)
+            uniqueArr.push(samePostSort[0])
+        }
 
+        else if (arr.filter(s => source.address === s.address).length === 1) {
+            uniqueArr.push(source)
+        };
+        return source;
+    });
 
     let hashMap = new Map();
     arr.map(val => {
@@ -63,10 +93,17 @@ const getLatestSource = (arr) => {
 
 export const getCashData = ({ arrPosts, arrSources }) => {
     const postHashValid = getDataHashValid(arrPosts);
+    console.warn('SOURCE');
     const sourcesHashValid = getDataHashValid(arrSources);
 
     const postSignatureValid = getDataSignatureValid({ arr: postHashValid, isPost: true });
     const sourcesSignatureValid = getDataSignatureValid({ arr: sourcesHashValid, isPost: false });
+
+    console.log('+++++++++++++++++++++arrSources++++++++++++++++++++++', arrSources);
+    console.log('+++++++++++++++++++++sourcesHashValid++++++++++++++++++++++', sourcesHashValid);
+    console.log('+++++++++++++++++++++sourcesSignatureValid++++++++++++++++++++++', sourcesSignatureValid);
+    console.log('getLatestSource(sourcesSignatureValid)', getLatestSource(sourcesSignatureValid));
+
 
     return {
         latestSource: getLatestSource(sourcesSignatureValid),

@@ -1,6 +1,7 @@
 import { takeEvery, call, select, put } from "redux-saga/effects";
 import { userApi } from "../../../config/http.config";
 import { ACTIONS as ACTIONS_USER } from "../../storage/user";
+import { ACTIONS as ACTIONS_SOURCE } from "../../storage/source";
 
 
 const sendUserData = async ({ axios, source }) => {
@@ -20,10 +21,13 @@ export function* workerUpdateUser(action) {
 
     if (userResponse?.data) {
         yield put({ type: ACTIONS_USER.SET_USER, payload: action.payload });
+        yield put({ type: ACTIONS_SOURCE.UPDATE_SOURCE_LATEST, payload: action.payload.source });
     }
     yield put({ type: ACTIONS_USER.SET_LOADING, payload: false });
 }
 
+
+// update source hash!!!!!!!!!!!!!!!
 export default function* watchUpdateUser() {
     yield takeEvery(ACTIONS_USER.UPDATE_USER, workerUpdateUser);
 }

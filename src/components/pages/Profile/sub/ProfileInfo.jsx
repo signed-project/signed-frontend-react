@@ -85,11 +85,12 @@ const ProfileInfo = () => {
                     console.warn("[ProfileInfo][uploadFile]", e);
                 }
             }
-            console.log('currentUser=======', currentUser);
             const userObject = {
                 ...currentUser,
                 source: {
                     ...currentUser.source,
+                    hash: '',
+                    signatures: '',
                     avatar: data ? data : currentUser.source.avatar,
                     publicName: form.publicName.value
                 }

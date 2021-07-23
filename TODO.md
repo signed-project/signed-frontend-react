@@ -36,8 +36,9 @@
 - [ ] save only refresh token on localStorage, so assess save on sessionStorage
  
 - [ ] split post store/reducer to post and book or like this
-- [ ] rename login to signIn
-- [ ] reload page /login or u name it direct to feed ! fix this !!!!!!!!!!
+ 
+- [ ] add test unit !!!!!! !!!!!!!!!! !!!!!!!!!!
+ 
 
   <!-- "homepage": "/public", -->
 <!--     "output": {

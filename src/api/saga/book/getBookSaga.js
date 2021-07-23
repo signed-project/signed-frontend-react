@@ -73,8 +73,8 @@ const getAllHostsBook = async () => {
   }
 
   try {
-    const { gatheredPosts } = await getSubscribedBook({ subscribed: data });
-    return gatheredPosts;
+    const { gatheredPosts, hostSources } = await getSubscribedBook({ subscribed: data });
+    return { gatheredPosts, hostSources };
   } catch (e) {
     console.warn("[getBookSaga][getAllHostsBook][getSubscribedBook]", e);
     return []
@@ -102,7 +102,8 @@ export default function* watchGetBook() {
   const wif = sessionStorage.getItem("wif");
   const accessTokenDecoded = jwt.decode(accessToken);
   const axios = yield select((state) => state.axios.axios);
-  let gatheredPosts = [], arrPosts, arrSources, myPosts, userSubscribedSources, hostSources;
+  let gatheredPosts = [], arrPosts, arrSources, myPosts,
+    userSubscribedSources, hostSources, mySource;
   if (wif && accessToken && accessTokenDecoded.exp * 1000 > new Date().getTime()) {
     const resData = yield call(getUser, { axios: axios, token: accessToken });
     if (resData) {
@@ -131,7 +132,7 @@ export default function* watchGetBook() {
 
 
       try {
-        ({ myPosts } = yield call(getMyBook, data.address));
+        ({ myPosts, mySource } = yield call(getMyBook, data.address));
       }
       catch (e) {
         myPosts = [];
@@ -146,7 +147,8 @@ export default function* watchGetBook() {
       }
 
       try {
-        arrSources = [...userSubscribedSources, ...hostSources];
+        arrSources = [...userSubscribedSources, ...hostSources, mySource];
+        console.log('arrSources------------------arrSources', arrSources);
         arrPosts = [...myPosts, ...gatheredPosts];
       } catch (e) {
         console.warn('[getBookSaga][Destructuring myPost, hostPost, hostsSources]', e)
@@ -156,7 +158,9 @@ export default function* watchGetBook() {
   }
   if (!userExist) {
     try {
-      arrPosts = yield call(getAllHostsBook);
+      const { gatheredPosts, hostSources } = yield call(getAllHostsBook);
+      arrPosts = gatheredPosts;
+      arrSources = hostSources;
     } catch (e) {
       console.warn('[getBookSaga][getAllHosts]', e)
       arrPosts = [];
