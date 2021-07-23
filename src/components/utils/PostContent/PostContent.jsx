@@ -4,10 +4,9 @@ import routes from "../../../config/routes.config.js";
 import { getFilePath } from "../../customHooks/getImgSources";
 
 
-const PostContent = ({ text, type, postHash, imgPrevSrc, hostAssets, imgHostArr }) => {
+const PostContent = ({ text, postHash, imgPrevSrc, imgHostArr }) => {
   let history = useHistory();
   const post_url = getFilePath({ hash: postHash, fileExtension: 'json' });
-
 
   const title = text ? text.slice(0, 140) : '';
   console.log('imgHostArr', imgHostArr);

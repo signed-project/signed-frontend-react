@@ -36,7 +36,6 @@ const Profile = ({ toggleTheme }) => {
     return tab === currentTab && styles.activeTab
   }
 
-
   return (
     <>
       <div className={styles.header}>

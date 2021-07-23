@@ -3,7 +3,7 @@ import styles from './infoAuthor.module.scss';
 import icon from '../../../assets/svg/icon';
 import routs from '../../../config/routes.config';
 import { useHistory } from "react-router-dom";
-const InfoAuthor = ({ name, createdAt, address }) => {
+const InfoAuthor = ({ name, createdAt, address, isShowDate = true }) => {
     const history = useHistory();
     return (
         <>
@@ -15,9 +15,9 @@ const InfoAuthor = ({ name, createdAt, address }) => {
                         <img src={icon.tickOne} alt="tick icon" className={styles.tickOne} />
                         <span className={styles.name}>{name}</span>
                     </div>
-                    <div className={styles.date}>
+                    {isShowDate && <div className={styles.date}>
                         <span>{createdAt}</span>
-                    </div>
+                    </div>}
                 </div>
             </div>
 
