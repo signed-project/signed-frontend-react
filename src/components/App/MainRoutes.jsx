@@ -35,7 +35,7 @@ const MainRouts = () => {
                                 <Route path={routes.postHash}
                                     component={() => <PostPage theme={theme} toggleTheme={toggleTheme} />}
                                 />
-                                <Route path={routes.source}
+                                <Route path={routes.sourceAddress}
                                     component={() => <Source theme={theme} toggleTheme={toggleTheme} />}
                                 />
                                 <Route path={routes.profile} exact

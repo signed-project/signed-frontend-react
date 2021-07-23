@@ -11,4 +11,5 @@ export default {
   login: '/login',
   passwordRecovery: '/password-recovery',
   source: '/source',
+  sourceAddress: '/source/:address',
 };

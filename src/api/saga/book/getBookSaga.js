@@ -167,7 +167,6 @@ export default function* watchGetBook() {
     }
   }
 
-
   if (!arrPosts) { return }
   const book = yield call(getCashData, { arrPosts, arrSources });
   yield put({ type: POST_ACTIONS.SET_POST_STREAM, payload: book.stream });

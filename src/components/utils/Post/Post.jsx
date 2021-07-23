@@ -126,13 +126,13 @@ const Post = ({
 
   const isHideLine = comments.length < 1;
   return (
-    <> { sourcePost && 
+    <> {sourcePost &&
       <div key={renderKey} className={styles.post}>
         {type === "post" && sourcePost.hosts && (
           <>
             <div className={styles.typePost}>
               <div className={styles.avatarBlock}>
-                <Avatar avatar={sourcePost.avatar} />
+                <Avatar avatar={sourcePost.avatar} address={address} />
                 <div
                   className={`${styles.verticalLine}  ${comments.length === 0 && styles.verticalLineRemove
                     }`}
@@ -140,7 +140,7 @@ const Post = ({
               </div>
               <div className={styles.postMain}>
                 <div className={styles.hover}>
-                  <InfoAuthor createdAt={getReadFormat(createdAt)} name={sourcePost.name} />
+                  <InfoAuthor createdAt={getReadFormat(createdAt)} name={sourcePost.name} address={address} />
                   <div className={styles.menuIconWrapper}
                     onClick={() => handleShowMenu(hash)}
                     data-hash={hash}
@@ -177,10 +177,10 @@ const Post = ({
         {type === "like" && targetPost && (
           <>
             <div className={styles.typeLike}>
-              <LikeMark createdAt={getReadFormat(createdAt)} name={sourcePost.name} />
+              <LikeMark createdAt={getReadFormat(createdAt)} name={sourcePost.name} address={address} />
               <div className={styles.avatarWrapper}>
                 <div className={styles.avatarBlock}>
-                  <Avatar avatar={sourcePost.avatar} />
+                  <Avatar avatar={sourcePost.avatar} address={address} />
                   <div
                     className={`${styles.verticalLine}    ${type === "like" && styles.verticalLineRemove
                       }`}
@@ -189,6 +189,7 @@ const Post = ({
                 <div className={styles.postBody}>
                   <div className={styles.hover}>
                     <InfoAuthor
+                      // address={address}
                       createdAt={getReadFormat(createdAt)}
                       name={sourceTargetPost.name}
                     />

@@ -23,8 +23,6 @@ const ProfileInfo = () => {
     const imgScr = getFilePath({ hash: 'HZPM8Dj1CNAbkjADug42pfruGmihq4Tynd9SsPCv9VzW', fileExtension: 'png' })
 
 
-
-
     const avatarInitial = {
         file: '',
         imageSrc: userPlaceHolder,
@@ -44,7 +42,6 @@ const ProfileInfo = () => {
         if (user?.source?.avatar) {
             const extension = mime.getExtension(user?.source?.avatar.contentType);
             const imgScr = getFilePath({ hash: user?.source?.avatar?.hash, fileExtension: extension });
-            console.log('imgScr*********************', imgScr);
             setAvatar({ file: '', imageSrc: imgScr })
         }
     }, [user])
