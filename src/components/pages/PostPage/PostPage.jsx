@@ -18,6 +18,7 @@ import Avatar from '../../utils/Avatar/Avatar';
 import InfoAuthor from '../../utils/InfoAuthor/InfoAuthor';
 import Slider from '../../utils/Slider/Slider';
 import routes from '../../../config/routes.config';
+import useSourcePost from '../../customHooks/useSourcePost';
 
 
 // TODO: refactor this component to use module Post if it possible
@@ -37,12 +38,14 @@ const PostPage = ({ toggleTheme }) => {
     const [showSlider, setShowSlider] = useState(false);
     const [sliderNum, setSliderNum] = useState('');
 
+    const currentPost = postMapState[hash];
+    const source = useSourcePost(currentPost.source.address);
+
     useEffect(() => {
         toggleTheme(false);
     }, [toggleTheme]);
 
     useEffect(() => {
-        const currentPost = postMapState[hash];
         setPost(currentPost);
     }, [hash, postMapState]);
 
@@ -64,6 +67,9 @@ const PostPage = ({ toggleTheme }) => {
             setShowSlider(true);
         }
     }, [slider]);
+
+
+
 
     const renderComments = comments.slice().map((post, i) =>
     (
@@ -98,24 +104,27 @@ const PostPage = ({ toggleTheme }) => {
                     <img src={icon.arrowBack} onClick={() => history.push(routes.feed)} alt="arrow back icon" />
                 </div >
                 {
-                    post &&
+                    post && source &&
                     <div className={styles.bodyBlock}>
                         <div className={styles.typePost}>
                             <div className={styles.avatarBlock}>
-                                <Avatar avatar={post.source.avatar} />
+                                <Avatar avatar={post.source.avatar} address={source.address} />
                                 {/*  ${styles.verticalLineRemove} */}
                                 <div className={`${styles.verticalLine} 
                              ${comments.length === 0 && styles.verticalLineRemove}`}></div>
                             </div>
                             <div className={styles.postMain}>
                                 <div className={styles.hover}>
-                                    <InfoAuthor createdAt={getReadFormat(post.createdAt)} name={post?.source?.name} />
+                                    <InfoAuthor
+                                        createdAt={getReadFormat(post.createdAt)}
+                                        name={source?.publicName}
+                                        address={source.address} />
                                     <img src={icon.menu} alt="menu icon" className={styles.menuIcon} />
                                 </div>
                                 <div className={styles.bodyWrapper}>
                                     {/* TODO: find out name sourceAddress,are is better  hash ?  */}
                                     <PostContent
-                                        hostAssets={post.source.hosts[0].assets}
+                                        hostAssets={source.hosts[0].assets}
                                         postHash={post.hash}
                                         text={post.text} type={post.type} />
                                     <Preview uploadImgArr={imgPreview} handleFullSlider={handleFullSlider} />

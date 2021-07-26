@@ -1,0 +1,25 @@
+@import "/src/assets/css/index.scss";
+
+.itemTitle {
+  font: $mainFont;
+  font-weight: 500;
+  font-size: 13px;
+  color: black;
+}
+.itemInfo {
+  font: $mainFont;
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.infoItem {
+  padding: 0 12px 0 12px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  // border-bottom: 1px ;
+  box-shadow: inset 0px -1px 0px #f0f0f0;
+  margin-left: -12px;
+  margin-right: -17px;
+}

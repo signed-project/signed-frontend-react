@@ -33,7 +33,7 @@ const Post = ({
   const {
     type, text, likesCount,
     repostsCount, attachments, hash, createdAt,
-    source: { address, name, avatar },
+    source: { address, publicName, avatar },
     target: { postHash }
   } = post;
 
@@ -93,12 +93,12 @@ const Post = ({
           renderKey={i}
           removeLastLine={i + 1 === comments.length}
           dotsLine={true}
-          name={c.source?.name}
-          text={c.text}
-          createdAt={c.createdAt}
+          // name={c.source?.name}
+          // text={c.text}
+          // createdAt={c.createdAt}
+          // hash={c.hash}
+          // type={c.type}
           showReactionBlock={true}
-          hash={c.hash}
-          type={c.type}
         />
       );
     } else if (i === 3) {
@@ -140,7 +140,7 @@ const Post = ({
               </div>
               <div className={styles.postMain}>
                 <div className={styles.hover}>
-                  <InfoAuthor createdAt={getReadFormat(createdAt)} name={sourcePost.name} address={address} />
+                  <InfoAuthor createdAt={getReadFormat(createdAt)} name={sourcePost.publicName} address={address} />
                   <div className={styles.menuIconWrapper}
                     onClick={() => handleShowMenu(hash)}
                     data-hash={hash}
@@ -177,7 +177,7 @@ const Post = ({
         {type === "like" && targetPost && (
           <>
             <div className={styles.typeLike}>
-              <LikeMark createdAt={getReadFormat(createdAt)} name={sourcePost.name} address={address} />
+              <LikeMark createdAt={getReadFormat(createdAt)} name={sourcePost.publicName} address={address} />
               <div className={styles.avatarWrapper}>
                 <div className={styles.avatarBlock}>
                   <Avatar avatar={sourcePost.avatar} address={address} />
@@ -191,7 +191,7 @@ const Post = ({
                     <InfoAuthor
                       // address={address}
                       createdAt={getReadFormat(createdAt)}
-                      name={sourceTargetPost.name}
+                      name={sourceTargetPost.publicName}
                     />
                   </div>
                   <div className={styles.bodyWrapper}>
@@ -217,7 +217,7 @@ const Post = ({
           <>
             <div className={styles.typePost}>
               <div className={styles.avatarBlock}>
-                <Avatar avatar={sourcePost.avatar} />
+                <Avatar avatar={sourcePost.avatar} address={address} />
                 <div
                   className={`${styles.verticalLine}  ${comments.length === 0 && styles.verticalLineRemove
                     }`}
@@ -225,7 +225,7 @@ const Post = ({
               </div>
               <div className={styles.postMain}>
                 <div className={styles.hover}>
-                  <InfoAuthor createdAt={getReadFormat(createdAt)} name={sourcePost.name} />
+                  <InfoAuthor createdAt={getReadFormat(createdAt)} name={sourcePost.publicName} address={address} />
                   <img
                     src={icon.menu}
                     alt="menu icon"

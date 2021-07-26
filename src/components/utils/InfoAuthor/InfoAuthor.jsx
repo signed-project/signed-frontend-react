@@ -3,6 +3,8 @@ import styles from './infoAuthor.module.scss';
 import icon from '../../../assets/svg/icon';
 import routs from '../../../config/routes.config';
 import { useHistory } from "react-router-dom";
+
+
 const InfoAuthor = ({ name, createdAt, address, isShowDate = true }) => {
     const history = useHistory();
     return (

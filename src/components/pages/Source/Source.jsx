@@ -8,6 +8,9 @@ import routes from '../../../config/routes.config';
 import Avatar from '../../utils/Avatar/Avatar';
 import InfoAuthor from '../../utils/InfoAuthor/InfoAuthor';
 import useSourcePost from "../../customHooks/useSourcePost";
+import SourcePosts from './sub/SourcePosts';
+import SourceInfo from './sub/SourceInfo';
+import Button from "../../utils/Button/Button";
 
 // TODO: refactor this component to use module Post if it possible
 const Source = ({ toggleTheme }) => {
@@ -21,8 +24,8 @@ const Source = ({ toggleTheme }) => {
     let { address } = useParams();
     const [tab, setTab] = useState(tabList.posts);
     const stream = useSelector((state) => state.post.stream);
-    let sourcePost = useSourcePost(address);
-    const [source, setSource] = useState('');
+    let source = useSourcePost(address);
+    // const [source, setSource] = useState('');
     const [ownPost, setOwnPost] = useState([]);
     const history = useHistory();
 
@@ -35,7 +38,9 @@ const Source = ({ toggleTheme }) => {
 
     useEffect(() => {
         if (Array.isArray(stream)) {
-            const userPost = stream.filter(post => post.source.address === source.address)
+            console.log('stream', stream);
+            const userPost = stream.filter(post => post.source.address === address)
+            console.log('userPost', userPost);
             setOwnPost(userPost);
         }
     }, [stream]);
@@ -53,21 +58,27 @@ const Source = ({ toggleTheme }) => {
             {/*  <div div className={styles.backBlock} >
                 <img src={icon.arrowBack} onClick={() => history.push(routes.feed)} alt="arrow back icon" />
             </div> */}
-            <div className={styles.header}>
-                <img src={icon.arrowBack} onClick={() => history.push(routes.feed)} alt="arrow back icon" />
-                <Avatar avatar={sourcePost.avatar} address={address} />
-                <InfoAuthor name={sourcePost.name} address={address} />
+            {source && <> <div className={styles.header}>
+                <img src={icon.arrowBack} onClick={() => history.push(routes.feed)} alt="arrow back icon" className={styles.iconBack} />
+                <Avatar avatar={source.avatar} address={address} />
+                <InfoAuthor name={source.publicName} address={address} />
             </div>
-            <div className={styles.tabs}>
-                <span className={`${styles.tabsItem} ${isActiveTab(tabList.posts)}`} onClick={() => goToTab(tabList.posts)}>Posts</span>
-                <span className={`${styles.tabsItem} ${isActiveTab(tabList.info)}`} onClick={() => goToTab(tabList.info)}>Info</span>
-                <span className={styles.tabsItem}>Users</span>
-            </div>
-            {/* {tab === tabList.posts && < ProfilePosts ownPost={ownPost} />}
-            {tab === tabList.info && <ProfileInfo />} */}
+                <div className={styles.controlUnit}>
+                    <div className={styles.tabs}>
+                        <span className={`${styles.tabsItem} ${isActiveTab(tabList.posts)}`} onClick={() => goToTab(tabList.posts)}>Posts</span>
+                        <span className={`${styles.tabsItem} ${isActiveTab(tabList.info)}`} onClick={() => goToTab(tabList.info)}>Info</span>
+                    </div>
+                    <div className={styles.buttonWrapper}>
+                        <Button className="primary follow" onClick={() => {
+                        }}>Follow</Button>
+                    </div>
+                    {/* Following */}
+                </div>
 
-
-
+            </>
+            }
+            {tab === tabList.posts && < SourcePosts ownPost={ownPost} />}
+            {tab === tabList.info && <SourceInfo source={source} />}
         </>
     );
 };

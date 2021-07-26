@@ -28,7 +28,10 @@ const RepostBlock = ({ postHash, type }) => {
     return (
         <div className={styles.repostBlock}>
             <div className={styles.wrapperContent}>
-                {targetPost && <AuthorBlock avatar={sourceTargetPost?.avatar} name={sourceTargetPost?.name} imgSmall={true} createdAt={getReadFormat(targetPost?.createdAt)} />}
+                {targetPost && <AuthorBlock
+                    avatar={sourceTargetPost?.avatar} name={sourceTargetPost?.name}
+                    imgSmall={true} createdAt={getReadFormat(targetPost?.createdAt)}
+                    address={targetPost.source.address} />}
             </div>
             {sourceTargetPost?.hosts && <PostContent
                 text={targetPost.text}
