@@ -9,7 +9,6 @@ const PostContent = ({ text, postHash, imgPrevSrc, imgHostArr }) => {
   const post_url = getFilePath({ hash: postHash, fileExtension: 'json' });
 
   const title = text ? text.slice(0, 140) : '';
-  console.log('imgHostArr', imgHostArr);
   const img = imgHostArr ? imgHostArr[0]?.imagePreviewUrl : '';
   const handleDirect = () => {
     history.push(`${routes.post}/${postHash}?post_url=${post_url}&title=${title}&img=${img}`);

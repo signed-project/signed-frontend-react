@@ -43,8 +43,6 @@ const Post = ({
   let sourceTargetPost = useSourcePost(targetPost?.source?.address);
   const reaction = useReaction();
 
-  console.log('sourcePost---------sourcePost', sourcePost);
-
   const [postMap, setPostMap] = useState({});
   const [comments, setComments] = useState([]);
   const [imgPreview, setImgPreview] = useState([]);
@@ -93,11 +91,6 @@ const Post = ({
           renderKey={i}
           removeLastLine={i + 1 === comments.length}
           dotsLine={true}
-          // name={c.source?.name}
-          // text={c.text}
-          // createdAt={c.createdAt}
-          // hash={c.hash}
-          // type={c.type}
           showReactionBlock={true}
         />
       );
@@ -180,7 +173,7 @@ const Post = ({
               <LikeMark createdAt={getReadFormat(createdAt)} name={sourcePost.publicName} address={address} />
               <div className={styles.avatarWrapper}>
                 <div className={styles.avatarBlock}>
-                  <Avatar avatar={sourcePost.avatar} address={address} />
+                  <Avatar avatar={sourceTargetPost.avatar} address={address} />
                   <div
                     className={`${styles.verticalLine}    ${type === "like" && styles.verticalLineRemove
                       }`}
@@ -189,8 +182,8 @@ const Post = ({
                 <div className={styles.postBody}>
                   <div className={styles.hover}>
                     <InfoAuthor
-                      // address={address}
-                      createdAt={getReadFormat(createdAt)}
+                      address={targetPost.source.address}
+                      createdAt={getReadFormat(targetPost.createdAt)}
                       name={sourceTargetPost.publicName}
                     />
                   </div>

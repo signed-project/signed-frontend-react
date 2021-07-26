@@ -28,4 +28,5 @@ export const userApi = {
   GET_TOKEN_PAIR: '/tokens-pair',
   SUBSCRIBED: '/subscribed',
   UPDATE_USER: '/user/update',
+  FOLLOW_USER: '/user/follow',
 };

@@ -12,7 +12,6 @@ const useReaction = () => {
     const history = useHistory();
     const dispatch = useDispatch();
 
-
     const handleLike = (p) => {
         let data;
         if (p.type === 'post' || p.type === 'reply') {
@@ -21,7 +20,7 @@ const useReaction = () => {
                 type: 'like',
                 wif: user.wif,
                 target: {
-                    "sourceHash": p.source.hash,
+                    "sourceHash": user.source.hash,
                     "postHash": p.hash
                 }
             }
@@ -29,17 +28,22 @@ const useReaction = () => {
         else {
             const postData = postMapState[p?.target?.postHash];
             data = {
-                ...postData,
+                // ...postData,
+                source: user.source,
                 type: 'like',
                 wif: user.wif,
                 target: {
-                    sourceHash: postData.source.hash,
-                    postHash: postData.hash
+                    sourceHash: user.source.hash,
+                    postHash: p?.target?.postHash
                 }
             }
         };
         const post = new PostModel(data);
         const likePost = post.newPost;
+
+        console.log('likePost--------likePost--------------likePost-------------likePost', likePost);
+
+
         dispatch(postActions.sendPost(likePost));
         history.push(`${routes.feed}`);
     };

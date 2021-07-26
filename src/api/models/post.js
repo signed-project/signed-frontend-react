@@ -8,8 +8,6 @@ export class Post {
             source: data.source,
             id: data.id ? data.id : generateId(),
             type: data.type,
-            // createdAt: data.createdAt,
-            // updatedAt: data.updatedAt,
             text: data.text ? data.text : '',
             attachments: data.attachments ? data.attachments : [],
             target: data.target ? data.target : '',

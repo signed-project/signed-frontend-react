@@ -11,6 +11,7 @@ import useSourcePost from "../../customHooks/useSourcePost";
 import SourcePosts from './sub/SourcePosts';
 import SourceInfo from './sub/SourceInfo';
 import Button from "../../utils/Button/Button";
+import { userApi } from '../../../config/http.config';
 
 // TODO: refactor this component to use module Post if it possible
 const Source = ({ toggleTheme }) => {
@@ -24,13 +25,12 @@ const Source = ({ toggleTheme }) => {
     let { address } = useParams();
     const [tab, setTab] = useState(tabList.posts);
     const stream = useSelector((state) => state.post.stream);
+    const axios = useSelector(state => state.axios.axios);
+    const user = useSelector(state => state.user);
     let source = useSourcePost(address);
-    // const [source, setSource] = useState('');
+    const [isFollowing, setIsFollowing] = useState(false);
     const [ownPost, setOwnPost] = useState([]);
     const history = useHistory();
-
-
-
 
     useEffect(() => {
         toggleTheme(false);
@@ -53,6 +53,22 @@ const Source = ({ toggleTheme }) => {
         return tab === currentTab && styles.activeTab
     }
 
+    const followHandler = async () => {
+        const action = isFollowing;
+        try {
+            let { data } = await axios.post(userApi.FOLLOW_USER, {
+                current: user.source.address,
+                toFollow: source,
+                action: true
+            });
+
+        }
+        catch (e) {
+            console.warn('[Source][followHandler]', e)
+        }
+
+    }
+
     return (
         <>
             {/*  <div div className={styles.backBlock} >
@@ -69,8 +85,7 @@ const Source = ({ toggleTheme }) => {
                         <span className={`${styles.tabsItem} ${isActiveTab(tabList.info)}`} onClick={() => goToTab(tabList.info)}>Info</span>
                     </div>
                     <div className={styles.buttonWrapper}>
-                        <Button className="primary follow" onClick={() => {
-                        }}>Follow</Button>
+                        <Button className="primary follow" onClick={() => followHandler()}>Follow</Button>
                     </div>
                     {/* Following */}
                 </div>
