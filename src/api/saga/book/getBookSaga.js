@@ -1,4 +1,4 @@
-import { call, select, put } from "redux-saga/effects";
+import { call, select, put, takeEvery } from "redux-saga/effects";
 import { publicApi, userApi } from "../../../config/http.config";
 import { ACTIONS as POST_ACTIONS } from "../../storage/post";
 import { ACTIONS as USER_ACTIONS } from "../../storage/user";
@@ -96,7 +96,8 @@ const getUser = async ({ axios, token }) => {
 };
 
 // function* workerGetBook(action) {
-export default function* watchGetBook() {
+function* workerGetBook() {
+
   let userExist = false;
   const accessToken = sessionStorage.getItem("accessToken");
   const wif = sessionStorage.getItem("wif");
@@ -181,8 +182,9 @@ export default function* watchGetBook() {
     payload: book.latestSource,
   });
 }
-// export default function* watchGetBook() {
-//   yield takeEvery(POST_ACTIONS.GET_BOOK, workerGetBook);
-// }
+function* watchGetBook() {
+  yield takeEvery(POST_ACTIONS.GET_BOOK, workerGetBook);
+}
 
 
+export default watchGetBook;

@@ -72,9 +72,7 @@ export const getRegisterUserData = ({ password, wifString = '' }) => {
     const decoded = wif.decode(wifBeforeEncrypt);
     const encryptedWif = bip38.encrypt(decoded.privateKey, decoded.compressed, password);
     const { address } = bitcoin.payments.p2pkh({ pubkey: keyPair.publicKey });
-    console.log('wifBeforeEncrypt', wifBeforeEncrypt);
-    console.log('wif', wif);
-    console.log('address', address);
+
     return {
         encryptedWif,
         wif: wifBeforeEncrypt,
@@ -94,7 +92,6 @@ export const isWifFormat = ({ wif }) => {
 
 
 export const getJsonStringFromObj = ({ objData }) => {
-    console.log('objData-------objData----------objData', objData);
     let jsonData;
     try {
         let objCopy = JSON.parse(JSON.stringify(objData));
@@ -149,9 +146,7 @@ export const isSignatureValid = ({ data, address }) => {
     const { signatures } = data;
     const jsonString = getJsonStringFromObj({ objData: data });
 
-    console.log('data', data);
-    console.log('address', address);
-    console.log('jsonString', jsonString);
+
     let isValid;
     try {
         isValid = bitcoinMessage.verify(jsonString, address, signatures);

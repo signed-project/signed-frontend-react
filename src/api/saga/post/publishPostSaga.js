@@ -3,15 +3,13 @@ import { postApi } from "../../../config/http.config";
 import { ACTIONS } from "../../storage/post";
 import { ACTIONS as ACTIONS_USER } from "../../storage/user";
 import axios from "axios";
+
 const sendPosts = async (axiosInst, post) => {
   try {
     const data = {
       post: post,
       addToIndex: true,
     };
-    console.log('axiosInst', axiosInst);
-    console.log('axios', axios);
-    // let res = await axios.post(postApi.SEND_POST, data);
     let res = await axiosInst.post(postApi.SEND_POST, data);
     return res;
   } catch (error) {

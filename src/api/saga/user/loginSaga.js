@@ -107,7 +107,7 @@ function* workerLogin(action) {
                 userModel.setUserData = userObject;
                 const user = userModel.newUser;
 
-                console.log('user', user);
+                console.log('user----------loginSaga', user);
                 yield put({ type: ACTIONS_USER.SET_USER, payload: user });
                 yield put({ type: ACTIONS_POST.GET_BOOK, payload: { isRegistered: true } });
                 action.payload.history.push(routes.feed);

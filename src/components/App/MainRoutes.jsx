@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import Layout from '../layout/Layout';
 import LayoutProvider from '../layout/LayoutProvider';
@@ -12,10 +13,14 @@ import routes from '../../config/routes.config';
 import Login from '../pages/Login/Login';
 import Register from '../pages/Register/Register';
 import Source from '../pages/Source/Source';
-
+import { postActions } from '../../api/storage/post';
 
 
 const MainRouts = () => {
+    const dispatch = useDispatch();
+    useEffect(() => { dispatch(postActions.getBook()) }
+        , []);
+
     return (
         <>
             <LayoutProvider.Consumer >

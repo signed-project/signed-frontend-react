@@ -6,7 +6,7 @@ import routs from "../../../config/routes.config";
 import { getFilePath } from "../../customHooks/getImgSources";
 import userPlaceHolder from "../../../assets/svg/icon/userPlaceHolder.jpg";
 
-const Avatar = ({ imgSmall = false, imgBig = false, avatar, srcData, address }) => {
+const Avatar = ({ imgSmall = false, imgBig = false, isDirect = true, avatar, srcData, address }) => {
   const history = useHistory();
 
   const [src, setSrc] = useState(userPlaceHolder);
@@ -32,9 +32,10 @@ const Avatar = ({ imgSmall = false, imgBig = false, avatar, srcData, address }) 
   return (
     <div
       className={`${!imgBig && styles.imgAvatarWrapper}`}
-      onClick={() => {
+      onClick={isDirect ? () => {
         history.push(`${routs.source}/${address}`);
-      }}
+      } : () => { }
+      }
     >
       <img
         src={src}

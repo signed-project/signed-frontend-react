@@ -13,6 +13,7 @@ const useReaction = () => {
     const dispatch = useDispatch();
 
     const handleLike = (p) => {
+        console.log('p---like--like', p);
         let data;
         if (p.type === 'post' || p.type === 'reply') {
             data = {

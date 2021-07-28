@@ -182,9 +182,12 @@ const NewPost = ({ toggleTheme }) => {
   };
 
   const handlePublicPost = () => {
+    console.log('1111111111111');
+
     if (isLoading) {
       return;
     }
+    console.log('2222222222222');
     if (post.type === "reply" && !replyingPage) {
       setReplyingPage(true);
       return;

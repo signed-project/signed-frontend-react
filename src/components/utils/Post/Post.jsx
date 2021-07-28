@@ -120,7 +120,7 @@ const Post = ({
   const isHideLine = comments.length < 1;
   return (
     <> {sourcePost &&
-      <div key={renderKey} className={styles.post}>
+      <div className={styles.post}>
         {type === "post" && sourcePost.hosts && (
           <>
             <div className={styles.typePost}>
@@ -167,7 +167,7 @@ const Post = ({
           </>
         )}
 
-        {type === "like" && targetPost && (
+        {type === "like" && targetPost && sourceTargetPost && (
           <>
             <div className={styles.typeLike}>
               <LikeMark createdAt={getReadFormat(createdAt)} name={sourcePost.publicName} address={address} />

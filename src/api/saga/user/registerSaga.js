@@ -1,6 +1,7 @@
 import { takeEvery, call, select, put } from "redux-saga/effects";
 import { userApi } from "../../../config/http.config";
 import { ACTIONS as ACTIONS_USER } from "../../storage/user";
+import { ACTIONS as ACTIONS_POST } from "../../storage/post";
 import srp from 'secure-remote-password/client';
 import { getRegisterUserData } from '../../../libs/signature.js';
 import { User } from '../../models/user';
@@ -73,14 +74,15 @@ export function* workerRegister(action) {
         const currentUser = new User({})
         currentUser.setUserData = userObject;
         const userToStore = currentUser.newUser;
-        console.log('userToStore==================', userToStore);
-        console.log('userToStore==================', userToStore);
+        console.log('userToStore----------registerSaga', userToStore);
         yield put({ type: ACTIONS_USER.SET_USER, payload: userToStore });
-        // yield put({ type: ACTIONS_POST.GET_BOOK, payload: { isRegistered: true } });
+        yield put({ type: ACTIONS_POST.GET_BOOK, payload: { isRegistered: true } });
         history.push(routes.feed);
     }
     yield put({ type: ACTIONS_USER.SET_LOADING, payload: false });
 }
+
+ 
 
 export default function* watchRegister() {
     yield takeEvery(ACTIONS_USER.SEND_REGISTER_DATA, workerRegister);

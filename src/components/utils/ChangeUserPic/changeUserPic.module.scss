@@ -15,3 +15,11 @@
   font-weight: 500;
   text-decoration-line: underline;
 }
+
+.uploadWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  cursor: pointer;
+}

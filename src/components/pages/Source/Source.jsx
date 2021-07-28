@@ -12,35 +12,43 @@ import SourcePosts from './sub/SourcePosts';
 import SourceInfo from './sub/SourceInfo';
 import Button from "../../utils/Button/Button";
 import { userApi } from '../../../config/http.config';
+import { postActions } from '../../../api/storage/post';
 
 // TODO: refactor this component to use module Post if it possible
 const Source = ({ toggleTheme }) => {
-
-
     const tabList = {
         posts: 'posts',
         info: 'info'
     }
 
+    const dispatch = useDispatch();
     let { address } = useParams();
     const [tab, setTab] = useState(tabList.posts);
     const stream = useSelector((state) => state.post.stream);
     const axios = useSelector(state => state.axios.axios);
     const user = useSelector(state => state.user);
     let source = useSourcePost(address);
-    const [isFollowing, setIsFollowing] = useState(false);
+    const [isAlreadyFollow, setIsAlreadyFollow] = useState(false);
     const [ownPost, setOwnPost] = useState([]);
+    // const [is, setOwnPost] = useState([]);
     const history = useHistory();
 
     useEffect(() => {
         toggleTheme(false);
     }, [toggleTheme]);
 
+
+    useEffect(() => {
+        if (user.subscribed.find(sub => sub.address === address)) {
+            setIsAlreadyFollow(true);
+        } else {
+            setIsAlreadyFollow(false);
+        }
+    }, [user, address]);
+
     useEffect(() => {
         if (Array.isArray(stream)) {
-            console.log('stream', stream);
             const userPost = stream.filter(post => post.source.address === address)
-            console.log('userPost', userPost);
             setOwnPost(userPost);
         }
     }, [stream]);
@@ -54,26 +62,28 @@ const Source = ({ toggleTheme }) => {
     }
 
     const followHandler = async () => {
-        const action = isFollowing;
+        const action = !isAlreadyFollow;
         try {
             let { data } = await axios.post(userApi.FOLLOW_USER, {
-                current: user.source.address,
-                toFollow: source,
-                action: true
+                address: user.source.address,
+                followSource: source,
+                follow: action
             });
-
+            if (data === 'Ok') {
+                setIsAlreadyFollow(action);
+                if (action === false) {
+                    const newStream = stream.filter(post => post.source.address !== address);
+                    dispatch(postActions.updatePostStream(newStream));
+                }
+            }
         }
         catch (e) {
             console.warn('[Source][followHandler]', e)
         }
-
     }
 
     return (
         <>
-            {/*  <div div className={styles.backBlock} >
-                <img src={icon.arrowBack} onClick={() => history.push(routes.feed)} alt="arrow back icon" />
-            </div> */}
             {source && <> <div className={styles.header}>
                 <img src={icon.arrowBack} onClick={() => history.push(routes.feed)} alt="arrow back icon" className={styles.iconBack} />
                 <Avatar avatar={source.avatar} address={address} />
@@ -85,9 +95,10 @@ const Source = ({ toggleTheme }) => {
                         <span className={`${styles.tabsItem} ${isActiveTab(tabList.info)}`} onClick={() => goToTab(tabList.info)}>Info</span>
                     </div>
                     <div className={styles.buttonWrapper}>
-                        <Button className="primary follow" onClick={() => followHandler()}>Follow</Button>
+                        <Button className={`follow ${isAlreadyFollow ? 'clean' : 'primary'} `} onClick={() => followHandler()}>
+                            {isAlreadyFollow ? 'Following' : 'Follow'}
+                        </Button>
                     </div>
-                    {/* Following */}
                 </div>
 
             </>

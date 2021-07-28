@@ -6,6 +6,11 @@ export const setPostStream = (payload) => ({
   payload,
 });
 
+export const updatePostStream = (payload) => ({
+  type: ACTIONS.UPDATE_POST_STREAM,
+  payload,
+});
+
 export const sendPost = (payload) => ({
   type: ACTIONS.SEND_POST,
   payload,

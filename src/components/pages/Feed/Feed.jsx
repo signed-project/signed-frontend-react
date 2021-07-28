@@ -8,6 +8,7 @@ import routes from "../../../config/routes.config";
 const Feed = ({ toggleTheme }) => {
   const stream = useSelector((state) => state.post.stream);
   const [openMenuHash, setOpenMenuHash] = useState(null);
+  const [forceUpdate, setForceUpdate] = useState('');
 
   const [posts, setPosts] = useState([]);
   let history = useHistory();
@@ -16,12 +17,15 @@ const Feed = ({ toggleTheme }) => {
   }, [toggleTheme]);
 
   useEffect(() => {
-    setPosts(stream);
+    setPosts([...stream]);
   }, [stream]);
 
   const handleShowMenu = (hash) => {
     setOpenMenuHash(hash);
   };
+
+  console.log('forceUpdate------------------', forceUpdate);
+  console.log('post------------------', posts);
 
   const isShowMenu = (hash) => {
     return hash === openMenuHash ? true : false;
@@ -39,39 +43,28 @@ const Feed = ({ toggleTheme }) => {
   const handleEditPost = (hash) => {
     history.push(`${routes.newPost}?edit=${hash}`);
   };
-
+  // .slice()
+  // .reverse()
   // TODO : refactor change less signature
-  const renderPosts = posts
-    .slice()
-    // .reverse()
-    .map((p, i) => {
-      return (
-        <Post
-          key={i}
-          renderKey={i}
-          post={p}
-          // avatar={p.source.avatar}
-          // type={p.type}
-          // name={p.source.name}
-          // text={p.text}
-          // postHash={p?.target?.postHash}
-          // createdAt={p.createdAt}
-          // likesCount={p.likesCount}
-          // repostsCount={p.repostsCount}
-          // attachments={p.attachments}
-          // hash={p.hash}
-          handleShowMenu={handleShowMenu}
-          isShowMenu={isShowMenu}
-          handleEditPost={handleEditPost}
-        />
-      );
-    });
+  const renderPosts = posts.map((p, i) => {
+    return (
+      <Post
+        key={i}
+        renderKey={i}
+        post={p}
+        handleShowMenu={handleShowMenu}
+        isShowMenu={isShowMenu}
+        handleEditPost={handleEditPost}
+      />
+    );
+  });
 
   console.log("renderPosts", renderPosts);
+  console.log("renderPosts.length", renderPosts.length);
 
   return (
     <>
-      <div onClick={(e) => handleMenuClose(e)}>{posts && renderPosts}</div>
+      {posts && <div onClick={(e) => handleMenuClose(e)}>{renderPosts}</div>}
     </>
   );
 };
