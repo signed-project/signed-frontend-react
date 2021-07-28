@@ -30,6 +30,7 @@
 ## host
 * assets - url
 * index - url
+* inbox - url
 
 ## signature
 * address - string
