@@ -6,7 +6,6 @@ const useSourcePost = (address) => {
     const [sourceLatest, setSourceLatest] = useState([]);
     useEffect(() => {
         if (address) {
-            // console.log('sourceStateLatest[address]', sourceStateLatest[address]);
             setSourceLatest(sourceStateLatest[address])
         }
     }, [sourceStateLatest, address]);

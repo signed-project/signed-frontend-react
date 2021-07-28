@@ -8,7 +8,7 @@ export const ACTIONS = {
   UPDATE_POST_STREAM: "POST::UPDATE_POST_STREAM",
   SET_POST_HASH: "POST::SET_POST_HASH",
   SET_POST_LATEST: "POST::SET_POST_LATEST",
-  GET_BOOK: "POST::GET_BOOK",
+  GET_INDEX: "POST::GET_INDEX",
 };
 
 const initialState = {
@@ -40,18 +40,10 @@ const postReducer = (state = initialState, action) => {
         hashed: action.payload,
       };
     case ACTIONS.ADD_POST_TO_STREAM:
-      const currentStream = state.stream.filter(post => post.id !== action.payload.id);
-      // let currentStream = state.stream.slice();
-      // currentStream.push(action.payload)
-      const newStream = JSON.parse(JSON.stringify([action.payload, ...state.stream]));
-      console.log('equal', newStream === state.stream);
-      console.log('newStream', newStream);
-      console.log('state.stream', state.stream);
+      // const currentStream = state.stream.filter(post => post.id !== action.payload.id);
       return {
         ...state,
-        // stream: newStream,
-        stream: [action.payload, ...currentStream],
-        // stream: [action.payload, ...state.stream],
+        stream: [action.payload, ...state.stream],
       };
     case ACTIONS.ADD_POST_TO_HASH:
       return {

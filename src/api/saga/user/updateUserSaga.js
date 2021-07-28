@@ -27,7 +27,6 @@ export function* workerUpdateUser(action) {
 }
 
 
-// update source hash!!!!!!!!!!!!!!!
 export default function* watchUpdateUser() {
     yield takeEvery(ACTIONS_USER.UPDATE_USER, workerUpdateUser);
 }

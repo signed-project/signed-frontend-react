@@ -99,12 +99,6 @@ export const getCashData = ({ arrPosts, arrSources }) => {
     const postSignatureValid = getDataSignatureValid({ arr: postHashValid, isPost: true });
     const sourcesSignatureValid = getDataSignatureValid({ arr: sourcesHashValid, isPost: false });
 
-    console.log('+++++++++++++++++++++arrSources++++++++++++++++++++++', arrSources);
-    console.log('+++++++++++++++++++++sourcesHashValid++++++++++++++++++++++', sourcesHashValid);
-    console.log('+++++++++++++++++++++sourcesSignatureValid++++++++++++++++++++++', sourcesSignatureValid);
-    console.log('getLatestSource(sourcesSignatureValid)', getLatestSource(sourcesSignatureValid));
-
-
     return {
         latestSource: getLatestSource(sourcesSignatureValid),
         hashedSource: getHashedData(sourcesSignatureValid),

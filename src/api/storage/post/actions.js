@@ -21,12 +21,9 @@ export const updatePost = (payload) => ({
   payload,
 });
 
-export const getBook = (payload) => ({
-  type: ACTIONS.GET_BOOK,
+export const getIndex = (payload) => ({
+  type: ACTIONS.GET_INDEX,
   payload,
 });
 
-export const test = (payload) => ({
-  type: ACTIONS.TEST,
-  payload,
-});
+ 

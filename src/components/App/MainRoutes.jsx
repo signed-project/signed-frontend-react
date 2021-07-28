@@ -17,9 +17,9 @@ import { postActions } from '../../api/storage/post';
 
 
 const MainRouts = () => {
+
     const dispatch = useDispatch();
-    useEffect(() => { dispatch(postActions.getBook()) }
-        , []);
+    useEffect(() => { dispatch(postActions.getIndex()) }, []);
 
     return (
         <>

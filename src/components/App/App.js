@@ -6,7 +6,6 @@ import { layoutType } from '../layout/LayoutProvider.jsx';
 
 const App = () => {
   const [themeVal, setThemeVal] = useState(layoutType.showLayout);
-  // const isAuth = useSelector(state => state.user.isAuth);
 
   const state = {
     theme: themeVal,

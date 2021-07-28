@@ -13,10 +13,9 @@ import { parseJson } from '../../../libs/json';
 const sendUserData = async (axios, data) => {
     try {
         let res = await axios.post(userApi.LOGIN_EXCHANGE_EPHEMERAL_KEYS, data);
-        console.log('resresresresresresresres', res);
         return res;
     } catch (error) {
-        console.log("[sendLogin][sendUserData]", error);
+        console.warn("[loginSaga][sendUserData]", error);
     }
 };
 const sendSessionProof = async (axios, data) => {
@@ -24,7 +23,7 @@ const sendSessionProof = async (axios, data) => {
         let res = await axios.post(userApi.LOGIN_SESSION_PROOF, data);
         return res;
     } catch (error) {
-        console.log("[sendLogin][sendUserData]", error);
+        console.log("[loginSaga][sendSessionProof]", error);
     }
 };
 
@@ -33,7 +32,7 @@ const loginGetUser = async (axios, data) => {
         let res = await axios.post(userApi.LOGIN_GET_USER_TOKEN, data);
         return res;
     } catch (error) {
-        console.log("[sendLogin][sendUserData]", error);
+        console.warn("[loginSaga][loginGetUser]", error);
     }
 };
 
@@ -66,7 +65,6 @@ function* workerLogin(action) {
         const { data } = yield call(sendSessionProof, axios, dataSendSessionProof);
         serverSessionProof = data.serverSessionProof;
         const isVerify = srp.verifySession(clientEphemeral.public, clientSession, serverSessionProof);
-        console.log('isVerify', isVerify);
 
         const proof = typeof isVerify === 'undefined';
         console.log('proof', proof);
@@ -107,14 +105,13 @@ function* workerLogin(action) {
                 userModel.setUserData = userObject;
                 const user = userModel.newUser;
 
-                console.log('user----------loginSaga', user);
                 yield put({ type: ACTIONS_USER.SET_USER, payload: user });
-                yield put({ type: ACTIONS_POST.GET_BOOK, payload: { isRegistered: true } });
+                yield put({ type: ACTIONS_POST.GET_INDEX, payload: { isRegistered: true } });
                 action.payload.history.push(routes.feed);
             }
         }
     } catch (e) {
-        console.warn('workerLogin--3', e);
+        console.warn('[loginSaga]workerLogin--3', e);
     }
     yield put({ type: ACTIONS_USER.SET_LOADING, payload: false });
 }

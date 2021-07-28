@@ -38,11 +38,10 @@ export function* workerGetUserData(action) {
         userModel.setUserData = userObject;
         const user = userModel.newUser;
         yield put({ type: ACTIONS_USER.SET_USER, payload: user });
-        yield put({ type: ACTIONS_POST.GET_BOOK, payload: { isRegistered: true, history } });
+        yield put({ type: ACTIONS_POST.GET_INDEX, payload: { isRegistered: true, history } });
     }
 }
 
-// Todo delete this !!!!
 export default function* watchGetUserData() {
     yield takeEvery(ACTIONS_USER.GET_USER, workerGetUserData);
 }

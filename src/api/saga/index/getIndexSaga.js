@@ -3,7 +3,7 @@ import { publicApi, userApi } from "../../../config/http.config";
 import { ACTIONS as POST_ACTIONS } from "../../storage/post";
 import { ACTIONS as USER_ACTIONS } from "../../storage/user";
 import { ACTIONS as SOURCE_ACTIONS } from "../../storage/source";
-import { getCashData } from "./_aggregationBook";
+import { getCashData } from "./_aggregationIndex";
 import { parseJson } from '../../../libs/json';
 import axios from "axios";
 import jwt from 'jsonwebtoken';
@@ -13,7 +13,7 @@ import { User } from '../../models/user';
 const publicApiHost = process.env.REACT_APP_PUBLIC_API_HOST;
 const apiHost = process.env.REACT_APP_API_HOST;
 
-const getMyBook = async (address) => {
+const getMyIndex = async (address) => {
   try {
     let res = await axios.get(`${publicApiHost}${publicApi.GET_INDEX}/${address}`);
     // let res = await axios.post('https://699m468ak3.execute-api.us-west-2.amazonaws.com/post');
@@ -22,7 +22,7 @@ const getMyBook = async (address) => {
       mySource: res.data.source
     };
   } catch (error) {
-    console.log("[getMyBook][error]", error);
+    console.log("[getMyIndex][error]", error);
     return []
   }
 };
@@ -30,7 +30,7 @@ const getMyBook = async (address) => {
 
 
 // TODO rename
-const getSubscribedBook = async ({ subscribed }) => {
+const getSubscribedIndex = async ({ subscribed }) => {
   let postSubscribed = [], gatheredPosts = [], hostSources = [];
   try {
     await Promise.all(subscribed.map(async (sbs) => {
@@ -40,15 +40,14 @@ const getSubscribedBook = async ({ subscribed }) => {
           postSubscribed.push(res?.data?.posts);
         }
         if (res?.data?.source) {
-          console.log('res?.data?.source', res?.data?.source);
           hostSources.push(res?.data?.source);
         }
       } catch (e) {
-        console.warn("[getSubscribedBook][postSubscribed.push]", e);
+        console.warn("[getSubscribedIndex][postSubscribed.push]", e);
       }
     }));
   } catch (e) {
-    console.warn("[getSubscribedBook][Promise.all]", e);
+    console.warn("[getSubscribedIndex][Promise.all]", e);
   }
 
   try {
@@ -58,25 +57,25 @@ const getSubscribedBook = async ({ subscribed }) => {
     })
   }
   catch (e) {
-    console.warn("[getHostsBook][gatheredPosts]", e);
+    console.warn("[getSubscribedIndex][gatheredPosts]", e);
   }
 
   return { gatheredPosts, hostSources };
 };
 
-const getAllHostsBook = async () => {
+const getAllHostsIndex = async () => {
   let data;
   try {
     ({ data } = await axios.get(`${apiHost}${userApi.SUBSCRIBED}`));
   } catch (e) {
-    console.warn("[getBookSaga][getAllHostsBook]", e);
+    console.warn("[getIndexSaga][getAllHostsIndex]", e);
   }
 
   try {
-    const { gatheredPosts, hostSources } = await getSubscribedBook({ subscribed: data });
+    const { gatheredPosts, hostSources } = await getSubscribedIndex({ subscribed: data });
     return { gatheredPosts, hostSources };
   } catch (e) {
-    console.warn("[getBookSaga][getAllHostsBook][getSubscribedBook]", e);
+    console.warn("[getIndexSaga][getAllHostsIndex][getSubscribedIndex]", e);
     return []
   }
 };
@@ -89,15 +88,14 @@ const getUser = async ({ axios, token }) => {
     };
     res = await axios.post(userApi.GET_USER, data);
   } catch (error) {
-    console.log("[getUserInfo][error]", error);
+    console.warn("[getUserInfo][error]", error);
     return res;
   }
   return res;
 };
 
-// function* workerGetBook(action) {
-function* workerGetBook() {
 
+function* workerGetIndex() {
   let userExist = false;
   const accessToken = sessionStorage.getItem("accessToken");
   const wif = sessionStorage.getItem("wif");
@@ -105,6 +103,7 @@ function* workerGetBook() {
   const axios = yield select((state) => state.axios.axios);
   let gatheredPosts = [], arrPosts, arrSources, myPosts,
     userSubscribedSources, hostSources, mySource;
+
   if (wif && accessToken && accessTokenDecoded.exp * 1000 > new Date().getTime()) {
     const resData = yield call(getUser, { axios: axios, token: accessToken });
     if (resData) {
@@ -128,63 +127,62 @@ function* workerGetBook() {
           return parseJson(sub.source);
         });
       } catch (e) {
-        console.warn('[getBookSaga][data.subscribed.map]', e);
+        console.warn('[getIndexSaga][data.subscribed.map]', e);
       }
 
 
       try {
-        ({ myPosts, mySource } = yield call(getMyBook, data.address));
+        ({ myPosts, mySource } = yield call(getMyIndex, data.address));
       }
       catch (e) {
         myPosts = [];
-        console.warn("[workerGetBook][getMyBook]", e);
+        console.warn("[workerGetIndex][getMyIndex]", e);
       }
       try {
         if (Array.isArray(data.subscribed)) {
-          ({ gatheredPosts, hostSources } = yield call(getSubscribedBook, { subscribed: data.subscribed }));
+          ({ gatheredPosts, hostSources } = yield call(getSubscribedIndex, { subscribed: data.subscribed }));
         }
       } catch (e) {
-        console.warn("[workerGetBook][getSubscribedBook]", e);
+        console.warn("[workerGetIndex][getSubscribed]", e);
       }
 
       try {
         arrSources = [...userSubscribedSources, ...hostSources, mySource];
-        console.log('arrSources------------------arrSources', arrSources);
         arrPosts = [...myPosts, ...gatheredPosts];
       } catch (e) {
-        console.warn('[getBookSaga][Destructuring myPost, hostPost, hostsSources]', e)
+        console.warn('[getIndexSaga][Destructuring myPost, hostPost, hostsSources]', e)
       }
       userExist = true;
     }
   }
   if (!userExist) {
     try {
-      const { gatheredPosts, hostSources } = yield call(getAllHostsBook);
+      const { gatheredPosts, hostSources } = yield call(getAllHostsIndex);
       arrPosts = gatheredPosts;
       arrSources = hostSources;
     } catch (e) {
-      console.warn('[getBookSaga][getAllHosts]', e)
       arrPosts = [];
+      console.warn('[getIndexSaga][getAllHostsIndex]', e)
     }
   }
 
   if (!arrPosts) { return }
-  const book = yield call(getCashData, { arrPosts, arrSources });
-  yield put({ type: POST_ACTIONS.SET_POST_STREAM, payload: book.stream });
-  yield put({ type: POST_ACTIONS.SET_POST_HASH, payload: book.hashedPost });
-  yield put({ type: POST_ACTIONS.SET_POST_LATEST, payload: book.latestPost });
+  const index = yield call(getCashData, { arrPosts, arrSources });
+  yield put({ type: POST_ACTIONS.SET_POST_STREAM, payload: index.stream });
+  yield put({ type: POST_ACTIONS.SET_POST_HASH, payload: index.hashedPost });
+  yield put({ type: POST_ACTIONS.SET_POST_LATEST, payload: index.latestPost });
   yield put({
     type: SOURCE_ACTIONS.SET_SOURCE_LATEST,
-    payload: book.latestSource,
+    payload: index.latestSource,
   });
   yield put({
     type: SOURCE_ACTIONS.SET_SOURCE_HASH,
-    payload: book.latestSource,
+    payload: index.latestSource,
   });
 }
-function* watchGetBook() {
-  yield takeEvery(POST_ACTIONS.GET_BOOK, workerGetBook);
+function* watchGetIndex() {
+  yield takeEvery(POST_ACTIONS.GET_INDEX, workerGetIndex);
 }
 
 
-export default watchGetBook;
+export default watchGetIndex;

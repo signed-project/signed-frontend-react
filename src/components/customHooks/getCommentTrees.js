@@ -1,7 +1,5 @@
-// import { useDispatch, useSelector } from 'react-redux';
 
 const getCommentTreas = ({ hashMap, currentHash }) => {
-    // const postMapState = useSelector(state => state.post.hashed);
     const postArr = Object.values(hashMap);
     const comments = [];
 

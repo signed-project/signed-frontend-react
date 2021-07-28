@@ -35,7 +35,7 @@
 
 - [ ] save only refresh token on localStorage, so assess save on sessionStorage
  
-- [ ] split post store/reducer to post and book or like this
+- [ ] split post store/reducer to post and index or like this
  
 - [ ] add test unit !!!!!! !!!!!!!!!! !!!!!!!!!!
  

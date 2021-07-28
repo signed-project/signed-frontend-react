@@ -22,7 +22,7 @@ const sendUserData = async (axios, data) => {
         let res = await axios.post(userApi.REGISTER, data);
         return res;
     } catch (error) {
-        console.log("[sendUserDataSaga][sendUserData]", error);
+        console.warn("[registerSaga][sendUserData]", error);
     }
 };
 
@@ -74,15 +74,14 @@ export function* workerRegister(action) {
         const currentUser = new User({})
         currentUser.setUserData = userObject;
         const userToStore = currentUser.newUser;
-        console.log('userToStore----------registerSaga', userToStore);
         yield put({ type: ACTIONS_USER.SET_USER, payload: userToStore });
-        yield put({ type: ACTIONS_POST.GET_BOOK, payload: { isRegistered: true } });
+        yield put({ type: ACTIONS_POST.GET_INDEX, payload: { isRegistered: true } });
         history.push(routes.feed);
     }
     yield put({ type: ACTIONS_USER.SET_LOADING, payload: false });
 }
 
- 
+
 
 export default function* watchRegister() {
     yield takeEvery(ACTIONS_USER.SEND_REGISTER_DATA, workerRegister);
