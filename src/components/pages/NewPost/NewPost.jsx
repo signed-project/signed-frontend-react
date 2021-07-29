@@ -4,7 +4,6 @@ import { useHistory } from "react-router-dom";
 import { animateScroll as scroll } from "react-scroll";
 import icon from "../../../assets/svg/icon";
 // import icon from "@/assets/svg/icon";
-import logo from "./logo.svg";
 
 import Avatar from "../../utils/Avatar/Avatar";
 import style from "./newPost.module.scss";
@@ -23,8 +22,7 @@ import useFiles from "../../customHooks/useFiles";
 import Preview from "../../utils/Preview/Preview";
 import Slider from "../../utils/Slider/Slider";
 import getImgArr from "../../customHooks/getImgSources";
-import { set } from "date-fns/esm";
-import { setLoading } from "../../../api/storage/user/actions";
+
 
 // TOTO: this component too mach long need to split up it!
 /**
@@ -140,10 +138,6 @@ const NewPost = ({ toggleTheme }) => {
     }
   }, [edit, hashedPost]);
 
-
-
-  console.log('avatar={post.source.avatar}', post.source);
-
   /**
    *    /*   let reader = new FileReader();
          reader.onloadend = () => {
@@ -182,18 +176,18 @@ const NewPost = ({ toggleTheme }) => {
   };
 
   const handlePublicPost = () => {
-    console.log('1111111111111');
-
     if (isLoading) {
       return;
     }
-    console.log('2222222222222');
     if (post.type === "reply" && !replyingPage) {
       setReplyingPage(true);
       return;
     }
     const mentions = getMentions();
     (async () => {
+      // change Promise.all to Promise.allSettled
+      // { status: "fulfilled", value: 1 }
+      // const attachments = await Promise.allSettled(
       const attachments = await Promise.all(
         uploadedImg.map(async (val) => {
           if (val.file) {
@@ -216,6 +210,9 @@ const NewPost = ({ toggleTheme }) => {
         })
       );
 
+      console.log('----------attachments------------attachments PROMISE', attachments);
+      console.log('----------attachments------------attachments PROMISE', attachments);
+
       const postInstance = new PostModel({
         id: post.id ? post.id : "",
         source: user.source,
@@ -225,7 +222,6 @@ const NewPost = ({ toggleTheme }) => {
           postHash: post.target?.postHash ? post.target?.postHash : "",
           sourceHash: post.target?.sourceHash ? post.target?.sourceHash : "",
         },
-        // target: post.hash ? { postHash: post.hash, sourceHash: post.source } : "",
         mentions: mentions?.length ? mentions : "",
         attachments: attachments.length > 0 ? attachments : "",
         wif: user.wif,

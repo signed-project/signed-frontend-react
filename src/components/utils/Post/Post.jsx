@@ -17,13 +17,10 @@ import useTargetPost from "../../customHooks/useTargetPost";
 import getCommentTrees from "../../customHooks/getCommentTrees";
 import useSourcePost from "../../customHooks/useSourcePost";
 import Preview from "../Preview/Preview";
-// import { filesApi } from "../../../config/http.config";
 import getImgArr from "../../customHooks/getImgSources";
 import MenuPost from "../MenuPost/MenuPost";
 
-// TODO rewrite signature functions to leave less parametrs
 const Post = ({
-  renderKey,
   post,
   handleShowMenu,
   isShowMenu,
@@ -80,7 +77,7 @@ const Post = ({
     };
   }
 
-  // TODO : subscribed condition in depends  subscribed state
+
   const renderComments = comments.map((c, i) => {
     if (true) {
       // if (subscribed.includes(c.source.address) && i !== 3) {
@@ -95,7 +92,6 @@ const Post = ({
         />
       );
     } else if (i === 3) {
-      // TODO: clear this mock
       return (
         <div key={i} className={styles.gap}>
           <div className={styles.gapBlockLine}></div>

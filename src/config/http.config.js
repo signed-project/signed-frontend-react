@@ -30,3 +30,7 @@ export const userApi = {
   UPDATE_USER: '/user/update',
   FOLLOW_USER: '/user/follow',
 };
+
+export const inboxApi = {
+  INBOX: '/inbox',
+};

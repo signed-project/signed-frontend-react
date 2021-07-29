@@ -33,8 +33,10 @@ const Register = ({ toggleTheme }) => {
 
   const history = useHistory();
   const dispatch = useDispatch();
+
   const axios = useSelector(state => state.axios.axios);
   const isLoginProcess = useSelector(state => state.user.isLoginProcess);
+
   const [form, setForm] = useState(initialForm);
   const [chooseTypeRegistration, setChooseTypeRegistration] = useState(true);
   const [typeRegistration, setTypeRegistration] = useState('');
@@ -53,7 +55,6 @@ const Register = ({ toggleTheme }) => {
   }, [isLoginProcess]);
 
 
-  console.log('isLoading', isLoading);
 
   useEffect(() => {
     if (typeRegistration === typeMap.createAddress)
@@ -70,6 +71,7 @@ const Register = ({ toggleTheme }) => {
     const value = e.target.value;
     const newForm = JSON.parse(JSON.stringify(form));
     newForm[name].warning = '';
+
     if (name === 'password') {
       newForm['passwordRepeat'].warning = '';
     }
@@ -85,13 +87,11 @@ const Register = ({ toggleTheme }) => {
     };
     setAvatar(filePrev);
   };
-  console.log('form', form);
-
 
   const checkIsLoginFree = async ({ userName }) => {
     try {
       let { data } = await axios.post(userApi.CHECK_LOGIN, { userName });
-      const isFreeLogin = data?.isFreeLogin
+      const isFreeLogin = data?.isFreeLogin;
       let warningMessage = '';
       if (isFreeLogin === false) {
         warningMessage = 'The login you entered is already in use';
@@ -112,7 +112,6 @@ const Register = ({ toggleTheme }) => {
   }
 
 
-  // TODO change state add error in every items
   const formValidate = () => {
     let isValid = true;
     let formCopy = JSON.parse(JSON.stringify(form));
@@ -133,6 +132,7 @@ const Register = ({ toggleTheme }) => {
         isValid = false
       }
     })
+
     setForm(formCopy);
     return isValid;
   }

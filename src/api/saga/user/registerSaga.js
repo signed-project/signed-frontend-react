@@ -1,5 +1,5 @@
 import { takeEvery, call, select, put } from "redux-saga/effects";
-import { userApi } from "../../../config/http.config";
+import { inboxApi, userApi } from "../../../config/http.config";
 import { ACTIONS as ACTIONS_USER } from "../../storage/user";
 import { ACTIONS as ACTIONS_POST } from "../../storage/post";
 import srp from 'secure-remote-password/client';
@@ -35,8 +35,12 @@ export function* workerRegister(action) {
     const srpData = getDataSrp({ userName: userName, password: password });
     const userBitcoinData = getRegisterUserData({ password: action.payload.password, wifString: action.payload.wif });
 
-    const hosts =
-        [{ assets: process.env.REACT_APP_API_HOST_ASSETS, index: `${process.env.REACT_APP_API_HOST}/prod/${userBitcoinData.address}` }];
+    const hosts = [
+        {
+            assets: process.env.REACT_APP_API_HOST_ASSETS,
+            index: `${process.env.REACT_APP_API_HOST}/prod/${userBitcoinData.address}`,
+            inbox: `${process.env.REACT_APP_API_HOST}${inboxApi.INBOX}`,
+        }];
 
     const userModel = new User({
         isAuth: true,

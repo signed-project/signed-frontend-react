@@ -38,6 +38,8 @@
 - [ ] split post store/reducer to post and index or like this
  
 - [ ] add test unit !!!!!! !!!!!!!!!! !!!!!!!!!!
+
+- [ ] use async when for example sent mentions !!!!!! !!!!!!!!!! !!!!!!!!!!
  
 
   <!-- "homepage": "/public", -->

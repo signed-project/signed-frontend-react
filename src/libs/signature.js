@@ -84,17 +84,17 @@ export const getRegisterUserData = ({ password, wifString = '' }) => {
 
 export const isWifFormat = ({ wif }) => {
     try {
-        const pair = bitcoin.ECPair.fromWIF(wif)
-        return !!pair
+        const pair = bitcoin.ECPair.fromWIF(wif);
+        return !!pair;
     } catch (e) {
         console.warn('[isWifFormat]', e);
         return false;
     }
 }
 
+// clean object fubction add to getJsonStringFromObj
 
 export const getJsonStringFromObj = ({ objData }) => {
-    console.log('objData-------objData----------objData', objData);
     let jsonData;
     try {
         let objCopy = JSON.parse(JSON.stringify(objData));
@@ -103,7 +103,7 @@ export const getJsonStringFromObj = ({ objData }) => {
         objCopy = sortKeys(objCopy);
         jsonData = stringify(objCopy);
     } catch (e) {
-        // console.error('[signature][getJsonStringFromObj]', e);
+        console.warn('[signature][getJsonStringFromObj]', e);
         jsonData = ''
     }
     return jsonData;
@@ -148,7 +148,7 @@ export const generateId = () => {
 export const isSignatureValid = ({ data, address }) => {
     const { signatures } = data;
     const jsonString = getJsonStringFromObj({ objData: data });
- 
+
     let isValid;
     try {
         isValid = bitcoinMessage.verify(jsonString, address, signatures);

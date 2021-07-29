@@ -2,16 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import Post from "../../utils/Post/Post";
-// import style from "./feed.module.scss";
 import routes from "../../../config/routes.config";
 
 const Feed = ({ toggleTheme }) => {
   const stream = useSelector((state) => state.post.stream);
   const [openMenuHash, setOpenMenuHash] = useState(null);
-  const [forceUpdate, setForceUpdate] = useState('');
 
   const [posts, setPosts] = useState([]);
   let history = useHistory();
+
   useEffect(() => {
     toggleTheme(true);
   }, [toggleTheme]);
@@ -24,8 +23,6 @@ const Feed = ({ toggleTheme }) => {
     setOpenMenuHash(hash);
   };
 
-  console.log('forceUpdate------------------', forceUpdate);
-  console.log('post------------------', posts);
 
   const isShowMenu = (hash) => {
     return hash === openMenuHash ? true : false;
@@ -43,9 +40,7 @@ const Feed = ({ toggleTheme }) => {
   const handleEditPost = (hash) => {
     history.push(`${routes.newPost}?edit=${hash}`);
   };
-  // .slice()
-  // .reverse()
-  // TODO : refactor change less signature
+
   const renderPosts = posts.map((p, i) => {
     return (
       <Post
@@ -59,8 +54,6 @@ const Feed = ({ toggleTheme }) => {
     );
   });
 
-  console.log("renderPosts", renderPosts);
-  console.log("renderPosts.length", renderPosts.length);
 
   return (
     <>
