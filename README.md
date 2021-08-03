@@ -64,3 +64,7 @@
 * posts - [post]
 * sources - [source]
 * hash - optional
+
+## inbox_request
+* post_url
+* signature
