@@ -49,21 +49,30 @@ const Register = ({ toggleTheme }) => {
     toggleTheme(false);
   }, [toggleTheme]);
 
-
   useEffect(() => {
-    setIsLoading(isLoginProcess)
+    setIsLoading(isLoginProcess);
+    if (isLoginProcess) {
+      setChooseTypeRegistration(false)
+    };
   }, [isLoginProcess]);
 
+  console.log('isLoading', isLoading);
 
+  console.log('isLoginProcess', isLoginProcess);
+  console.log('typeRegistration', typeRegistration);
 
   useEffect(() => {
-    if (typeRegistration === typeMap.createAddress)
+    console.log('ge here 11111111111 typeRegistration');
+    if (typeRegistration === typeMap.createAddress) {
+      console.log('ge here !!!!!!!!!!!!!!!', typeRegistration);
       setForm(prev => {
         delete prev.wif;
         return ({
           ...prev
         })
       })
+    }
+
   }, [typeRegistration]);
 
   const handleForm = (e) => {
@@ -119,21 +128,26 @@ const Register = ({ toggleTheme }) => {
     if (form.password.value !== form.passwordRepeat.value) {
       isValid = false;
       formCopy.passwordRepeat.warning = 'Password mismatch';
+      console.log('password', isValid);
     }
 
     if (form?.wif?.value && !isWifFormat({ wif: form?.wif?.value })) {
       isValid = false;
       formCopy.wif.warning = 'Wrong format';
+      console.log('wif', isValid);
     }
 
     Object.keys(formCopy).map(fieldName => {
       if (formCopy[fieldName].value.length === 0) {
         formCopy[fieldName].warning = 'Field this field';
         isValid = false
+        console.log('fieldName', fieldName);
       }
     })
 
     setForm(formCopy);
+    console.log('formCopy', formCopy);
+    console.log('isValid', isValid);
     return isValid;
   }
 
@@ -152,12 +166,14 @@ const Register = ({ toggleTheme }) => {
     if (!formValidate()) {
       return;
     }
+    console.log(';laksfdj;asklfjd;asfkljd;sa');
     dispatch(userActions.setLoading(true));
 
     if (!await checkIsLoginFree({ userName: form.userName.value })) {
       dispatch(userActions.setLoading(false));
       return;
     }
+
     if (avatar.file) {
       try {
         ({ data: uploadAvatarData } = await uploadFile(avatar.file));
@@ -165,7 +181,6 @@ const Register = ({ toggleTheme }) => {
         console.warn("[handleSendForm][uploadFile]", e);
       }
     }
-
 
     let data = {};
     Object.keys(form).map(field => {
@@ -175,6 +190,7 @@ const Register = ({ toggleTheme }) => {
     });
 
     data = { ...data, history, avatar: uploadAvatarData ? uploadAvatarData : '' };
+
     dispatch(userActions.sendRegisterData(data));
     // formClear();
   }
@@ -216,17 +232,18 @@ const Register = ({ toggleTheme }) => {
               </div>
 
             </>
-            :
-            <div className={styles.formWrapper}>
-              <ChangeUserPic srcData={avatar.imageSrc} handleChangeFile={handleChangeFile} />
-              {typeRegistration === typeMap.haveAddress && <Input title={'Enter Bitcoin address'} name={'wif'} warning={form.wif.warning} type={'text'} handleChange={handleForm} value={form.wif.value} />}
-              <Input title={'Public name'} name={'publicName'} warning={form.publicName.warning} type={'text'} handleChange={handleForm} value={form.publicName.value} />
-              <Input title={'User name'} name={'userName'} warning={form.userName.warning} type={'text'} handleChange={handleForm} value={form.userName.value} />
-              <Input title={'Password'} type={'password'} warning={form.password.warning} name={'password'} handleChange={handleForm} value={form.password.value} />
-              <Input title={'Repeat password'} type={'password'} warning={form.passwordRepeat.warning} name={'passwordRepeat'} handleChange={handleForm} value={form.passwordRepeat.value} />
-              <NavLink to={routes.passwordRecovery} className={styles.passForgot}> Forgot your password?</NavLink>
-              <Button className="primary" isLoading={isLoading} onClick={() => { handleSendForm() }}>Register</Button>
-            </div>
+            : <form>
+              <div className={styles.formWrapper}>
+                <ChangeUserPic srcData={avatar.imageSrc} handleChangeFile={handleChangeFile} />
+                {typeRegistration === typeMap.haveAddress && <Input title={'Enter Bitcoin address'} name={'wif'} warning={form.wif.warning} type={'text'} handleChange={handleForm} value={form.wif.value} />}
+                <Input title={'Public name'} name={'publicName'} warning={form.publicName.warning} type={'text'} handleChange={handleForm} value={form.publicName.value} />
+                <Input title={'User name'} name={'userName'} warning={form.userName.warning} type={'text'} handleChange={handleForm} value={form.userName.value} />
+                <Input title={'Password'} type={'password'} warning={form.password.warning} name={'password'} handleChange={handleForm} value={form.password.value} />
+                <Input title={'Repeat password'} type={'password'} warning={form.passwordRepeat.warning} name={'passwordRepeat'} handleChange={handleForm} value={form.passwordRepeat.value} />
+                <NavLink to={routes.passwordRecovery} className={styles.passForgot}> Forgot your password?</NavLink>
+                <Button className="primary" isLoading={isLoading} onClick={() => { handleSendForm() }}>Register</Button>
+              </div>
+            </form>
           }
         </div>
         <div className={styles.footer}>

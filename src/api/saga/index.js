@@ -5,6 +5,7 @@ import watchGetUserData from "./user/getUserSaga";
 import watchRegister from "./user/registerSaga";
 import watchLogin from "./user/loginSaga";
 import watchUpdateUser from "./user/updateUserSaga";
+import watchGetInboxSaga from "./inbox/getInboxSaga";
 
 export default function* rootSaga() {
     yield all([
@@ -13,6 +14,8 @@ export default function* rootSaga() {
         watchGetUserData(),
         watchRegister(),
         watchLogin(),
-        watchUpdateUser()
+        watchUpdateUser(),
+        watchGetInboxSaga(),
     ]);
 }
+ 

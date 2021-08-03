@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import queryString from "query-string";
 import icon from '../../../assets/svg/icon';
 import styles from './source.module.scss';
-import { useLocation, useParams, useHistory } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import routes from '../../../config/routes.config';
 import Avatar from '../../utils/Avatar/Avatar';
 import InfoAuthor from '../../utils/InfoAuthor/InfoAuthor';
@@ -30,13 +29,11 @@ const Source = ({ toggleTheme }) => {
     let source = useSourcePost(address);
     const [isAlreadyFollow, setIsAlreadyFollow] = useState(false);
     const [ownPost, setOwnPost] = useState([]);
-    // const [is, setOwnPost] = useState([]);
     const history = useHistory();
 
     useEffect(() => {
         toggleTheme(false);
     }, [toggleTheme]);
-
 
     useEffect(() => {
         if (user.subscribed.find(sub => sub.address === address)) {

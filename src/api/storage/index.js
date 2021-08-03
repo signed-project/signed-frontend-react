@@ -3,6 +3,7 @@ import { reducer as axiosReducer } from "../storage/axios";
 import { reducer as userReducer } from "../storage/user";
 import { reducer as postReducer } from "../storage/post";
 import { reducer as sourceReducer } from "../storage/source";
+import { reducer as inboxReducer } from "../storage/inbox";
 import { composeWithDevTools } from "redux-devtools-extension";
 import logger from "redux-logger";
 
@@ -14,6 +15,7 @@ const reducer = combineReducers({
     post: postReducer,
     user: userReducer,
     source: sourceReducer,
+    inbox: inboxReducer,
 });
 
 const sagaMiddleware = createSagaMiddleware();

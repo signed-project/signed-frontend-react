@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useEffect, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import Layout from '../layout/Layout';
 import LayoutProvider from '../layout/LayoutProvider';
@@ -8,7 +8,7 @@ import Search from '../pages/Search/Search';
 import NewPost from '../pages/NewPost/NewPost';
 import PostPage from '../pages/PostPage/PostPage';
 import Profile from '../pages/Profile/Profile';
-import Notification from '../pages/Notification/Notification';
+import NotificationPage from '../pages/NotificationPage/NotificationPage';
 import routes from '../../config/routes.config';
 import Login from '../pages/Login/Login';
 import Register from '../pages/Register/Register';
@@ -19,7 +19,10 @@ import { postActions } from '../../api/storage/post';
 const MainRouts = () => {
 
     const dispatch = useDispatch();
-    useEffect(() => { dispatch(postActions.getIndex()) }, []);
+    useEffect(() => {
+        dispatch(postActions.getIndex());
+        // dispatch(inboxActions.getInbox());
+    }, []);
 
     return (
         <>
@@ -47,7 +50,7 @@ const MainRouts = () => {
                                     component={() => <Profile theme={theme} toggleTheme={toggleTheme} />}
                                 />
                                 <Route path={routes.notification} exact
-                                    component={() => <Notification theme={theme} toggleTheme={toggleTheme} />}
+                                    component={() => <NotificationPage theme={theme} toggleTheme={toggleTheme} />}
                                 />
                                 <Route path={routes.login} exact
                                     component={() => <Login theme={theme} toggleTheme={toggleTheme} />} />

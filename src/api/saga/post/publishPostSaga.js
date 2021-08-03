@@ -1,5 +1,5 @@
 import { takeEvery, call, select, put } from "redux-saga/effects";
-import { postApi } from "../../../config/http.config";
+import { postApi, inboxApi } from "../../../config/http.config";
 import { ACTIONS } from "../../storage/post";
 import { ACTIONS as ACTIONS_USER } from "../../storage/user";
 import axios from "axios";
@@ -17,17 +17,23 @@ const sendPosts = async (axiosInst, post) => {
   }
 };
 
-
 const sendMentions = async ({ address, hosts, post, axios }) => {
   const result = await Promise.any(
     hosts.map(async (host) => {
       try {
-        return await axios.post(host.inbox, { post, mentionedUserAddress: address } );
+        return await axios.post(host.inbox, { post, mentionedUserAddress: address });
       } catch (e) {
         console.warn("[publishPostSaga][sendMentions]", e);
       }
-
     }));
+}
+
+const getMentions = async ({ axios }) => {
+  try {
+    let res = await axios.get(inboxApi.INBOX);
+  } catch (e) {
+    console.warn("[publishPostSaga][sendMentions]", e);
+  }
 }
 
 
@@ -43,7 +49,6 @@ const mapMentions = async ({ axios, post }) => {
         console.warn("[NewPost][attachments]", e);
       }
     }));
-
   console.log('mapMentions!!!!!!!!!!!!!!!!!!!!', resultMapMention);
 }
 
@@ -55,8 +60,8 @@ export function* workerSendPost(action) {
   yield call(sendPosts, axios, action.payload);
 
   if (action.payload.mentions) {
-    console.log("action====================[saga]", action.payload);
     yield call(mapMentions, { axios, post: action.payload });
+    yield call(getMentions, { axios, address: action.payload });
   }
 
   yield put({ type: ACTIONS.ADD_POST_TO_HASH, payload: action.payload });
