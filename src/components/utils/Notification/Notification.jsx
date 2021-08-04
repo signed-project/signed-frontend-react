@@ -1,54 +1,44 @@
 
 import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 import InfoAuthor from "../InfoAuthor/InfoAuthor";
 import Avatar from "../Avatar/Avatar";
 import PostContent from "../PostContent/PostContent";
-import Reaction from "../Reaction/Reaction";
-import LikeMark from "../LikeMark/LikeMark";
 import RepostBlock from "../Post/RepostBlock";
-
 import icon from "../../../assets/svg/icon";
 import { getReadFormat } from "../../../libs/date.js";
 import styles from "./notification.module.scss";
-import useReaction from "../../customHooks/useReaction";
 import useTargetPost from "../../customHooks/useTargetPost";
-import getCommentTrees from "../../customHooks/getCommentTrees";
 import useSourcePost from "../../customHooks/useSourcePost";
 import Preview from "../Preview/Preview";
 import getImgArr from "../../customHooks/getImgSources";
-import MenuPost from "../MenuPost/MenuPost";
+import NotificationTargetPost from "./NotificationTargetPost";
+import Button from '../Button/Button';
+import { inboxAction } from '../../../api/storage/inbox';
 
 const Notification = ({
     post,
     handleShowMenu,
-    isShowMenu,
     handleEditPost,
 }) => {
-
     const {
-        type, text, likesCount,
+        id, type, text, likesCount,
         repostsCount, attachments, hash, createdAt,
         source: { address, publicName, avatar },
         target: { postHash }
     } = post;
 
-    let sourcePost = useSourcePost(address);
+    // let sourceCurrentPost = useSourcePost(address);
     let targetPost = useTargetPost(postHash);
-    console.log('targetPost99999999999999999', targetPost);
 
+    console.log('targetPo222222222222222222222.address', postHash);
+    console.log('targetPo222222222222222222222.address', targetPost);
+    console.log('targetPost?.source?.address', targetPost?.source?.address);
     let sourceTargetPost = useSourcePost(targetPost?.source?.address);
-
-
-    const [postMap, setPostMap] = useState({});
-    const [comments, setComments] = useState([]);
+    const dispatch = useDispatch();
     const [imgPreview, setImgPreview] = useState([]);
-    const postMapState = useSelector((state) => state.post.hashed);
-
-    useEffect(() => {
-        setPostMap(postMapState);
-    }, [postMapState, postHash]);
+    const { source: userSource } = useSelector((state) => state.user);
 
     useEffect(() => {
         const imgSources = getImgArr(attachments);
@@ -69,56 +59,73 @@ const Notification = ({
         };
     }
 
+    const statuses = {
+        reject: 'reject',
+        accept: 'accept'
+    };
+
+    console.log('post', post);
+    console.log('targetPost', targetPost);
+    console.log('sourceTargetPost', sourceTargetPost);
+
+    const setPermission = ({ address, id, status }) => {
+
+        dispatch()
+
+    }
+
+
+
 
     return (
-        <> {sourcePost && targetPost &&
+        <> {targetPost && sourceTargetPost &&
             <div className={styles.post}>
-                {targetPost.type === "post" && sourcePost.hosts && (
+                {(targetPost.type === "post" || targetPost.type === "reply") && (
                     <>
                         <div className={styles.typePost}>
                             <div className={styles.avatarBlock}>
-                                <Avatar avatar={sourcePost.avatar} address={address} />
-                                <div
-                                    className={`${styles.verticalLine}  ${comments.length === 0 && styles.verticalLineRemove
-                                        }`}
-                                ></div>
+                                <Avatar avatar={post.source.avatar} address={post.source.address} />
                             </div>
                             <div className={styles.postMain}>
                                 <div className={styles.hover}>
-                                    <InfoAuthor createdAt={getReadFormat(createdAt)} name={sourcePost.publicName} address={address} />
+                                    <InfoAuthor
+                                        createdAt={getReadFormat(createdAt)}
+                                        name={post.source.publicName} address={post.source.address}
+                                        typeTargetPost={targetPost.type}
+                                        typePost={type} />
                                     <div className={styles.menuIconWrapper}
                                         onClick={() => handleShowMenu(hash)}
                                         data-hash={hash}
                                     >
-                                        <img
-                                            src={icon.menu}
-                                            alt="menu icon"
-                                            className={styles.menuIcon}
-                                            onClick={() => handleShowMenu(hash)}
-                                            data-hash={hash}
-                                        />
                                     </div>
-
-                                    {isShowMenu(hash) && (
-                                        <MenuPost dataHash={hash} handleEditPost={handleEditPost} />
-                                    )}
                                 </div>
                                 <div className={styles.bodyWrapper}>
-                                    <PostContent
-                                        hostAssets={sourcePost.hosts[0]?.assets}
+                                    <NotificationTargetPost
+                                        text={targetPost.text}
+                                    />
+                                    {sourceTargetPost.hosts && <PostContent
+                                        hostAssets={sourceTargetPost.hosts[0]?.assets}
                                         postHash={hash}
                                         text={text}
                                         type={type}
                                         imgHostArr={imgPreview}
-                                    />
-                                    <Preview uploadImgArr={imgPreview} postHash={hash} />
+                                    />}
+                                    <div className={styles.buttonWrapper}>
+                                        <Button className="clean_white grey"
+                                            onClick={() => setPermission({ address: userSource.address, id, status: statuses.reject })}
+                                        >Reject</Button>
+                                        <Button className="clean_white"
+                                            onClick={() => setPermission({ address: userSource.address, id, status: statuses.accept })}
+                                        >Repost</Button>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
                     </>
                 )}
 
-                {type === "like" && targetPost && sourceTargetPost && (
+                {/*  {type === "like" && targetPost && sourceTargetPost && (
                     <>
                         <div className={styles.typeLike}>
                             <LikeMark createdAt={getReadFormat(createdAt)} name={sourcePost.publicName} address={address} />
@@ -185,10 +192,10 @@ const Notification = ({
                                     />
                                 </div>
                                 <RepostBlock postHash={targetPost.hash} />
-                            </div>
+                            </div> 
                         </div>
                     </>
-                )}
+                )}*/}
             </div>
         }
         </>

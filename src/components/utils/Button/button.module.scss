@@ -75,7 +75,9 @@ button.agree:hover .iconGreen {
   background-color: transparent !important;
   opacity: 0.6;
 }
+
 .button.clean_white {
+  font-weight: 600;
   background: none;
   border: none;
   // border: 1px solid #ffffff;
@@ -111,4 +113,8 @@ button.agree:hover .iconGreen {
   min-width: 81px !important;
   height: 30px;
   padding: 0;
+}
+
+.grey {
+  color: $colorGrey900 !important;
 }

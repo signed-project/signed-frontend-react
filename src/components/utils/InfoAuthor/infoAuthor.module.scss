@@ -8,6 +8,24 @@
   font-size: 13px;
   line-height: 20px;
 }
+
+.notificationDescription {
+  color: $colorGrey100;
+  font-family: $mainFont;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.notificationTypePost {
+  color: $colorPrimary100;
+  font-family: $mainFont;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 20px;
+}
 .nameBlock {
   margin-bottom: 1px;
   cursor: pointer;
@@ -22,4 +40,9 @@
   font-weight: 500;
   font-size: 13px;
   color: $colorGrey100;
+}
+
+.menuIcon {
+  height: 12px;
+  margin: 0 5px 0 5px;
 }

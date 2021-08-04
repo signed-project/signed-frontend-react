@@ -5,6 +5,11 @@ export const getInbox = (payload) => ({
     payload
 });
 
+export const setPermission = (payload) => ({
+    type: ACTIONS.SET_PERMISSION,
+    payload
+});
+
 
 
 

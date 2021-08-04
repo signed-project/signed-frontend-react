@@ -33,4 +33,5 @@ export const userApi = {
 
 export const inboxApi = {
   INBOX: '/inbox',
+  INBOX_UPDATE: '/inbox/update',
 };

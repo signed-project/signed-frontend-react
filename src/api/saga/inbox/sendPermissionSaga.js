@@ -19,30 +19,38 @@ const getInbox = async ({ axios, address }) => {
         return await axios.get(inboxApi.INBOX, { params });
 
     } catch (error) {
-        console.log("[getUserInfo][error]", error);
+        console.warn("[getUserInfo][error]", error);
         return []
     }
 }
 
 
-function* callSelfOnTimer({ axios, address }) {
-    const { data } = yield call(getInbox, { axios: axios, address: address });
-    yield put({ type: INBOX_ACTIONS.SET_INBOX, payload: data });
-    if (address) {
-        yield delay(2000);
-        yield call(callSelfOnTimer, { axios, address });
+const sendPermission = async ({ axios, address }) => {
+    let res;
+    const data = {
+        address: address,
+        id: id,
+        status: status
     }
+
+    try {
+        res = await axios.post(inboxApi.INBOX_UPDATE, data);
+    }
+    catch (e) {
+        console.warn("[watchSendPermissionDecision][sendPermission]", e);
+    }
+    return res;
 }
 
-function* workerGetInbox() {
+function* workerSendPermissionDecision(action) {
+    const { address, id, status } = action.payload;
     const axios = yield select((state) => state.axios.axios);
     const user = yield select((state) => state.user)
-    // const inbox = yield call(setInterval, () => getInbox({ axios: axios, address: user.source.address }), 10000);
-    const runner = yield call(callSelfOnTimer, { axios: axios, address: user.source.address });
+    const resPermission = yield call(sendPermission, { axios: axios, address, id, status });
 }
 
-function* watchGetInbox() {
-    yield takeEvery(INBOX_ACTIONS.GET_INBOX, workerGetInbox);
+function* watchSendPermissionDecision() {
+    yield takeEvery(INBOX_ACTIONS.SEND_PERMISSION_DECISION, workerSendPermissionDecision);
 }
 
 
