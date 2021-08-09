@@ -36,10 +36,6 @@ const Login = ({ toggleTheme }) => {
     const [loginError, setLoginError] = useState(loginErrorState);
     const [isLoading, setIsLoading] = useState(false);
 
-    console.log('loginErrorState', loginErrorState);
-
-
-
     useEffect(() => {
         setLoginError(loginErrorState)
     }, [loginErrorState]);
@@ -69,7 +65,6 @@ const Login = ({ toggleTheme }) => {
                 isValid = false
             }
         })
-        console.log('---------formCopy------formValidate--', form);
         setForm(formCopy);
         return isValid;
     }
@@ -103,7 +98,7 @@ const Login = ({ toggleTheme }) => {
                         <Input title={'Password'} type={'password'} name={'password'} value={form.password.value} handleChange={handleForm} warning={form.password.warning} />
                         <div className={styles.loginError}>{loginError}</div>
                         <NavLink to={routes.passwordRecovery} className={styles.passForgot}> Forgot your password?</NavLink>
-                        <Button className="primary" isLoading={isLoading} onClick={() => { handleSendForm() }}>Log in</Button>
+                        <Button className="primary fontSizeBig" isLoading={isLoading} onClick={() => { handleSendForm() }}>Log in</Button>
                     </div>
                 </div>
                 {/* <Loader loaderColor={true} /> */}

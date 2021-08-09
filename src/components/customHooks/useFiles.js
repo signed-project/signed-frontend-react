@@ -28,7 +28,7 @@ const useFiles = () => {
         return res;
       })
       .catch((err) => {
-        console.log("CATCH ERR: ", err);
+        console.warn("CATCH ERR: ", err);
         const errors =
           err.response.data.errors || err.response.data.Error.Message;
         let errorString = "";
@@ -70,7 +70,7 @@ const useFiles = () => {
         return res;
       })
       .catch((err) => {
-        console.log("CATCH ERR: ", err);
+        console.warn("CATCH ERR: ", err);
         const errors =
           err.response.data.errors || err.response.data.Error.Message;
         let errorString = "";

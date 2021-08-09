@@ -1,19 +1,14 @@
 
 import React, { useEffect, useState } from 'react';
-import { Link, NavLink, useHistory } from "react-router-dom";
 import Notification from '../../../utils/Notification/Notification';
 
-
-
-
 const AllNotification = ({ inbox }) => {
-    let history = useHistory();
-
-    console.log('inbox', inbox);
-
-    const renderPosts = inbox.slice().map((p, i) => {
+    const renderPosts = inbox.slice().map((notification, i) => {
+        const p = notification.post;
+        const status = notification.status;
         return (
             <Notification
+                status={status}
                 post={p}
                 avatar={p.source.avatar}
                 key={i}

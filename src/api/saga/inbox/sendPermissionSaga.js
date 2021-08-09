@@ -25,28 +25,30 @@ const getInbox = async ({ axios, address }) => {
 }
 
 
-const sendPermission = async ({ axios, address }) => {
-    let res;
-    const data = {
+const sendPermission = async ({ axios, address, id, status }) => {
+    let data;
+    const requestData = {
         address: address,
         id: id,
         status: status
     }
 
     try {
-        res = await axios.post(inboxApi.INBOX_UPDATE, data);
+        ({ data } = await axios.post(inboxApi.INBOX_UPDATE_STATE, requestData));
     }
     catch (e) {
         console.warn("[watchSendPermissionDecision][sendPermission]", e);
     }
-    return res;
+    return data;
 }
 
 function* workerSendPermissionDecision(action) {
     const { address, id, status } = action.payload;
     const axios = yield select((state) => state.axios.axios);
-    const user = yield select((state) => state.user)
     const resPermission = yield call(sendPermission, { axios: axios, address, id, status });
+    if (resPermission) {
+        yield put({ type: INBOX_ACTIONS.UPDATE_INBOX_STATUS, payload: { id, status } });
+    }
 }
 
 function* watchSendPermissionDecision() {
@@ -54,4 +56,4 @@ function* watchSendPermissionDecision() {
 }
 
 
-export default watchGetInbox;
+export default watchSendPermissionDecision;

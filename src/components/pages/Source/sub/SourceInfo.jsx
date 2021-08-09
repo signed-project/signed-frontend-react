@@ -4,8 +4,6 @@ import Avatar from '../../../utils/Avatar/Avatar';
 import InfoItem from '../../../utils/InfoItem/InfoItem';
 
 const SourceInfo = ({ source }) => {
-
-    console.log('source+++++++++++++++++', source);
     return (
         <>
             <div className={styles.AvatarWrapper}>

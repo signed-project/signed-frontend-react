@@ -9,11 +9,13 @@ import { filesApi } from "../../config/http.config";
  */
 
 
-export const getFilePath = ({ hash, fileExtension }) => {
+export const getFilePath = ({ hash, fileExtension, contentType }) => {
   if (!hash) {
     return {}
   }
-
+  if (contentType) {
+    fileExtension = mime.getExtension(contentType);
+  }
   const pathStructure = {
     first: hash.slice(0, 2),
     second: hash.slice(2, 4),
@@ -24,6 +26,9 @@ export const getFilePath = ({ hash, fileExtension }) => {
 
 
 const getImgArr = (arrImg) => {
+  if (!Array.isArray(arrImg)) {
+    return []
+  }
   return arrImg.map((file) => {
     const fileExtension = mime.getExtension(file.contentType);
     const imagePreviewUrl = getFilePath({ hash: file.hash, fileExtension })

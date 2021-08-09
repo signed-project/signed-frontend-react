@@ -59,7 +59,6 @@ const Register = ({ toggleTheme }) => {
     const checkIsLoginFree = async ({ login }) => {
         try {
             let { data } = await axios.post(userApi.IS_FREE_LOGIN, { login: login });
-            console.log('data', data);
             const isFreeLogin = data?.isFreeLogin
             let warningMessage = '';
             if (isFreeLogin === false) {

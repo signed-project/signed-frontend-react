@@ -153,7 +153,7 @@ const Post = ({
                     postHash={hash}
                     text={text}
                     type={type}
-                    imgHostArr={imgPreview}
+                  // imgHostArr={imgPreview}
                   />
                   <Preview uploadImgArr={imgPreview} postHash={hash} />
                 </div>

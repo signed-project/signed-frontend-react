@@ -13,13 +13,12 @@ const getUser = async (axios, token) => {
         };
         res = await axios.post(userApi.GET_USER, data);
     } catch (error) {
-        console.log("[getUserInfo][error]", error);
+        console.warn("[getUserInfo][error]", error);
     }
     return res;
 };
 
 export function* workerGetUserData(action) {
-    console.log('33333333workerGetUserData33333333');
     const axios = yield select((state) => state.axios.axios);
     const { accessToken, wif, history } = action.payload;
     const resData = yield call(getUser, axios, accessToken);

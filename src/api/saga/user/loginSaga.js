@@ -23,7 +23,7 @@ const sendSessionProof = async (axios, data) => {
         let res = await axios.post(userApi.LOGIN_SESSION_PROOF, data);
         return res;
     } catch (error) {
-        console.log("[loginSaga][sendSessionProof]", error);
+        console.warn("[loginSaga][sendSessionProof]", error);
     }
 };
 
@@ -104,7 +104,6 @@ function* workerLogin(action) {
                 };
                 userModel.setUserData = userObject;
                 const user = userModel.newUser;
-
                 yield put({ type: ACTIONS_USER.SET_USER, payload: user });
                 yield put({ type: ACTIONS_POST.GET_INDEX, payload: { isRegistered: true } });
                 action.payload.history.push(routes.feed);

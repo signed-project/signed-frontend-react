@@ -7,7 +7,11 @@
 }
 
 .like {
-    margin-right: 15px;
+  margin-right: 24px;
+}
+
+.reactionHistoryItem {
+  margin-right: 15px;
 }
 
 .reaction {
@@ -19,7 +23,7 @@
 .actionReaction {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-end;
   padding-right: 3px;
   width: 100%;
   //   max-width: 120px;
@@ -34,6 +38,10 @@
   font-weight: 600;
   font-size: 13px;
   line-height: 20px;
+}
+
+.actionReaction > div {
+  margin-left: 40px;
 }
 
 .action {

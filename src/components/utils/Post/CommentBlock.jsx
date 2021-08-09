@@ -18,8 +18,6 @@ const CommentBlock = ({
   removeLastLine = false,
   showReactionBlock = false,
 }) => {
-
-
   const { text, createdAt, hash, type, likesCount,
     repostsCount, source: { address } } = post;
   const [imgPreview, setImgPreview] = useState([]);
@@ -51,13 +49,15 @@ const CommentBlock = ({
             </div>
             <div className={styles.commentBodyWrapper}>
               {/* {imgPreview.length > 0 && <img src={imgPreview[0]?.imagePreviewUrl} alt="" className={styles.imgCommentPreview} />} */}
-              {source?.hosts && <PostContent
-                hostAssets={source?.hosts[0]?.assets}
-                postHash={hash}
-                text={text}
-                type={type}
-                imgPrevSrc={imgPreview[0]?.imagePreviewUrl}
-              />}
+              {source?.hosts &&
+                <PostContent
+                  hostAssets={source?.hosts[0]?.assets}
+                  postHash={hash}
+                  text={text}
+                  type={type}
+                  imgHostArr={imgPreview}
+                // imgPrevSrc={imgPreview[0]?.imagePreviewUrl}
+                />}
             </div>
             <Reaction
               likesCount={likesCount}

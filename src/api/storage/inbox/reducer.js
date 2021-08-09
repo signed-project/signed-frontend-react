@@ -2,7 +2,7 @@ export const ACTIONS = {
   GET_INBOX: 'INBOX::GET_INBOX',
   SET_INBOX: 'INBOX::SET_INBOX',
   SEND_PERMISSION_DECISION: 'INBOX::SEND_PERMISSION_DECISION',
-  SET_PERMISSION: 'INBOX::SET_PERMISSION',
+  UPDATE_INBOX_STATUS: 'INBOX::UPDATE_INBOX_STATUS',
 };
 
 const initialState = {
@@ -16,10 +16,16 @@ const inboxReducer = (state = initialState, action) => {
         ...state,
         inbox: action.payload
       }
-    case ACTIONS.SET_PERMISSION:
+    case ACTIONS.UPDATE_INBOX_STATUS:
+      const updatedInbox = state.inbox.slice().map(notification => {
+        if (notification.post.id === action.payload.id) {
+          notification.status = action.payload.status;
+        }
+        return notification;
+      })
       return {
         ...state,
-        // inbox: action.payload
+        inbox: updatedInbox
       }
     default:
       return state;

@@ -12,7 +12,6 @@ import { inboxActions } from '../../api/storage/inbox';
 
 
 const Layout = ({ children, theme }) => {
-
   const [isAuthPage, setISAuthPage] = useState(false)
   const { isAuth } = useSelector(state => state.user);
   const location = useLocation();

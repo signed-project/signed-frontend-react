@@ -1,22 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import icon from '../../../assets/svg/icon';
 import styles from './notificationPage.module.scss';
 import { useHistory } from "react-router-dom";
-import Button from "../../utils/Button/Button";
-import { parseJson } from '../../../libs/json';
 import AllNotification from './sub/AllNotification';
 
 
-
 const NotificationPage = ({ toggleTheme }) => {
-
   const inboxState = useSelector(state => state.inbox.inbox);
 
   useEffect(() => {
     let inboxToLocalStore;
     try {
-      inboxToLocalStore = inboxState.map(ntf => parseJson(ntf.post));
+      inboxToLocalStore = inboxState.map(ntf => {
+        return { post: ntf.post, status: ntf.status }
+      });
+
     } catch (e) {
       console.warn('[NotificationPage][useEffect][inboxState]', e);
       inboxToLocalStore = [];
@@ -59,8 +58,6 @@ const NotificationPage = ({ toggleTheme }) => {
         </div>
 
         {tab === tabList.all && < AllNotification inbox={inbox} />}
-
-
 
       </>}
 

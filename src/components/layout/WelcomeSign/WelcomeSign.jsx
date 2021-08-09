@@ -21,8 +21,8 @@ const WelcomeSing = () => {
                         need to register</p>
                 </div>
                 <div className={styles.buttonWrapper}>
-                    <div className={styles.button}><Button className="clean" onClick={() => handleGoingTo(routes.register)}>Sign up </Button></div>
-                    <div className={styles.button}><Button className="primary" onClick={() => handleGoingTo(routes.login)}>Log in</Button></div>
+                    <div className={styles.button}><Button className="clean fontSizeBig" onClick={() => handleGoingTo(routes.register)}>Sign up </Button></div>
+                    <div className={styles.button}><Button className="primary fontSizeBig" onClick={() => handleGoingTo(routes.login)}>Log in</Button></div>
                 </div>
             </div>
         </>

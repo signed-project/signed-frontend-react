@@ -1,11 +1,5 @@
 const path = require('path');
-
-console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!path', path.resolve(__dirname, 'src/'));
-console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!path', path.resolve(__dirname, 'src/'));
-console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!path', path.resolve(__dirname, 'src/'));
-console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!path', path.resolve(__dirname, 'src/'));
-console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!path', path.resolve(__dirname, 'src/'));
-console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!path', path.resolve(__dirname, 'src/'));
+ 
 
 module.exports = {
   webpack: {

@@ -1,15 +1,8 @@
 import { call, select, put, takeEvery, throttle, delay } from "redux-saga/effects";
-import { publicApi, userApi, inboxApi } from "../../../config/http.config";
-
-
+import { inboxApi } from "../../../config/http.config";
 import { ACTIONS as INBOX_ACTIONS } from "../../storage/inbox";
 import { parseJson } from '../../../libs/json';
-import axios from "axios";
 
-import { User } from '../../models/user';
-
-const publicApiHost = process.env.REACT_APP_PUBLIC_API_HOST;
-const apiHost = process.env.REACT_APP_API_HOST;
 
 const getInbox = async ({ axios, address }) => {
     try {
@@ -19,17 +12,29 @@ const getInbox = async ({ axios, address }) => {
         return await axios.get(inboxApi.INBOX, { params });
 
     } catch (error) {
-        console.log("[getUserInfo][error]", error);
+        console.warn("[getInboxSaga][getInbox]", error);
         return []
     }
 }
 
 
 function* callSelfOnTimer({ axios, address }) {
+    let notificationsList;
     const { data } = yield call(getInbox, { axios: axios, address: address });
-    yield put({ type: INBOX_ACTIONS.SET_INBOX, payload: data });
+
+    try {
+        notificationsList = data.map(notification => {
+            notification.post = parseJson(notification.post);
+            return notification;
+        });
+    } catch (error) {
+        console.warn("[getInboxSaga][callSelfOnTimer]", error);
+    }
+
+    notificationsList = notificationsList.sort((a, b) => b.post.createdAt - a.post.createdAt)
+    yield put({ type: INBOX_ACTIONS.SET_INBOX, payload: notificationsList });
     if (address) {
-        yield delay(2000);
+        yield delay(120000);
         yield call(callSelfOnTimer, { axios, address });
     }
 }

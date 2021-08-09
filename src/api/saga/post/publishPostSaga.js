@@ -13,7 +13,7 @@ const sendPosts = async (axiosInst, post) => {
     let res = await axiosInst.post(postApi.SEND_POST, data);
     return res;
   } catch (error) {
-    console.log("[getUserInfo][error]", error);
+    console.warn("[getUserInfo][error]", error);
   }
 };
 
@@ -49,7 +49,6 @@ const mapMentions = async ({ axios, post }) => {
         console.warn("[NewPost][attachments]", e);
       }
     }));
-  console.log('mapMentions!!!!!!!!!!!!!!!!!!!!', resultMapMention);
 }
 
 

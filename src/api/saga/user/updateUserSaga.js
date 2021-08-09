@@ -9,7 +9,7 @@ const sendUserData = async ({ axios, source }) => {
         let res = await axios.post(userApi.UPDATE_USER, { source });
         return res;
     } catch (error) {
-        console.log("[updateUserSaga][sendUserData]", error);
+        console.warn("[updateUserSaga][sendUserData]", error);
     }
 };
 

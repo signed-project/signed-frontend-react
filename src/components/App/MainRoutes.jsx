@@ -15,12 +15,10 @@ import Register from '../pages/Register/Register';
 import Source from '../pages/Source/Source';
 import { postActions } from '../../api/storage/post';
 
-
 const MainRouts = () => {
-
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(postActions.getIndex());
+        dispatch(postActions.getIndex({ isRegistered: false }));
         // dispatch(inboxActions.getInbox());
     }, []);
 

@@ -5,7 +5,7 @@ import Loader from '../loader/Loader';
 /**
  * @param {string}  classNames:  - defines button style and colors
  *    Colors: clean_white, clean, primary
- *  
+ *    Font size: big
  */
 
 const Button = ({ className, onClick, disabled = false, type, children, isLoading = false, loaderColor }) => {

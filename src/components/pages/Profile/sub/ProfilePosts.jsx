@@ -7,10 +7,6 @@ import routes from "../../../../config/routes.config";
 
 
 const ProfilePosts = ({ ownPost }) => {
-    console.log('Post ------ ownPost', ownPost);
-    console.log('Post ------ ownPost', ownPost);
-    console.log('Post ------ ownPost', ownPost);
-    console.log('Post ------ ownPost', ownPost);
     let history = useHistory();
     const handleShowMenu = (hash) => {
         setOpenMenuHash(hash);

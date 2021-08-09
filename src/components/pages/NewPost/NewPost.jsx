@@ -125,7 +125,6 @@ const NewPost = ({ toggleTheme }) => {
   useEffect(() => {
     if (edit && hashedPost) {
       const editedPost = hashedPost[edit];
-      console.log("editedPost", editedPost);
       if (editedPost?.attachments) {
         const imgSours = getImgArr(editedPost?.attachments);
         setUploadedImg(imgSours);
@@ -141,7 +140,6 @@ const NewPost = ({ toggleTheme }) => {
   /**
    *    /*   let reader = new FileReader();
          reader.onloadend = () => {
-             console.log('onloadend', reader.result);
              const filePrev = {
                file: file,
                imagePreviewUrl: reader.result
@@ -184,6 +182,8 @@ const NewPost = ({ toggleTheme }) => {
       return;
     }
     const mentions = getMentions();
+
+
     (async () => {
       // change Promise.all to Promise.allSettled
       // { status: "fulfilled", value: 1 }
@@ -209,9 +209,6 @@ const NewPost = ({ toggleTheme }) => {
           }
         })
       );
-
-      console.log('----------attachments------------attachments PROMISE', attachments);
-      console.log('----------attachments------------attachments PROMISE', attachments);
 
       const postInstance = new PostModel({
         id: post.id ? post.id : "",

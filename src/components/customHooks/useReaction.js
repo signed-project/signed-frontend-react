@@ -22,7 +22,8 @@ const useReaction = () => {
                 target: {
                     "sourceHash": user.source.hash,
                     "postHash": p.hash
-                }
+                },
+                mentions: [p.source],
             }
         }
         else {
@@ -32,9 +33,10 @@ const useReaction = () => {
                 type: 'like',
                 wif: user.wif,
                 target: {
-                    sourceHash: user.source.hash,
+                    sourceHash: p.source.hash,
                     postHash: p?.target?.postHash
-                }
+                },
+                mentions: [p.source],
             }
         };
         const post = new PostModel(data);

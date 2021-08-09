@@ -11,7 +11,6 @@ import { userActions } from '../../../../api/storage/user';
 import ChangeUserPic from '../../../utils/ChangeUserPic/ChangeUserPic';
 import userPlaceHolder from "../../../../assets/svg/icon/userPlaceHolder.jpg";
 
-
 /**
  *  way to get is img download 
  *  const img = new Image();

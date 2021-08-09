@@ -22,11 +22,10 @@ const getMyIndex = async (address) => {
       mySource: res.data.source
     };
   } catch (error) {
-    console.log("[getMyIndex][error]", error);
+    console.warn("[getMyIndex][error]", error);
     return []
   }
 };
-
 
 
 // TODO rename
@@ -95,67 +94,71 @@ const getUser = async ({ axios, token }) => {
 };
 
 
-function* workerGetIndex() {
-  let userExist = false;
+function* workerGetIndex(action) {
+  const { isRegistered } = action.payload;
+  let gatheredPosts = [], arrPosts, arrSources, myPosts,
+    userSubscribedSources, hostSources, mySource, user;
   const accessToken = sessionStorage.getItem("accessToken");
   const wif = sessionStorage.getItem("wif");
   const accessTokenDecoded = jwt.decode(accessToken);
   const axios = yield select((state) => state.axios.axios);
-  let gatheredPosts = [], arrPosts, arrSources, myPosts,
-    userSubscribedSources, hostSources, mySource;
+  user = yield select((state) => state.user);
 
-  if (wif && accessToken && accessTokenDecoded.exp * 1000 > new Date().getTime()) {
-    const resData = yield call(getUser, { axios: axios, token: accessToken });
-    if (resData) {
-      const { data } = resData;
-      const source = parseJson(data.source);
-      const userModel = new User({});
-      const userObject = {
-        isAuth: true,
-        wif: wif,
-        subscribed: data.subscribed,
-        source: {
-          ...source,
-        }
-      };
-      userModel.setUserData = userObject;
-      const user = userModel.newUser;
-      yield put({ type: USER_ACTIONS.SET_USER, payload: user });
+  if (!isRegistered) {
+    if (wif && accessToken && accessTokenDecoded.exp * 1000 > new Date().getTime()) {
+      const resUserData = yield call(getUser, { axios: axios, token: accessToken });
 
-      try {
-        userSubscribedSources = data.subscribed.map(sub => {
-          return parseJson(sub.source);
-        });
-      } catch (e) {
-        console.warn('[getIndexSaga][data.subscribed.map]', e);
+      if (resUserData) {
+        const { data } = resUserData;
+        const source = parseJson(data.source);
+        const userModel = new User({});
+        const userObject = {
+          isAuth: true,
+          wif: wif,
+          subscribed: data.subscribed,
+          source: {
+            ...source,
+          }
+        };
+        userModel.setUserData = userObject;
+        user = userModel.newUser;
+        yield put({ type: USER_ACTIONS.SET_USER, payload: user });
       }
-
-
-      try {
-        ({ myPosts, mySource } = yield call(getMyIndex, data.address));
-      }
-      catch (e) {
-        myPosts = [];
-        console.warn("[workerGetIndex][getMyIndex]", e);
-      }
-      try {
-        if (Array.isArray(data.subscribed)) {
-          ({ gatheredPosts, hostSources } = yield call(getSubscribedIndex, { subscribed: data.subscribed }));
-        }
-      } catch (e) {
-        console.warn("[workerGetIndex][getSubscribed]", e);
-      }
-
-      try {
-        arrSources = [...userSubscribedSources, ...hostSources, mySource];
-        arrPosts = [...myPosts, ...gatheredPosts];
-      } catch (e) {
-        console.warn('[getIndexSaga][Destructuring myPost, hostPost, hostsSources]', e)
-      }
-      userExist = true;
     }
   }
-  if (!userExist) {
+
+  if (user.isAuth) {
+    try {
+      userSubscribedSources = user.subscribed.map(sub => {
+        return parseJson(sub.source);
+      });
+    } catch (e) {
+      console.warn('[getIndexSaga][data.subscribed.map]', e);
+    }
+
+    try {
+      ({ myPosts, mySource } = yield call(getMyIndex, user.source.address));
+    }
+    catch (e) {
+      myPosts = [];
+      console.warn("[workerGetIndex][getMyIndex]", e);
+    }
+    try {
+      if (Array.isArray(user.subscribed)) {
+        ({ gatheredPosts, hostSources } = yield call(getSubscribedIndex, { subscribed: user.subscribed }));
+      }
+    } catch (e) {
+      console.warn("[workerGetIndex][getSubscribed]", e);
+    }
+
+    try {
+      arrSources = [...userSubscribedSources, ...hostSources, mySource];
+      arrPosts = [...myPosts, ...gatheredPosts];
+    } catch (e) {
+      console.warn('[getIndexSaga][Destructuring myPost, hostPost, hostsSources]', e)
+    }
+
+  } else {
     try {
       const { gatheredPosts, hostSources } = yield call(getAllHostsIndex);
       arrPosts = gatheredPosts;
@@ -180,9 +183,10 @@ function* workerGetIndex() {
     payload: index.latestSource,
   });
 }
+
+
 function* watchGetIndex() {
   yield takeEvery(POST_ACTIONS.GET_INDEX, workerGetIndex);
 }
-
 
 export default watchGetIndex;
