@@ -24,13 +24,14 @@ const getInbox = async ({ axios, address }) => {
     }
 }
 
-
-const sendPermission = async ({ axios, address, id, status }) => {
+const sendPermission = async ({ axios, address, id, status, destinationAddress, authorAddress }) => {
     let data;
     const requestData = {
-        address: address,
-        id: id,
-        status: status
+        address,
+        id,
+        status,
+        destinationAddress,
+        authorAddress
     }
 
     try {
@@ -42,18 +43,18 @@ const sendPermission = async ({ axios, address, id, status }) => {
     return data;
 }
 
-function* workerSendPermissionDecision(action) {
-    const { address, id, status } = action.payload;
+function* workerSendMentionedPermission(action) {
+    const { address, id, status, destinationAddress, authorAddress } = action.payload;
     const axios = yield select((state) => state.axios.axios);
-    const resPermission = yield call(sendPermission, { axios: axios, address, id, status });
+    const resPermission = yield call(sendPermission, { axios: axios, address, id, status, destinationAddress, authorAddress });
     if (resPermission) {
         yield put({ type: INBOX_ACTIONS.UPDATE_INBOX_STATUS, payload: { id, status } });
     }
 }
 
-function* watchSendPermissionDecision() {
-    yield takeEvery(INBOX_ACTIONS.SEND_PERMISSION_DECISION, workerSendPermissionDecision);
+function* watchSendMentionedPermission() {
+    yield takeEvery(INBOX_ACTIONS.SEND_PERMISSION_DECISION, workerSendMentionedPermission);
 }
 
 
-export default watchSendPermissionDecision;
+export default watchSendMentionedPermission;

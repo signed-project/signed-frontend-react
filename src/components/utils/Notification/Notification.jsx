@@ -5,13 +5,10 @@ import PropTypes from "prop-types";
 import InfoAuthor from "../InfoAuthor/InfoAuthor";
 import Avatar from "../Avatar/Avatar";
 import PostContent from "../PostContent/PostContent";
-import RepostBlock from "../Post/RepostBlock";
-import icon from "../../../assets/svg/icon";
 import { getReadFormat } from "../../../libs/date.js";
 import styles from "./notification.module.scss";
 import useTargetPost from "../../customHooks/useTargetPost";
 import useSourcePost from "../../customHooks/useSourcePost";
-import Preview from "../Preview/Preview";
 import getImgArr from "../../customHooks/getImgSources";
 import NotificationTargetPost from "./NotificationTargetPost";
 import ButtonBlock from "./ButtonBlock";
@@ -22,6 +19,7 @@ const Notification = ({
     post,
     handleShowMenu,
     handleEditPost,
+    destinationAddress
 }) => {
     const {
         id, type, text, likesCount,
@@ -42,6 +40,8 @@ const Notification = ({
     const { source: userSource } = useSelector((state) => state.user);
     const inbox = useSelector((state) => state.inbox.inbox);
 
+    console.log('#####################inbox', inbox);
+
     useEffect(() => {
         const imgSources = getImgArr(targetPost.attachments);
         setImgPreviewTargetPost(imgSources);
@@ -60,7 +60,8 @@ const Notification = ({
     }
 
     const setPermission = ({ address, id, status }) => {
-        dispatch(inboxActions.sendPermissionDecision({ address, id, status }))
+        console.log('destinationAddress!!!!!!!!!!!!!!', destinationAddress);
+        dispatch(inboxActions.sendPermissionDecision({ address, id, status, destinationAddress, authorAddress: address }))
     }
 
     return (

@@ -4,10 +4,13 @@ import Notification from '../../../utils/Notification/Notification';
 
 const AllNotification = ({ inbox }) => {
     const renderPosts = inbox.slice().map((notification, i) => {
+        console.log('notification!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', notification);
+        // const p = notification.post;
         const p = notification.post;
         const status = notification.status;
         return (
             <Notification
+                destinationAddress={notification.address}
                 status={status}
                 post={p}
                 avatar={p.source.avatar}

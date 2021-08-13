@@ -38,7 +38,7 @@ export function* workerRegister(action) {
     const hosts = [
         {
             assets: process.env.REACT_APP_API_HOST_ASSETS,
-            index: `${process.env.REACT_APP_API_HOST}/prod/${userBitcoinData.address}`,
+            index: `${process.env.REACT_APP_PUBLIC_API_HOST}/prod/${userBitcoinData.address}`,
             inbox: `${process.env.REACT_APP_API_HOST}${inboxApi.INBOX}`,
         }];
 
