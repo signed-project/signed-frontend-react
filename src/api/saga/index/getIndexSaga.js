@@ -16,11 +16,12 @@ const apiHost = process.env.REACT_APP_API_HOST;
 const getMyIndex = async (address) => {
   try {
     let res = await axios.get(`${publicApiHost}${publicApi.GET_INDEX}/${address}`);
-    // let res = await axios.post('https://699m468ak3.execute-api.us-west-2.amazonaws.com/post');
+
     return {
-      myPosts: res.data.posts,
+      myPosts: res.data.index,
       mySource: res.data.source
     };
+
   } catch (error) {
     console.warn("[getMyIndex][error]", error);
     return []
@@ -32,19 +33,35 @@ const getMyIndex = async (address) => {
 const getSubscribedIndex = async ({ subscribed }) => {
   let postSubscribed = [], gatheredPosts = [], hostSources = [];
   try {
-    await Promise.all(subscribed.map(async (sbs) => {
-      try {
-        let res = await axios.get(`${sbs.url}`);
-        if (res?.data?.posts) {
-          postSubscribed.push(res?.data?.posts);
+    await Promise.all(
+      subscribed.map(async (sbs) => {
+        try {
+          await Promise.all(
+            sbs.hosts.map(async hst => {
+              let res = await axios.get(`${hst.index}`);
+              console.log('res', res);
+              if (res?.data?.index) {
+                postSubscribed.push(res?.data?.index);
+              }
+              if (res?.data?.source) {
+                hostSources.push(res?.data?.source);
+              }
+              return;
+            })
+          )
+
+          // let res = await axios.get(`${sbs.hosts[0].index}`);
+          // if (res?.data?.posts) {
+          //   postSubscribed.push(res?.data?.posts);
+          // }
+          // if (res?.data?.source) {
+          //   hostSources.push(res?.data?.source);
+          // }
+        } catch (e) {
+          console.warn("[getSubscribedIndex][postSubscribed.push]", e);
         }
-        if (res?.data?.source) {
-          hostSources.push(res?.data?.source);
-        }
-      } catch (e) {
-        console.warn("[getSubscribedIndex][postSubscribed.push]", e);
-      }
-    }));
+      })
+    );
   } catch (e) {
     console.warn("[getSubscribedIndex][Promise.all]", e);
   }
@@ -130,14 +147,19 @@ function* workerGetIndex(action) {
   if (user.isAuth) {
     try {
       userSubscribedSources = user.subscribed.map(sub => {
-        return parseJson(sub.source);
+
+        console.log('sub.source', sub);
+        return sub;
+        // return parseJson(sub.source);
       });
     } catch (e) {
+      userSubscribedSources = [];
       console.warn('[getIndexSaga][data.subscribed.map]', e);
     }
 
     try {
       ({ myPosts, mySource } = yield call(getMyIndex, user.source.address));
+
     }
     catch (e) {
       myPosts = [];

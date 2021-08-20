@@ -118,6 +118,7 @@ const NewPost = ({ toggleTheme }) => {
           return comment;
         }
       });
+      
       setComments(commentsCheckbox);
     }
   }, [post, hashedPost]);
@@ -137,6 +138,9 @@ const NewPost = ({ toggleTheme }) => {
     }
   }, [edit, hashedPost]);
 
+
+  console.log('comments$$$$$$$$$$$$$$$$$$$$$$$$$$@@@@@@@@@@@@@@@@@@@', comments);
+
   /**
    *    /*   let reader = new FileReader();
          reader.onloadend = () => {
@@ -154,11 +158,32 @@ const NewPost = ({ toggleTheme }) => {
    *  growth  height when add text in one row
    */
 
+
+
+
+  const getTags = (text) => {
+    let textLowerCase = text.toLowerCase();
+    if (textLowerCase.indexOf("#") === -1) {
+      return '';
+    }
+    const tagArr = [];
+    const dirtyTextArr = textLowerCase.split('#');
+    const resMap = dirtyTextArr.map((tagDirtyArr, i) => {
+      if (i > 0) {
+        const tagItem = tagDirtyArr.split(" ")[0];
+        tagArr.push(tagItem);
+        return tagDirtyArr;
+      }
+    });
+    return tagArr;
+  };
+
   const handleChangeMessage = (e) => {
     const value = e.target.value;
     e.target.style.height = 0;
     e.target.style.height = `${e.target.scrollHeight}px`;
     // scroll.scrollToBottom();
+    // console.log('getTags(value)', getTags(value));
     setMessage(value);
   };
 
@@ -172,6 +197,7 @@ const NewPost = ({ toggleTheme }) => {
     });
     return mentions;
   };
+
 
   const handlePublicPost = () => {
     if (isLoading) {
@@ -210,11 +236,15 @@ const NewPost = ({ toggleTheme }) => {
         })
       );
 
+
+      const tagsArr = getTags(message);
+
       const postInstance = new PostModel({
         id: post.id ? post.id : "",
         source: user.source,
         type: post.type,
         text: message,
+        tags: tagsArr,
         target: {
           postHash: post.target?.postHash ? post.target?.postHash : "",
           sourceHash: post.target?.sourceHash ? post.target?.sourceHash : "",
@@ -225,6 +255,8 @@ const NewPost = ({ toggleTheme }) => {
       });
 
       const newPost = postInstance.newPost;
+
+      console.log('newPost222222222222222@@@@@@@@@@@@@', newPost);
       setMessage("");
       setUploadedImg([]);
       dispatch(postActions.sendPost(newPost));
@@ -240,7 +272,7 @@ const NewPost = ({ toggleTheme }) => {
         key={i}
         type={post.type}
         img={post?.source?.avatar?.hash}
-        name={post.source?.name}
+        name={post.source?.publicName}
         text={post.text}
         createdAt={post.createdAt}
         post={post}
@@ -272,18 +304,28 @@ const NewPost = ({ toggleTheme }) => {
   };
 
   const renderReplyingUser = comments.map((post, i) => {
-    if (i > 0) {
+    // if (i > 0 && post.source.address) {
+    if (i > 0 && post.source.address !== user.source.address) {
       return (
         <ReplyingUser
           key={i}
           avatar={post.source.avatar}
-          name={post.source.name}
+          name={post.source.publicName}
           checked={post.isMention}
           checkBoxName={post.hash}
           onChange={handleMention}
         />
       );
     }
+    else if (post.source.address === user.source.address) {
+      return (
+        <div key={i} className={style.gap}>
+          <div className={style.gapBlockLine}></div>
+          {/* <span className={style.gapTitle}>Show this thread</span> */}
+        </div>
+      );
+    }
+
     return "";
   });
 
@@ -347,12 +389,11 @@ const NewPost = ({ toggleTheme }) => {
 
       <div className={style.bodyBlock}>
         {
-          // replyingPage
           replyingPage ? (
             <div className={style.replyingBlock}>
               <ReplyingUser
                 avatar={comments[0].source.avatar}
-                name={comments[0].source.name}
+                name={comments[0].source.publicName}
                 checked={comments[0].isMention}
                 checkBoxName={comments[0].hash}
                 onChange={handleMention}

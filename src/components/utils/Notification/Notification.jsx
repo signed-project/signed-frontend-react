@@ -29,9 +29,8 @@ const Notification = ({
     } = post;
 
     // let sourceCurrentPost = useSourcePost(address);
+
     let targetPost = useTargetPost(postHash);
-
-
 
     let sourceTargetPost = useSourcePost(targetPost?.source?.address);
     const dispatch = useDispatch();
@@ -59,9 +58,8 @@ const Notification = ({
         };
     }
 
-    const setPermission = ({ address, id, status }) => {
-        console.log('destinationAddress!!!!!!!!!!!!!!', destinationAddress);
-        dispatch(inboxActions.sendPermissionDecision({ address, id, status, destinationAddress, authorAddress: address }))
+    const setPermission = ({ authorAddress, destinationAddress, id, status }) => {
+        dispatch(inboxActions.sendPermissionDecision({ id, status, destinationAddress, authorAddress, post }))
     }
 
     return (
@@ -100,7 +98,8 @@ const Notification = ({
                                     <ButtonBlock
                                         status={status}
                                         setPermission={setPermission}
-                                        address={userSource.address}
+                                        destinationAddress={userSource.address}
+                                        authorAddress={post.source.address}
                                         id={id} />
                                 </div>
                             </div>

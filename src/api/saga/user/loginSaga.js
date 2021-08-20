@@ -92,7 +92,8 @@ function* workerLogin(action) {
                 sessionStorage.setItem('accessToken', data?.token);
                 sessionStorage.setItem('wif', wifEncode);
 
-                const source = parseJson(data.source);
+                 const source = parseJson(data.source);
+                // const source = data.source;
                 const userModel = new User({});
                 const userObject = {
                     isAuth: true,

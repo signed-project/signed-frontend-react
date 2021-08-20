@@ -22,6 +22,8 @@ const MainRouts = () => {
         // dispatch(inboxActions.getInbox());
     }, []);
 
+    console.log('process.env.REACT_APP_PUBLIC_API_HOST', process.env.REACT_APP_PUBLIC_API_HOST);
+
     return (
         <>
             <LayoutProvider.Consumer >

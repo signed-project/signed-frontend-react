@@ -22,9 +22,12 @@ function* callSelfOnTimer({ axios, address }) {
     let notificationsList;
     const { data } = yield call(getInbox, { axios: axios, address: address });
 
+    console.log('data-----------data', data);
+
+    if (!Array.isArray(data)) return;
     try {
         notificationsList = data.map(notification => {
-            notification.post = parseJson(notification.post);
+            notification.post = parseJson(notification.postJson);
             return notification;
         });
     } catch (error) {
@@ -34,7 +37,7 @@ function* callSelfOnTimer({ axios, address }) {
     notificationsList = notificationsList.sort((a, b) => b.post.createdAt - a.post.createdAt)
     yield put({ type: INBOX_ACTIONS.SET_INBOX, payload: notificationsList });
     if (address) {
-        yield delay(120000);
+        yield delay(2000000);
         yield call(callSelfOnTimer, { axios, address });
     }
 }

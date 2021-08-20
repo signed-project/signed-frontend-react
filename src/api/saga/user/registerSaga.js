@@ -45,7 +45,6 @@ export function* workerRegister(action) {
     const userModel = new User({
         isAuth: true,
         address: userBitcoinData.address,
-        name: userName,
         wif: userBitcoinData.wif,
         hosts,
         avatar,

@@ -21,15 +21,32 @@ const CommentBlock = ({
   const { text, createdAt, hash, type, likesCount,
     repostsCount, source: { address } } = post;
   const [imgPreview, setImgPreview] = useState([]);
+  const [source, setSource] = useState('');
 
+  let sourceRes = useSourcePost(address);
+  useEffect(() => {
+    if (!sourceRes) {
+      sourceRes = post.source
+    }
+    if (sourceRes) {
+      setSource(sourceRes);
+    }
+  }, [post])
   const reaction = useReaction();
-  const source = useSourcePost(address);
+
+
   useEffect(() => {
     if (post?.attachments?.length > 0) {
       const imgArrSources = getImgSources(post.attachments);
       setImgPreview(imgArrSources);
     }
   }, [post]);
+
+
+  // console.log('post####CommentBlock', post);
+  // console.log('source?.hosts', source?.hosts);
+  // console.log('text', text);
+
 
   return (
     <>

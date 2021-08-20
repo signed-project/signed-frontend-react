@@ -27,6 +27,7 @@ const Post = ({
   handleEditPost,
 }) => {
 
+
   const {
     type, text, likesCount,
     repostsCount, attachments, hash, createdAt,
@@ -57,7 +58,6 @@ const Post = ({
     setComments(commentsTrees);
   }, [postMap, hash]);
 
-
   useEffect(() => {
     const imgSources = getImgArr(attachments);
     setImgPreview(imgSources);
@@ -80,6 +80,7 @@ const Post = ({
 
   const renderComments = comments.map((c, i) => {
     if (true) {
+      console.log('!!!!!!!!!!!!!!!!!comments!!!!!!!!!!!!', comments);
       // if (subscribed.includes(c.source.address) && i !== 3) {
       return (
         <CommentBlock
@@ -112,6 +113,9 @@ const Post = ({
       />
     );
   };
+
+
+  console.log('sourcePost', sourcePost);
 
   const isHideLine = comments.length < 1;
   return (

@@ -13,8 +13,8 @@ const LikeMark = ({ createdAt, name, address }) => {
                     history.push(`${routs.source}/${address}`);
                 }}>
                     <img src={icon.likeMark} alt="like mark icon" className={styles.menuIcon} />
-                    <span className={styles.name}>{name}</span>
-                    <span className={styles.descriptionLike}>Like this post</span>
+                    <span className={styles.name}>{name}  <span className={styles.descriptionLike}>Like this post</span></span>
+                  
                 </div>
                 <div>
                     <span className={styles.date}>{createdAt}</span>

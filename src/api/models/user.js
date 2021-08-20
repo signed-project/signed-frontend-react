@@ -7,7 +7,6 @@ export class User {
       subscribed: data.subscribed ? data.subscribed : [],
       source: {
         address: data.address ? data.address : "",
-        name: data.name ? data.name : "",
         avatar: data.avatar ? data.avatar : "",
         publicName: data.publicName ? data.publicName : "",
         hosts: data.hosts ? data.hosts : [],
@@ -25,7 +24,6 @@ export class User {
       source: {
         address: data.source.address ? data.source.address : "",
         updatedAt: data.source.updatedAt ? data.source.updatedAt : "",
-        name: data.source.name ? data.source.name : "",
         avatar: data.source.avatar
           ? data.source.avatar
           : {

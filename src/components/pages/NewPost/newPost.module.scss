@@ -284,3 +284,28 @@
 // .fl_col:first-child {
 //   margin-left: 0;
 // }
+
+
+.gapTitle {
+  font-family: $mainFont;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  line-height: 20px;
+  /* identical to box height, or 154% */
+  /* Daybreak Blue/6 */
+  color: $colorPrimary100;
+  margin-left: 40px;
+}
+
+.gap {
+  height: 20px;
+  margin: 5px 0 20px 18px;
+  display: flex;
+  flex-direction: fow;
+  justify-content: flex-start;
+}
+
+.gapBlockLine {
+  border-left: 1px dashed $colorGrey200;
+}

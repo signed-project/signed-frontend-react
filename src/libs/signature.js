@@ -145,12 +145,22 @@ export const isSignatureValid = ({ data, address }) => {
     const { signatures } = data;
     const jsonString = getJsonStringFromObj({ objData: data });
 
-    let isValid;
+    let isValid = false, isSignatureArrValid;
     try {
-        isValid = bitcoinMessage.verify(jsonString, address, signatures);
+        if (Array.isArray(signatures)) {
+            isSignatureArrValid = signatures.map(sign => {
+                return bitcoinMessage.verify(jsonString, sign.address, sign.signature);
+            })
+            if (!isSignatureArrValid.find(sign => sign === false)) {
+                isValid = true
+            }
+        } else {
+            isValid = bitcoinMessage.verify(jsonString, address, signatures);
+        }
     } catch (e) {
         console.warn("[isSignatureValid]", e);
         isValid = false;
     }
+
     return isValid;
 };

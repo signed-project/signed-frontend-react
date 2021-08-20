@@ -3,7 +3,7 @@ import Button from '../Button/Button';
 
 
 
-const ButtonBlock = ({ setPermission, address, id, status }) => {
+const ButtonBlock = ({ setPermission, destinationAddress, authorAddress, id, status }) => {
     const statuses = {
         rejected: { value: 'rejected', text: 'Rejected' },
         accepted: { value: 'accepted', text: 'Approved' },
@@ -13,10 +13,10 @@ const ButtonBlock = ({ setPermission, address, id, status }) => {
         return (
             <div className={styles.buttonWrapper}>
                 <Button className="clean_white grey"
-                    onClick={() => setPermission({ address: address, id, status: statuses.rejected.value })}
+                    onClick={() => setPermission({ destinationAddress, authorAddress, id, status: statuses.rejected.value })}
                 >Reject</Button>
                 <Button className="clean_white"
-                    onClick={() => setPermission({ address: address, id, status: statuses.accepted.value })}
+                    onClick={() => setPermission({ destinationAddress, authorAddress, id, status: statuses.accepted.value })}
                 >Repost</Button>
             </div>
         )

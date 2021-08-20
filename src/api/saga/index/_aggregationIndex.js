@@ -25,7 +25,15 @@ const getDataSignatureValid = ({ arr, isPost = false }) => {
             return isSignatureValid({ data: obj, address: address })
         })
         : [];
-}
+};
+
+// const getPostSignatureValid = ({ arr, isPost = false }) => {
+//     return Array.isArray(arr) ?
+//         arr.filter(obj => {
+//             return isSignatureArrValid({ data: obj, address: address })
+//         })
+//         : [];
+// };
 
 const getLatestPost = (arr) => {
     let latestPost = new Map();
@@ -37,14 +45,7 @@ const getLatestPost = (arr) => {
     return Object.fromEntries(latestPost);
 };
 
-const getPostUpdateAtFilter = (arr) => {
-    let result = [];
-    if (!Array.isArray(arr)) return result;
 
-    // arr.map(src => { })
-
-
-}
 
 
 

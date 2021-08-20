@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 
 const useSourcePost = (address) => {
     const sourceStateLatest = useSelector(state => state.source.latest);
-    const [sourceLatest, setSourceLatest] = useState([]);
+    const [sourceLatest, setSourceLatest] = useState();
     useEffect(() => {
         if (address) {
             setSourceLatest(sourceStateLatest[address])
