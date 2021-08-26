@@ -80,7 +80,6 @@ const Post = ({
 
   const renderComments = comments.map((c, i) => {
     if (true) {
-      console.log('!!!!!!!!!!!!!!!!!comments!!!!!!!!!!!!', comments);
       // if (subscribed.includes(c.source.address) && i !== 3) {
       return (
         <CommentBlock
@@ -114,8 +113,6 @@ const Post = ({
     );
   };
 
-
-  console.log('sourcePost', sourcePost);
 
   const isHideLine = comments.length < 1;
   return (
@@ -152,11 +149,11 @@ const Post = ({
                   )}
                 </div>
                 <div className={styles.bodyWrapper}>
+                  {/*  text, postHash, imgHostArr, hosts */}
                   <PostContent
-                    hostAssets={sourcePost.hosts[0]?.assets}
+                    hosts={sourcePost.hosts}
                     postHash={hash}
                     text={text}
-                    type={type}
                   // imgHostArr={imgPreview}
                   />
                   <Preview uploadImgArr={imgPreview} postHash={hash} />

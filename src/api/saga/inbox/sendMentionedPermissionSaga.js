@@ -8,8 +8,7 @@ import { Post } from '../../models/post';
 
 
 
-const publicApiHost = process.env.REACT_APP_PUBLIC_API_HOST;
-const apiHost = process.env.REACT_APP_API_HOST;
+ 
 
 const getInbox = async ({ axios, address }) => {
     try {
@@ -48,22 +47,19 @@ function* workerSendMentionedPermission(action) {
     const { address, id, status, destinationAddress, authorAddress, post } = action.payload;
     const axios = yield select((state) => state.axios.axios);
     const { wif } = yield select((state) => state.user);
-
     const postModel = new Post({ ...post, wif });
     const postWithAddSignature = postModel.addSignature;
-
-    console.log('postWithAddSignature', postWithAddSignature);
 
     const resPermission = yield call(sendPermission, { axios: axios, address, id, status, destinationAddress, authorAddress, post: postWithAddSignature });
 
     if (resPermission) {
         yield put({ type: INBOX_ACTIONS.UPDATE_INBOX_STATUS, payload: { id, status } });
-        // yield put({ type: POST_ACTIONS.ADD_POST_TO_HASH, payload: post });
-        // yield put({ type: POST_ACTIONS.ADD_POST_TO_LATEST, payload: post });
+        yield put({ type: POST_ACTIONS.ADD_POST_TO_HASH, payload: post });
+        yield put({ type: POST_ACTIONS.ADD_POST_TO_LATEST, payload: post });
 
-        // if (action.payload.type !== "reply") {
-        //     yield put({ type: ACTIONS.ADD_POST_TO_STREAM, payload: post });
-        // }
+        if (action.payload.type !== "reply") {
+            yield put({ type: POST_ACTIONS.ADD_POST_TO_STREAM, payload: post });
+        }
     }
 }
 

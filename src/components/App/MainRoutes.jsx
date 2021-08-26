@@ -14,6 +14,7 @@ import Login from '../pages/Login/Login';
 import Register from '../pages/Register/Register';
 import Source from '../pages/Source/Source';
 import { postActions } from '../../api/storage/post';
+import TagPage from '../pages/TagPage/TagPage';
 
 const MainRouts = () => {
     const dispatch = useDispatch();
@@ -21,8 +22,6 @@ const MainRouts = () => {
         dispatch(postActions.getIndex({ isRegistered: false }));
         // dispatch(inboxActions.getInbox());
     }, []);
-
-    console.log('process.env.REACT_APP_PUBLIC_API_HOST', process.env.REACT_APP_PUBLIC_API_HOST);
 
     return (
         <>
@@ -49,13 +48,18 @@ const MainRouts = () => {
                                 <Route path={routes.profile} exact
                                     component={() => <Profile theme={theme} toggleTheme={toggleTheme} />}
                                 />
+                                <Route path={routes.tagTagName} exact
+                                    component={() => <TagPage theme={theme} toggleTheme={toggleTheme} />}
+                                />
                                 <Route path={routes.notification} exact
                                     component={() => <NotificationPage theme={theme} toggleTheme={toggleTheme} />}
                                 />
                                 <Route path={routes.login} exact
-                                    component={() => <Login theme={theme} toggleTheme={toggleTheme} />} />
+                                    component={() => <Login theme={theme} toggleTheme={toggleTheme} />}
+                                />
                                 <Route path={routes.register} exact
                                     component={() => <Register theme={theme} toggleTheme={toggleTheme} />} />
+
                             </Switch>
                         </Layout>
                     )

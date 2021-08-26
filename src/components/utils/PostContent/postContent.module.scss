@@ -9,6 +9,10 @@
   justify-content: flex-start;
 }
 
+.postContentPostPage {
+  cursor: auto;
+}
+
 .postContent span {
   font-family: $mainFont;
   font-style: normal;
@@ -27,5 +31,3 @@
   border-radius: 4px;
   margin-right: 8px;
 }
-
-

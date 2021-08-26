@@ -9,13 +9,12 @@ import axios from "axios";
 import jwt from 'jsonwebtoken';
 import { User } from '../../models/user';
 
-
-const publicApiHost = process.env.REACT_APP_PUBLIC_API_HOST;
+const publicApiHost = process.env.REACT_APP_PUBLIC_API_INDEX_HOST;
 const apiHost = process.env.REACT_APP_API_HOST;
 
 const getMyIndex = async (address) => {
   try {
-    let res = await axios.get(`${publicApiHost}${publicApi.GET_INDEX}/${address}`);
+    let res = await axios.get(`${publicApiHost}/${address}`);
 
     return {
       myPosts: res.data.index,
@@ -35,31 +34,27 @@ const getSubscribedIndex = async ({ subscribed }) => {
   try {
     await Promise.all(
       subscribed.map(async (sbs) => {
-        try {
-          await Promise.all(
-            sbs.hosts.map(async hst => {
-              let res = await axios.get(`${hst.index}`);
-              console.log('res', res);
-              if (res?.data?.index) {
-                postSubscribed.push(res?.data?.index);
-              }
-              if (res?.data?.source) {
-                hostSources.push(res?.data?.source);
-              }
-              return;
-            })
-          )
+        await Promise.all(
+          sbs.hosts.map(async hst => {
+            let res = await axios.get(`${hst.index}`);
+            console.log('res', res);
+            if (res?.data?.index) {
+              postSubscribed.push(res?.data?.index);
+            }
+            if (res?.data?.source) {
+              hostSources.push(res?.data?.source);
+            }
+            return;
+          })
+        )
 
-          // let res = await axios.get(`${sbs.hosts[0].index}`);
-          // if (res?.data?.posts) {
-          //   postSubscribed.push(res?.data?.posts);
-          // }
-          // if (res?.data?.source) {
-          //   hostSources.push(res?.data?.source);
-          // }
-        } catch (e) {
-          console.warn("[getSubscribedIndex][postSubscribed.push]", e);
-        }
+        // let res = await axios.get(`${sbs.hosts[0].index}`);
+        // if (res?.data?.posts) {
+        //   postSubscribed.push(res?.data?.posts);
+        // }
+        // if (res?.data?.source) {
+        //   hostSources.push(res?.data?.source);
+        // }
       })
     );
   } catch (e) {
@@ -83,6 +78,7 @@ const getAllHostsIndex = async () => {
   let data;
   try {
     ({ data } = await axios.get(`${apiHost}${userApi.SUBSCRIBED}`));
+    console.log('data!!!!!!!!!!!!!!!!!!!!', data);
   } catch (e) {
     console.warn("[getIndexSaga][getAllHostsIndex]", e);
   }
@@ -185,6 +181,9 @@ function* workerGetIndex(action) {
       const { gatheredPosts, hostSources } = yield call(getAllHostsIndex);
       arrPosts = gatheredPosts;
       arrSources = hostSources;
+
+      console.log('arrPosts', arrPosts);
+      console.log('arrSources', arrSources);
     } catch (e) {
       arrPosts = [];
       console.warn('[getIndexSaga][getAllHostsIndex]', e)

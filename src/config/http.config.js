@@ -2,7 +2,7 @@ export const postApi = {
   SEND_POST: "/post",
 };
 export const publicApi = {
-  GET_INDEX: "/prod",
+  HOST_ASSETS: "/public/file_storage",
 };
 
 export const filesApi = {

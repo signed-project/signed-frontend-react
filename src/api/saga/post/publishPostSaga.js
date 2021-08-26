@@ -1,19 +1,15 @@
 import { takeEvery, call, select, put } from "redux-saga/effects";
-import { postApi, inboxApi } from "../../../config/http.config";
+import { postApi } from "../../../config/http.config";
 import { ACTIONS } from "../../storage/post";
 import { ACTIONS as ACTIONS_USER } from "../../storage/user";
-import axios from "axios";
 
-const sendPosts = async (axiosInst, post) => {
+
+const sendPosts = async ({ axios, data }) => {
   try {
-    const data = {
-      post: post,
-      addToIndex: true,
-    };
-    let res = await axiosInst.post(postApi.SEND_POST, data);
+    let res = await axios.post(postApi.SEND_POST, data);
     return res;
   } catch (error) {
-    console.warn("[getUserInfo][error]", error);
+    console.warn("[publish][sendPosts]", error);
   }
 };
 
@@ -28,13 +24,7 @@ const sendMentions = async ({ address, hosts, post, axios }) => {
     }));
 }
 
-const getMentions = async ({ axios }) => {
-  try {
-    let res = await axios.get(inboxApi.INBOX);
-  } catch (e) {
-    console.warn("[publishPostSaga][sendMentions]", e);
-  }
-}
+
 
 
 const mapMentions = async ({ axios, post }) => {
@@ -53,21 +43,26 @@ const mapMentions = async ({ axios, post }) => {
 
 
 export function* workerSendPost(action) {
+
+  const { post, tags } = action.payload;
+
+  console.log('post&&&&&&&&&&&&&&&&&&&&&&&&&7777777777', post);
+  console.log('tags&&&&&&&&&&&&&&&&&&&&&&&&&7777777777', tags);
+
   yield put({ type: ACTIONS_USER.SET_LOADING, payload: true });
 
   const axios = yield select((state) => state.axios.axios);
-  yield call(sendPosts, axios, action.payload);
+  yield call(sendPosts, { axios, data: { post, tags, addToIndex: true, } });
 
-  if (action.payload.mentions) {
-    yield call(mapMentions, { axios, post: action.payload });
-    yield call(getMentions, { axios, address: action.payload });
+  if (post.mentions) {
+    yield call(mapMentions, { axios, post });
   }
 
-  yield put({ type: ACTIONS.ADD_POST_TO_HASH, payload: action.payload });
-  yield put({ type: ACTIONS.ADD_POST_TO_LATEST, payload: action.payload });
+  yield put({ type: ACTIONS.ADD_POST_TO_HASH, payload: post });
+  yield put({ type: ACTIONS.ADD_POST_TO_LATEST, payload: post });
 
   if (action.payload.type !== "reply") {
-    yield put({ type: ACTIONS.ADD_POST_TO_STREAM, payload: action.payload });
+    yield put({ type: ACTIONS.ADD_POST_TO_STREAM, payload: post });
   }
   yield put({ type: ACTIONS_USER.SET_LOADING, payload: false });
 }

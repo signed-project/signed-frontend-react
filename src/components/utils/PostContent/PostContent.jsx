@@ -1,12 +1,18 @@
+
 import styles from "./postContent.module.scss";
-import { useHistory } from "react-router-dom";
+import { useHistory, NavLink, Link } from "react-router-dom";
 import routes from "../../../config/routes.config.js";
 import { getFilePath } from "../../customHooks/getImgSources";
+import Linkify from 'linkifyjs/react';
+import * as linkify from 'linkifyjs';
+import hashtag from 'linkifyjs/plugins/hashtag';
+hashtag(linkify);
 
 
-const PostContent = ({ text, postHash, imgHostArr }) => {
+
+const PostContent = ({ text, postHash, imgHostArr, hosts }) => {
   let history = useHistory();
-
+  let options;
   const title = text ? text.slice(0, 140) : '';
   const img = imgHostArr ? imgHostArr[0]?.imagePreviewUrl : '';
   const handleDirect = () => {
@@ -15,13 +21,33 @@ const PostContent = ({ text, postHash, imgHostArr }) => {
     history.push(`${routes.post}/${postHash}?post_url=${post_url}&title=${title}&img=${img}`);
   };
 
+  console.log('hosts111', hosts);
+  if (hosts) {
+    options = {
+      tagName: {
+        hashtag: () => Link
+      },
+      attributes: (href, type) => {
+        if (type == 'hashtag') {
+          return {
+            to: `/tag/${href.substring(1)}?tagApi=${hosts[0].tag}/${href.substring(1)}`
+          }
+        }
+        return '';
+      }
+    };
+  }
+
+
+
   return (
     <>
-      <div onClick={() => handleDirect()} className={styles.postContent}>
+      <div onClick={() => handleDirect()} className={`${styles.postContent} ${!postHash && styles.postContentPostPage}`}>
         {img && (
           <img src={img} alt="" className={styles.imgCommentPreview} />
         )}
-        <span>{text}</span>
+        {/* <span>{text}</span> */}
+        {hosts ? <Linkify options={options}>{text}</Linkify> : <span>{text}</span>}
       </div>
     </>
   );

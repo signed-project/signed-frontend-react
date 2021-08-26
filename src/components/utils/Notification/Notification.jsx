@@ -18,8 +18,6 @@ const Notification = ({
     status,
     post,
     handleShowMenu,
-    handleEditPost,
-    destinationAddress
 }) => {
     const {
         id, type, text, likesCount,
@@ -77,7 +75,9 @@ const Notification = ({
                                         createdAt={getReadFormat(createdAt)}
                                         name={post.source.publicName} address={post.source.address}
                                         typeTargetPost={targetPost.type}
-                                        typePost={type} />
+                                        typePost={type}
+                                        targetPostText={targetPost.text}
+                                        postHash={postHash} />
                                     <div className={styles.menuIconWrapper}
                                         onClick={() => handleShowMenu(hash)}
                                         data-hash={hash}
@@ -85,10 +85,10 @@ const Notification = ({
                                     </div>
                                 </div>
                                 <div className={styles.bodyWrapper}>
-                                    <NotificationTargetPost img={imgPreviewTargetPost.length > 0 ? imgPreviewTargetPost[0].imagePreviewUrl : ''}
+                                    {/* <NotificationTargetPost img={imgPreviewTargetPost.length > 0 ? imgPreviewTargetPost[0].imagePreviewUrl : ''}
                                         text={targetPost.text}
                                         postHash={targetPost.hash}
-                                    />
+                                    /> */}
                                     {sourceTargetPost.hosts &&
                                         <PostContent
                                             text={text}

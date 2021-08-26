@@ -39,7 +39,9 @@ const PostPage = ({ toggleTheme }) => {
     const [sliderNum, setSliderNum] = useState('');
 
     const currentPost = postMapState[hash];
+
     const source = useSourcePost(currentPost.source.address);
+
 
     useEffect(() => {
         toggleTheme(false);
@@ -124,8 +126,7 @@ const PostPage = ({ toggleTheme }) => {
                                 <div className={styles.bodyWrapper}>
                                     {/* TODO: find out name sourceAddress,are is better  hash ?  */}
                                     <PostContent
-                                        hostAssets={source.hosts[0].assets}
-                                        postHash={post.hash}
+                                        hosts={source.hosts}
                                         text={post.text} type={post.type} />
                                     <Preview uploadImgArr={imgPreview} handleFullSlider={handleFullSlider} />
                                     {post?.type === 'repost' &&

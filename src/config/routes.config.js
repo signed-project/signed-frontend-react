@@ -12,4 +12,6 @@ export default {
   passwordRecovery: '/password-recovery',
   source: '/source',
   sourceAddress: '/source/:address',
+  tag: '/tag',
+  tagTagName: '/tag/:tag',
 };

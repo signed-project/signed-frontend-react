@@ -118,7 +118,7 @@ const NewPost = ({ toggleTheme }) => {
           return comment;
         }
       });
-      
+
       setComments(commentsCheckbox);
     }
   }, [post, hashedPost]);
@@ -139,7 +139,7 @@ const NewPost = ({ toggleTheme }) => {
   }, [edit, hashedPost]);
 
 
-  console.log('comments$$$$$$$$$$$$$$$$$$$$$$$$$$@@@@@@@@@@@@@@@@@@@', comments);
+
 
   /**
    *    /*   let reader = new FileReader();
@@ -208,8 +208,6 @@ const NewPost = ({ toggleTheme }) => {
       return;
     }
     const mentions = getMentions();
-
-
     (async () => {
       // change Promise.all to Promise.allSettled
       // { status: "fulfilled", value: 1 }
@@ -244,7 +242,6 @@ const NewPost = ({ toggleTheme }) => {
         source: user.source,
         type: post.type,
         text: message,
-        tags: tagsArr,
         target: {
           postHash: post.target?.postHash ? post.target?.postHash : "",
           sourceHash: post.target?.sourceHash ? post.target?.sourceHash : "",
@@ -256,10 +253,9 @@ const NewPost = ({ toggleTheme }) => {
 
       const newPost = postInstance.newPost;
 
-      console.log('newPost222222222222222@@@@@@@@@@@@@', newPost);
       setMessage("");
       setUploadedImg([]);
-      dispatch(postActions.sendPost(newPost));
+      dispatch(postActions.sendPost({ post: newPost, tags: tagsArr }));
       history.push(routes.feed);
     })();
   };
