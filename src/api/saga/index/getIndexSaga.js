@@ -4,10 +4,10 @@ import { ACTIONS as POST_ACTIONS } from "../../storage/post";
 import { ACTIONS as USER_ACTIONS } from "../../storage/user";
 import { ACTIONS as SOURCE_ACTIONS } from "../../storage/source";
 import { getCashData } from "./_aggregationIndex";
-import { parseJson } from '../../../libs/json';
+import { parseJson } from "../../../libs/json";
 import axios from "axios";
-import jwt from 'jsonwebtoken';
-import { User } from '../../models/user';
+import jwt from "jsonwebtoken";
+import { User } from "../../models/user";
 
 const publicApiHost = process.env.REACT_APP_PUBLIC_API_INDEX_HOST;
 const apiHost = process.env.REACT_APP_API_HOST;
@@ -18,26 +18,26 @@ const getMyIndex = async (address) => {
 
     return {
       myPosts: res.data.index,
-      mySource: res.data.source
+      mySource: res.data.source,
     };
-
   } catch (error) {
     console.warn("[getMyIndex][error]", error);
-    return []
+    return [];
   }
 };
 
-
 // TODO rename
 const getSubscribedIndex = async ({ subscribed }) => {
-  let postSubscribed = [], gatheredPosts = [], hostSources = [];
+  let postSubscribed = [],
+    gatheredPosts = [],
+    hostSources = [];
   try {
     await Promise.all(
       subscribed.map(async (sbs) => {
-        await Promise.all(
-          sbs.hosts.map(async hst => {
+        await Promise.allSettled(
+          sbs.hosts.map(async (hst) => {
             let res = await axios.get(`${hst.index}`);
-            console.log('res', res);
+            console.log("res0000", res);
             if (res?.data?.index) {
               postSubscribed.push(res?.data?.index);
             }
@@ -46,7 +46,7 @@ const getSubscribedIndex = async ({ subscribed }) => {
             }
             return;
           })
-        )
+        );
 
         // let res = await axios.get(`${sbs.hosts[0].index}`);
         // if (res?.data?.posts) {
@@ -62,12 +62,11 @@ const getSubscribedIndex = async ({ subscribed }) => {
   }
 
   try {
-    postSubscribed.map(posts => {
-      gatheredPosts = [...gatheredPosts, ...posts]
+    postSubscribed.map((posts) => {
+      gatheredPosts = [...gatheredPosts, ...posts];
       return posts;
-    })
-  }
-  catch (e) {
+    });
+  } catch (e) {
     console.warn("[getSubscribedIndex][gatheredPosts]", e);
   }
 
@@ -78,17 +77,19 @@ const getAllHostsIndex = async () => {
   let data;
   try {
     ({ data } = await axios.get(`${apiHost}${userApi.SUBSCRIBED}`));
-    console.log('data!!!!!!!!!!!!!!!!!!!!', data);
+    console.log("data!!!!!!!!!!!!!!!!!!!!", data);
   } catch (e) {
     console.warn("[getIndexSaga][getAllHostsIndex]", e);
   }
 
   try {
-    const { gatheredPosts, hostSources } = await getSubscribedIndex({ subscribed: data });
+    const { gatheredPosts, hostSources } = await getSubscribedIndex({
+      subscribed: data,
+    });
     return { gatheredPosts, hostSources };
   } catch (e) {
     console.warn("[getIndexSaga][getAllHostsIndex][getSubscribedIndex]", e);
-    return []
+    return [];
   }
 };
 
@@ -96,7 +97,7 @@ const getUser = async ({ axios, token }) => {
   let res;
   try {
     const data = {
-      token
+      token,
     };
     res = await axios.post(userApi.GET_USER, data);
   } catch (error) {
@@ -106,11 +107,16 @@ const getUser = async ({ axios, token }) => {
   return res;
 };
 
-
 function* workerGetIndex(action) {
   const { isRegistered } = action.payload;
-  let gatheredPosts = [], arrPosts, arrSources, myPosts,
-    userSubscribedSources, hostSources, mySource, user;
+  let gatheredPosts = [],
+    arrPosts,
+    arrSources,
+    myPosts,
+    userSubscribedSources,
+    hostSources,
+    mySource,
+    user;
   const accessToken = sessionStorage.getItem("accessToken");
   const wif = sessionStorage.getItem("wif");
   const accessTokenDecoded = jwt.decode(accessToken);
@@ -118,8 +124,15 @@ function* workerGetIndex(action) {
   user = yield select((state) => state.user);
 
   if (!isRegistered) {
-    if (wif && accessToken && accessTokenDecoded.exp * 1000 > new Date().getTime()) {
-      const resUserData = yield call(getUser, { axios: axios, token: accessToken });
+    if (
+      wif &&
+      accessToken &&
+      accessTokenDecoded.exp * 1000 > new Date().getTime()
+    ) {
+      const resUserData = yield call(getUser, {
+        axios: axios,
+        token: accessToken,
+      });
 
       if (resUserData) {
         const { data } = resUserData;
@@ -131,7 +144,7 @@ function* workerGetIndex(action) {
           subscribed: data.subscribed,
           source: {
             ...source,
-          }
+          },
         };
         userModel.setUserData = userObject;
         user = userModel.newUser;
@@ -142,28 +155,27 @@ function* workerGetIndex(action) {
 
   if (user.isAuth) {
     try {
-      userSubscribedSources = user.subscribed.map(sub => {
-
-        console.log('sub.source', sub);
+      userSubscribedSources = user.subscribed.map((sub) => {
+        console.log("sub.source", sub);
         return sub;
         // return parseJson(sub.source);
       });
     } catch (e) {
       userSubscribedSources = [];
-      console.warn('[getIndexSaga][data.subscribed.map]', e);
+      console.warn("[getIndexSaga][data.subscribed.map]", e);
     }
 
     try {
       ({ myPosts, mySource } = yield call(getMyIndex, user.source.address));
-
-    }
-    catch (e) {
+    } catch (e) {
       myPosts = [];
       console.warn("[workerGetIndex][getMyIndex]", e);
     }
     try {
       if (Array.isArray(user.subscribed)) {
-        ({ gatheredPosts, hostSources } = yield call(getSubscribedIndex, { subscribed: user.subscribed }));
+        ({ gatheredPosts, hostSources } = yield call(getSubscribedIndex, {
+          subscribed: user.subscribed,
+        }));
       }
     } catch (e) {
       console.warn("[workerGetIndex][getSubscribed]", e);
@@ -173,24 +185,28 @@ function* workerGetIndex(action) {
       arrSources = [...userSubscribedSources, ...hostSources, mySource];
       arrPosts = [...myPosts, ...gatheredPosts];
     } catch (e) {
-      console.warn('[getIndexSaga][Destructuring myPost, hostPost, hostsSources]', e)
+      console.warn(
+        "[getIndexSaga][Destructuring myPost, hostPost, hostsSources]",
+        e
+      );
     }
-
   } else {
     try {
       const { gatheredPosts, hostSources } = yield call(getAllHostsIndex);
       arrPosts = gatheredPosts;
       arrSources = hostSources;
 
-      console.log('arrPosts', arrPosts);
-      console.log('arrSources', arrSources);
+      console.log("arrPosts", arrPosts);
+      console.log("arrSources", arrSources);
     } catch (e) {
       arrPosts = [];
-      console.warn('[getIndexSaga][getAllHostsIndex]', e)
+      console.warn("[getIndexSaga][getAllHostsIndex]", e);
     }
   }
 
-  if (!arrPosts) { return }
+  if (!arrPosts) {
+    return;
+  }
   const index = yield call(getCashData, { arrPosts, arrSources });
   yield put({ type: POST_ACTIONS.SET_POST_STREAM, payload: index.stream });
   yield put({ type: POST_ACTIONS.SET_POST_HASH, payload: index.hashedPost });
@@ -204,7 +220,6 @@ function* workerGetIndex(action) {
     payload: index.latestSource,
   });
 }
-
 
 function* watchGetIndex() {
   yield takeEvery(POST_ACTIONS.GET_INDEX, workerGetIndex);

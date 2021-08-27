@@ -23,7 +23,6 @@ import Preview from "../../utils/Preview/Preview";
 import Slider from "../../utils/Slider/Slider";
 import getImgArr from "../../customHooks/getImgSources";
 
-
 // TOTO: this component too mach long need to split up it!
 /**
  * @tutorial function getCommentStoryKnots(params) {} compute comments story, get only one branch, only Knots, doesn't get all comments
@@ -138,9 +137,6 @@ const NewPost = ({ toggleTheme }) => {
     }
   }, [edit, hashedPost]);
 
-
-
-
   /**
    *    /*   let reader = new FileReader();
          reader.onloadend = () => {
@@ -158,16 +154,14 @@ const NewPost = ({ toggleTheme }) => {
    *  growth  height when add text in one row
    */
 
-
-
-
   const getTags = (text) => {
-    let textLowerCase = text.toLowerCase();
-    if (textLowerCase.indexOf("#") === -1) {
-      return '';
+    // let textLowerCase = text.toLowerCase();
+
+    if (text.indexOf("#") === -1) {
+      return "";
     }
     const tagArr = [];
-    const dirtyTextArr = textLowerCase.split('#');
+    const dirtyTextArr = text.split("#");
     const resMap = dirtyTextArr.map((tagDirtyArr, i) => {
       if (i > 0) {
         const tagItem = tagDirtyArr.split(" ")[0];
@@ -197,7 +191,6 @@ const NewPost = ({ toggleTheme }) => {
     });
     return mentions;
   };
-
 
   const handlePublicPost = () => {
     if (isLoading) {
@@ -233,7 +226,6 @@ const NewPost = ({ toggleTheme }) => {
           }
         })
       );
-
 
       const tagsArr = getTags(message);
 
@@ -312,8 +304,7 @@ const NewPost = ({ toggleTheme }) => {
           onChange={handleMention}
         />
       );
-    }
-    else if (post.source.address === user.source.address) {
+    } else if (post.source.address === user.source.address) {
       return (
         <div key={i} className={style.gap}>
           <div className={style.gapBlockLine}></div>
@@ -384,51 +375,49 @@ const NewPost = ({ toggleTheme }) => {
       </div>
 
       <div className={style.bodyBlock}>
-        {
-          replyingPage ? (
-            <div className={style.replyingBlock}>
-              <ReplyingUser
-                avatar={comments[0].source.avatar}
-                name={comments[0].source.publicName}
-                checked={comments[0].isMention}
-                checkBoxName={comments[0].hash}
-                onChange={handleMention}
-              />
-              {comments.length > 1 && (
-                <div className={style.otherCheckBox}>
-                  <span>Others in this conversation</span>
-                  <div className={style.checkbox_wrapper}>
-                    <Checkbox
-                      onChange={handleOthersMention}
-                      isChecked={others}
-                      name="others"
-                    />
-                  </div>
+        {replyingPage ? (
+          <div className={style.replyingBlock}>
+            <ReplyingUser
+              avatar={comments[0].source.avatar}
+              name={comments[0].source.publicName}
+              checked={comments[0].isMention}
+              checkBoxName={comments[0].hash}
+              onChange={handleMention}
+            />
+            {comments.length > 1 && (
+              <div className={style.otherCheckBox}>
+                <span>Others in this conversation</span>
+                <div className={style.checkbox_wrapper}>
+                  <Checkbox
+                    onChange={handleOthersMention}
+                    isChecked={others}
+                    name="others"
+                  />
                 </div>
-              )}
-              {renderReplyingUser}
-            </div>
-          ) : (
-            <div className={style.newPostPage}>
-              {post.type === "reply" && comments && <div>{renderComments}</div>}
-              <div className={style.messageBlock}>
-                <Avatar avatar={user.source.avatar} />
-                <textarea
-                  value={message}
-                  onChange={handleChangeMessage}
-                  placeholder="Enter text..."
-                  className={style.textarea}
-                ></textarea>
               </div>
-
-              {post?.type === "repost" && (
-                <div className={style.repostBlockWrapper}>
-                  <RepostBlock postHash={post.target?.postHash} />
-                </div>
-              )}
+            )}
+            {renderReplyingUser}
+          </div>
+        ) : (
+          <div className={style.newPostPage}>
+            {post.type === "reply" && comments && <div>{renderComments}</div>}
+            <div className={style.messageBlock}>
+              <Avatar avatar={user.source.avatar} />
+              <textarea
+                value={message}
+                onChange={handleChangeMessage}
+                placeholder="Enter text..."
+                className={style.textarea}
+              ></textarea>
             </div>
-          )
-        }
+
+            {post?.type === "repost" && (
+              <div className={style.repostBlockWrapper}>
+                <RepostBlock postHash={post.target?.postHash} />
+              </div>
+            )}
+          </div>
+        )}
         {uploadedImg.length > 0 && !replyingPage && (
           <div className={style.wrapperPreview}>
             <Preview
