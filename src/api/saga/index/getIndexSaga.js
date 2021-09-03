@@ -37,7 +37,6 @@ const getSubscribedIndex = async ({ subscribed }) => {
         await Promise.allSettled(
           sbs.hosts.map(async (hst) => {
             let res = await axios.get(`${hst.index}`);
-            console.log("res0000", res);
             if (res?.data?.index) {
               postSubscribed.push(res?.data?.index);
             }
@@ -77,7 +76,6 @@ const getAllHostsIndex = async () => {
   let data;
   try {
     ({ data } = await axios.get(`${apiHost}${userApi.SUBSCRIBED}`));
-    console.log("data!!!!!!!!!!!!!!!!!!!!", data);
   } catch (e) {
     console.warn("[getIndexSaga][getAllHostsIndex]", e);
   }
@@ -195,9 +193,6 @@ function* workerGetIndex(action) {
       const { gatheredPosts, hostSources } = yield call(getAllHostsIndex);
       arrPosts = gatheredPosts;
       arrSources = hostSources;
-
-      console.log("arrPosts", arrPosts);
-      console.log("arrSources", arrSources);
     } catch (e) {
       arrPosts = [];
       console.warn("[getIndexSaga][getAllHostsIndex]", e);

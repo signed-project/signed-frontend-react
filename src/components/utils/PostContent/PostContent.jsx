@@ -29,7 +29,6 @@ const PostContent = ({ text, postHash, imgHostArr, hosts, address }) => {
       },
       attributes: (href, type) => {
         if (type == "hashtag") {
-          console.log("888");
           return {
             to: `/tag/${address}/${href.substring(1)}`,
           };

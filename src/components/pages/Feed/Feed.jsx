@@ -23,8 +23,6 @@ const Feed = ({ toggleTheme }) => {
     setOpenMenuHash(hash);
   };
 
-  console.log('1111111111111stream1111111111111', stream);
-
   const isShowMenu = (hash) => {
     return hash === openMenuHash ? true : false;
   };

@@ -111,9 +111,6 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
 
   const isHideLine = comments.length < 1;
 
-  console.log("sourcePost111", sourcePost);
-  console.log("address11212121212", address);
-
   return (
     <>
       {" "}
@@ -125,9 +122,8 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
                 <div className={styles.avatarBlock}>
                   <Avatar avatar={sourcePost.avatar} address={address} />
                   <div
-                    className={`${styles.verticalLine}  ${
-                      comments.length === 0 && styles.verticalLineRemove
-                    }`}
+                    className={`${styles.verticalLine}  ${comments.length === 0 && styles.verticalLineRemove
+                      }`}
                   ></div>
                 </div>
                 <div className={styles.postMain}>
@@ -165,7 +161,7 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
                       postHash={hash}
                       text={text}
                       address={address}
-                      // imgHostArr={imgPreview}
+                    // imgHostArr={imgPreview}
                     />
                     <Preview uploadImgArr={imgPreview} postHash={hash} />
                   </div>
@@ -190,9 +186,8 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
                       address={address}
                     />
                     <div
-                      className={`${styles.verticalLine}    ${
-                        type === "like" && styles.verticalLineRemove
-                      }`}
+                      className={`${styles.verticalLine}    ${type === "like" && styles.verticalLineRemove
+                        }`}
                     ></div>
                   </div>
                   <div className={styles.postBody}>
@@ -228,9 +223,8 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
                 <div className={styles.avatarBlock}>
                   <Avatar avatar={sourcePost.avatar} address={address} />
                   <div
-                    className={`${styles.verticalLine}  ${
-                      comments.length === 0 && styles.verticalLineRemove
-                    }`}
+                    className={`${styles.verticalLine}  ${comments.length === 0 && styles.verticalLineRemove
+                      }`}
                   ></div>
                 </div>
                 <div className={styles.postMain}>
