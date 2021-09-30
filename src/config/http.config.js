@@ -35,3 +35,6 @@ export const inboxApi = {
   INBOX: '/inbox',
   INBOX_UPDATE_STATE: '/inbox/update',
 };
+
+
+  // inbox statuses new/rejected/accepted

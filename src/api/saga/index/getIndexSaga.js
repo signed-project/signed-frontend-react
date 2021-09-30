@@ -32,7 +32,7 @@ const getSubscribedIndex = async ({ subscribed }) => {
     gatheredPosts = [],
     hostSources = [];
   try {
-    await Promise.all(
+    await Promise.allSettled(
       subscribed.map(async (sbs) => {
         await Promise.allSettled(
           sbs.hosts.map(async (hst) => {
@@ -76,6 +76,7 @@ const getAllHostsIndex = async () => {
   let data;
   try {
     ({ data } = await axios.get(`${apiHost}${userApi.SUBSCRIBED}`));
+    console.log('[getAllHostsIndex][]data', data);
   } catch (e) {
     console.warn("[getIndexSaga][getAllHostsIndex]", e);
   }

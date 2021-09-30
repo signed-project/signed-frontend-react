@@ -2,6 +2,7 @@ import { takeEvery, call, select, put } from "redux-saga/effects";
 import { inboxApi, userApi, publicApi } from "../../../config/http.config";
 import { ACTIONS as ACTIONS_USER } from "../../storage/user";
 import { ACTIONS as ACTIONS_POST } from "../../storage/post";
+import { ACTIONS as ACTIONS_AXIOS } from "../../storage/axios";
 import srp from 'secure-remote-password/client';
 import { getRegisterUserData } from '../../../libs/signature.js';
 import { User } from '../../models/user';
@@ -33,7 +34,10 @@ export function* workerRegister(action) {
     const axios = yield select((state) => state.axios.axios);
     const { userName, publicName, password, history, avatar } = action.payload;
     const srpData = getDataSrp({ userName: userName, password: password });
+
     const userBitcoinData = getRegisterUserData({ password: action.payload.password, wifString: action.payload.wif });
+    console.log('{ password: action.payload.password, wifString: action.payload.wif }', { password: action.payload.password, wifString: action.payload.wif });
+
 
     const hosts = [
         {
@@ -66,6 +70,15 @@ export function* workerRegister(action) {
     if (userResponse?.data) {
         sessionStorage.setItem('accessToken', userResponse.data.accessToken);
         sessionStorage.setItem('wif', userBitcoinData.wif);
+        if (typeof userResponse.data.accessToken === "string") {
+            console.log('ACTIONS_AXIOS.SET_USER', ACTIONS_AXIOS.SET_TOKEN);
+            console.log('userResponse.data.accessToken', userResponse.data.accessToken);
+            yield put({ type: ACTIONS_AXIOS.SET_TOKEN, payload: userResponse.data.accessToken });
+        }
+        else {
+            console.warn("[registerSaga][workerRegister][userResponse.data.accessToken not a string]");
+            return;
+        }
         const userObject = {
             ...user,
             subscribed: userResponse.data.subscribed,

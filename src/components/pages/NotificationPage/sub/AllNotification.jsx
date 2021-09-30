@@ -11,8 +11,6 @@ const AllNotification = ({ inbox }) => {
     .slice()
     .filter((data) => data?.post?.source?.address !== source?.address)
     .map((notification, i) => {
-      console.log("notification!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", notification);
-      // const p = notification.post;
 
       const p = notification.post;
       const status = notification.status;
@@ -22,9 +20,9 @@ const AllNotification = ({ inbox }) => {
           status={status}
           post={p}
           key={i}
-          // handleShowMenu={handleShowMenu}
-          // isShowMenu={isShowMenu}
-          // handleEditPost={handleEditPost}
+        // handleShowMenu={handleShowMenu}
+        // isShowMenu={isShowMenu}
+        // handleEditPost={handleEditPost}
         />
       );
     });

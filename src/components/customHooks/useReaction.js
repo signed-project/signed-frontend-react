@@ -42,7 +42,7 @@ const useReaction = () => {
         const post = new PostModel(data);
         const likePost = post.newPost;
 
-        dispatch(postActions.sendPost(likePost));
+        dispatch(postActions.sendPost({ post: likePost }));
         history.push(`${routes.feed}`);
     };
 

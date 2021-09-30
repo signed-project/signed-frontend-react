@@ -40,7 +40,6 @@ import * as   bitcoinMessage from 'bitcoinjs-message';
 
 
 
-
     console.log(crypto.SHA256("password").toString());
     const crypto = sha256('nonce' + 'message');
 

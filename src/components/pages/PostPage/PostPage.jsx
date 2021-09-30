@@ -38,8 +38,10 @@ const PostPage = ({ toggleTheme }) => {
   const [sliderNum, setSliderNum] = useState("");
 
   const currentPost = postMapState[hash];
-
   const source = useSourcePost(currentPost.source.address);
+  console.log('currentPost', currentPost);
+  console.log('source[currentPost]', source);
+  console.log('source[currentPost.source.address]', currentPost.source.address);
 
   useEffect(() => {
     toggleTheme(false);
@@ -70,6 +72,8 @@ const PostPage = ({ toggleTheme }) => {
       setShowSlider(true);
     }
   }, [slider]);
+
+  console.log('post[post]', post);
 
   const renderComments = comments
     .slice()
@@ -115,10 +119,9 @@ const PostPage = ({ toggleTheme }) => {
               {/*  ${styles.verticalLineRemove} */}
               <div
                 className={`${styles.verticalLine} 
-                             ${
-                               comments.length === 0 &&
-                               styles.verticalLineRemove
-                             }`}
+                             ${comments.length === 0 &&
+                  styles.verticalLineRemove
+                  }`}
               ></div>
             </div>
             <div className={styles.postMain}>

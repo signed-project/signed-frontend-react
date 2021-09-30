@@ -15,7 +15,6 @@ const sortPostUpdateAt = (arr) => {
         });
         return isExist;
     };
-
     if (arr)
         arr.map(post => {
             if (arr.filter(p => post.id === p.id).length > 1
@@ -55,8 +54,8 @@ const getPostStream = (arr) => {
             return false;
         }
     });
-    return sortPostUpdateAt(newArr);
+    return newArr;
+    // return sortPostUpdateAt(newArr);
 }
-
 
 export default getPostStream;

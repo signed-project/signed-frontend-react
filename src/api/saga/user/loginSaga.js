@@ -78,7 +78,6 @@ function* workerLogin(action) {
         yield put({ type: ACTIONS_USER.SET_LOGIN_ERROR, payload: loginError });
     }
 
-
     try {
         if (isProof) {
             const sendLoginData = {
@@ -92,7 +91,7 @@ function* workerLogin(action) {
                 sessionStorage.setItem('accessToken', data?.token);
                 sessionStorage.setItem('wif', wifEncode);
 
-                 const source = parseJson(data.source);
+                const source = parseJson(data.source);
                 // const source = data.source;
                 const userModel = new User({});
                 const userObject = {

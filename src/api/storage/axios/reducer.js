@@ -11,7 +11,6 @@ const initialState = {
     baseURL: API_HOST,
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      // Authorization: "Bearer " + 'token',
       // 'Accept': 'application/json',
     },
   }),
@@ -23,7 +22,7 @@ const generateAxiosInstance = (token) => {
     baseURL: API_HOST,
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      Authorization: "Bearer " + token,
+      'Authorization': `Bearer ${token}`,
     }
   });
   return instance;

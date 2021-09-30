@@ -8,7 +8,7 @@ import { Post } from '../../models/post';
 
 
 
- 
+
 
 const getInbox = async ({ axios, address }) => {
     try {
@@ -23,10 +23,9 @@ const getInbox = async ({ axios, address }) => {
     }
 }
 
-const sendPermission = async ({ axios, address, id, status, destinationAddress, authorAddress, post }) => {
+const sendPermission = async ({ axios, id, status, destinationAddress, authorAddress, post }) => {
     let data;
     const requestData = {
-        address,
         id,
         status,
         destinationAddress,
@@ -44,13 +43,13 @@ const sendPermission = async ({ axios, address, id, status, destinationAddress, 
 }
 
 function* workerSendMentionedPermission(action) {
-    const { address, id, status, destinationAddress, authorAddress, post } = action.payload;
+    const { id, status, destinationAddress, authorAddress, post } = action.payload;
     const axios = yield select((state) => state.axios.axios);
     const { wif } = yield select((state) => state.user);
     const postModel = new Post({ ...post, wif });
     const postWithAddSignature = postModel.addSignature;
 
-    const resPermission = yield call(sendPermission, { axios: axios, address, id, status, destinationAddress, authorAddress, post: postWithAddSignature });
+    const resPermission = yield call(sendPermission, { axios: axios, id, status, destinationAddress, authorAddress, post: postWithAddSignature });
 
     if (resPermission) {
         yield put({ type: INBOX_ACTIONS.UPDATE_INBOX_STATUS, payload: { id, status } });

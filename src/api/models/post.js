@@ -79,7 +79,6 @@ export class Post {
         if (Array.isArray(this.data.signatures)) {
             this.data.signatures.push(signatureItem)
         }
-        console.log('this.data.signatures.push&&&&&&&&&&', this.data.signatures);
         return {
             ...post,
             signatures: this.data.signatures,

@@ -3,7 +3,6 @@ import { postApi } from "../../../config/http.config";
 import { ACTIONS } from "../../storage/post";
 import { ACTIONS as ACTIONS_USER } from "../../storage/user";
 
-
 const sendPosts = async ({ axios, data }) => {
   try {
     let res = await axios.post(postApi.SEND_POST, data);
@@ -17,14 +16,14 @@ const sendMentions = async ({ address, hosts, post, axios }) => {
   const result = await Promise.any(
     hosts.map(async (host) => {
       try {
+        // how better host.inbox or common way
+        // !!!!!
         return await axios.post(host.inbox, { post, mentionedUserAddress: address });
       } catch (e) {
         console.warn("[publishPostSaga][sendMentions]", e);
       }
     }));
 }
-
-
 
 
 const mapMentions = async ({ axios, post }) => {
@@ -46,15 +45,12 @@ export function* workerSendPost(action) {
 
   const { post, tags } = action.payload;
 
-  console.log('post&&&&&&&&&&&&&&&&&&&&&&&&&7777777777', post);
-  console.log('tags&&&&&&&&&&&&&&&&&&&&&&&&&7777777777', tags);
-
   yield put({ type: ACTIONS_USER.SET_LOADING, payload: true });
 
   const axios = yield select((state) => state.axios.axios);
   yield call(sendPosts, { axios, data: { post, tags, addToIndex: true, } });
 
-  if (post.mentions) {
+  if (post?.mentions) {
     yield call(mapMentions, { axios, post });
   }
 

@@ -113,7 +113,6 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
 
   return (
     <>
-      {" "}
       {sourcePost && (
         <div className={styles.post}>
           {type === "post" && sourcePost.hosts && (

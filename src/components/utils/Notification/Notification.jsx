@@ -37,8 +37,6 @@ const Notification = ({
     const { source: userSource } = useSelector((state) => state.user);
     const inbox = useSelector((state) => state.inbox.inbox);
 
-    console.log('#####################inbox', inbox);
-
     useEffect(() => {
         const imgSources = getImgArr(targetPost.attachments);
         setImgPreviewTargetPost(imgSources);
