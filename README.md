@@ -39,7 +39,8 @@
 
 ## media
 * contentType - mime
-* hash
+* hash - optional, either hash or url
+* url - optional, either hash or url
 * width - optional
 * height - optional
 * thumbnail - media, optional
