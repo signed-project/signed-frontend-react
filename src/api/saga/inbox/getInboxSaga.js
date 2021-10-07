@@ -50,7 +50,7 @@ function* workerGetInbox() {
 }
 
 function* watchGetInbox() {
-    yield takeEvery(INBOX_ACTIONS.GET_INBOX, workerGetInbox);
+    // yield takeEvery(INBOX_ACTIONS.GET_INBOX, workerGetInbox);
 }
 
 

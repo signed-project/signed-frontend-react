@@ -5,11 +5,24 @@ import styles from "./avatar.module.scss";
 import routs from "../../../config/routes.config";
 import { getFilePath } from "../../customHooks/getImgSources";
 import userPlaceHolder from "../../../assets/svg/icon/userPlaceHolder.jpg";
+import { robotHash } from '../../../config/http.config.js';
 
 const Avatar = ({ imgSmall = false, imgBig = false, isDirect = true, avatar, srcData, address }) => {
   const history = useHistory();
 
-  const [src, setSrc] = useState(userPlaceHolder);
+  const [src, setSrc] = useState('');
+  // const [src, setSrc] = useState(userPlaceHolder);
+
+  useEffect(() => {
+
+    const urlRobotHashImg = robotHash({ hash: address })
+    const image = new Image();
+    image.src = urlRobotHashImg;
+    image.onload = function () {
+      setSrc(urlRobotHashImg);
+    };
+  }, [address])
+
   useEffect(() => {
     let srcImg
     if (avatar && avatar.hash && avatar.contentType) {

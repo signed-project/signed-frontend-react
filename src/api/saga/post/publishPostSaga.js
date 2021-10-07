@@ -5,7 +5,10 @@ import { ACTIONS as ACTIONS_USER } from "../../storage/user";
 
 const sendPosts = async ({ axios, data }) => {
   try {
+    console.log('axios[000000000000000]', axios);
+    console.log('data[000000000000000]', data);
     let res = await axios.post(postApi.SEND_POST, data);
+    console.log('res[res000000011111]', res);
     return res;
   } catch (error) {
     console.warn("[publish][sendPosts]", error);
@@ -46,6 +49,8 @@ export function* workerSendPost(action) {
   const { post, tags } = action.payload;
 
   yield put({ type: ACTIONS_USER.SET_LOADING, payload: true });
+
+  console.log('workerSendPost[workerSendPost]', post);
 
   const axios = yield select((state) => state.axios.axios);
   yield call(sendPosts, { axios, data: { post, tags, addToIndex: true, } });

@@ -54,8 +54,8 @@ const getPostStream = (arr) => {
             return false;
         }
     });
-    return newArr;
-    // return sortPostUpdateAt(newArr);
+    // return newArr;
+    return sortPostUpdateAt(newArr);
 }
 
 export default getPostStream;

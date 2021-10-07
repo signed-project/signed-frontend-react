@@ -31,7 +31,10 @@ const getImgArr = (arrImg) => {
   }
   return arrImg.map((file) => {
     const fileExtension = mime.getExtension(file.contentType);
-    const imagePreviewUrl = getFilePath({ hash: file.hash, fileExtension })
+    let imagePreviewUrl = getFilePath({ hash: file.hash, fileExtension });
+    if (file.url) {
+      imagePreviewUrl = file.url
+    }
     return {
       ...file,
       imagePreviewUrl: imagePreviewUrl

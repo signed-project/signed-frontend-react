@@ -8,7 +8,7 @@ import routes from '../../../config/routes.config';
 import wif from 'wif';
 import bip38 from 'bip38';
 import { parseJson } from '../../../libs/json';
-
+import { ACTIONS as ACTIONS_AXIOS } from "../../storage/axios";
 
 const sendUserData = async (axios, data) => {
     try {
@@ -104,6 +104,7 @@ function* workerLogin(action) {
                 };
                 userModel.setUserData = userObject;
                 const user = userModel.newUser;
+                yield put({ type: ACTIONS_AXIOS.SET_TOKEN, payload: data?.token });
                 yield put({ type: ACTIONS_USER.SET_USER, payload: user });
                 yield put({ type: ACTIONS_POST.GET_INDEX, payload: { isRegistered: true } });
                 action.payload.history.push(routes.feed);

@@ -94,7 +94,6 @@ const getLatestSource = (arr) => {
 
 export const getCashData = ({ arrPosts, arrSources }) => {
     const postHashValid = getDataHashValid(arrPosts);
-    console.warn('SOURCE');
     const sourcesHashValid = getDataHashValid(arrSources);
 
     const postSignatureValid = getDataSignatureValid({ arr: postHashValid, isPost: true });

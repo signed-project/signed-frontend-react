@@ -17,9 +17,10 @@ const PostContent = ({ text, postHash, imgHostArr, hosts, address }) => {
       return;
     }
     const post_url = getFilePath({ hash: postHash, fileExtension: "json" });
-    history.push(
-      `${routes.post}/${postHash}?post_url=${post_url}&title=${title}&img=${img}`
-    );
+    const path = `${routes.post}/${postHash}?post_url=${post_url}&title=${title}&img=${img}`;
+    // window.open(path);
+    // `${routes.post}/${postHash}?post_url=${post_url}&title=${title}&img=${img}`
+    history.push(path);
   };
 
   if (hosts) {
@@ -42,9 +43,8 @@ const PostContent = ({ text, postHash, imgHostArr, hosts, address }) => {
     <>
       <div
         onClick={() => handleDirect()}
-        className={`${styles.postContent} ${
-          !postHash && styles.postContentPostPage
-        }`}
+        className={`${styles.postContent} ${!postHash && styles.postContentPostPage
+          }`}
       >
         {img && <img src={img} alt="" className={styles.imgCommentPreview} />}
         {/* <span>{text}</span> */}

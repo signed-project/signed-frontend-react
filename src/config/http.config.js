@@ -36,5 +36,24 @@ export const inboxApi = {
   INBOX_UPDATE_STATE: '/inbox/update',
 };
 
+// 24, 36, 72
+export const robotHash = ({ hash, size }) => {
+  return `https://robohash.org/${hash}.png`
+}
+
+// url: 'https://robohash.org/asfdsdf.png?size=200x200',
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   // inbox statuses new/rejected/accepted

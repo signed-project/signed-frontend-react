@@ -11,13 +11,13 @@ const initialState = {
     baseURL: API_HOST,
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      // 'Accept': 'application/json',
     },
   }),
 };
 
+// 'Accept': 'application/json',
 
-const generateAxiosInstance = (token) => {
+const generatePrivateAxiosInstance = ({ token }) => {
   const instance = axios.create({
     baseURL: API_HOST,
     headers: {
@@ -33,7 +33,7 @@ const axiosReducer = (state = initialState, action) => {
     case ACTIONS.SET_TOKEN:
       return {
         ...state,
-        axios: generateAxiosInstance(action.payload),
+        axios: generatePrivateAxiosInstance({ token: action.payload }),
       };
     default:
       return state;

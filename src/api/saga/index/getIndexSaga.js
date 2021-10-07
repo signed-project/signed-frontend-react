@@ -17,8 +17,8 @@ const getMyIndex = async (address) => {
     let res = await axios.get(`${publicApiHost}/${address}`);
 
     return {
-      myPosts: res.data.index,
-      mySource: res.data.source,
+      myPosts: res.data?.index?.recentPosts,
+      mySource: res.data?.source,
     };
   } catch (error) {
     console.warn("[getMyIndex][error]", error);
@@ -37,8 +37,9 @@ const getSubscribedIndex = async ({ subscribed }) => {
         await Promise.allSettled(
           sbs.hosts.map(async (hst) => {
             let res = await axios.get(`${hst.index}`);
-            if (res?.data?.index) {
-              postSubscribed.push(res?.data?.index);
+
+            if (res?.data?.index?.recentPosts) {
+              postSubscribed.push(res?.data?.index?.recentPosts);
             }
             if (res?.data?.source) {
               hostSources.push(res?.data?.source);

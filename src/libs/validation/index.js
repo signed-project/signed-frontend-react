@@ -70,9 +70,11 @@ const mediaSchema = {
     contentType: { type: "string" },
     hash: { type: "string" },
     width: { type: "string" },
-    height: { type: "string" }
+    height: { type: "string" },
+    // thumbnail: { type: mediaSchema },
+    url: { type: 'string' }
   },
-  required: ["contentType", "hash"],
+  // required: ["contentType", "hash"],
   additionalProperties: true,
 }
 
