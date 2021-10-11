@@ -46,7 +46,7 @@ function* workerGetInbox() {
     const axios = yield select((state) => state.axios.axios);
     const user = yield select((state) => state.user)
     // const inbox = yield call(setInterval, () => getInbox({ axios: axios, address: user.source.address }), 10000);
-    const runner = yield call(callSelfOnTimer, { axios: axios, address: user.source.address });
+    yield call(callSelfOnTimer, { axios: axios, address: user.source.address });
 }
 
 function* watchGetInbox() {

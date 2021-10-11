@@ -6,9 +6,10 @@ import { reducer as sourceReducer } from "../storage/source";
 import { reducer as inboxReducer } from "../storage/inbox";
 import { composeWithDevTools } from "redux-devtools-extension";
 import logger from "redux-logger";
-
+import { createStateSyncMiddleware, initMessageListener } from "redux-state-sync";
 import createSagaMiddleware from "redux-saga";
 import saga from "../saga";
+
 
 const reducer = combineReducers({
     axios: axiosReducer,
@@ -24,11 +25,14 @@ let store;
 if (process.env.NODE_ENV === "development") {
     store = createStore(
         reducer,
-        composeWithDevTools(applyMiddleware(logger, sagaMiddleware))
+        // reducer,
+        composeWithDevTools(applyMiddleware(createStateSyncMiddleware(), logger, sagaMiddleware))
     );
 } else {
-    store = createStore(reducer, applyMiddleware(sagaMiddleware));
+    store = createStore(reducer, applyMiddleware(createStateSyncMiddleware(), sagaMiddleware));
 }
 sagaMiddleware.run(saga);
+initMessageListener(store);
+
 
 export default store;

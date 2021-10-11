@@ -24,6 +24,7 @@ import useSourcePost from "../../customHooks/useSourcePost";
 const PostPage = ({ toggleTheme }) => {
   const user = useSelector((state) => state.user);
   const postMapState = useSelector((state) => state.post.hashed);
+  const sourceStateLatest = useSelector(state => state.source.latest);
   const location = useLocation();
   const { slider } = queryString.parse(location.search);
 
@@ -36,12 +37,24 @@ const PostPage = ({ toggleTheme }) => {
   const [imgPreview, setImgPreview] = useState([]);
   const [showSlider, setShowSlider] = useState(false);
   const [sliderNum, setSliderNum] = useState("");
+  const [currentPost, setCurrentPost] = useState("");
+  const [source, setSource] = useState("");
 
-  const currentPost = postMapState[hash];
-  const source = useSourcePost(currentPost.source.address);
-  console.log('currentPost', currentPost);
-  console.log('source[currentPost]', source);
-  console.log('source[currentPost.source.address]', currentPost.source.address);
+
+  // console.log('currentPost', currentPost);
+  // console.log('source[currentPost]', source);
+  // console.log('source[currentPost.source.address]', currentPost.source.address);
+  // const source = useSourcePost(currentPost.source.address);
+
+  useEffect(() => {
+    const post = postMapState[hash];
+    setCurrentPost(post);
+    if (currentPost?.source?.address) {
+      const sourceData = sourceStateLatest[currentPost.source.address];
+      setSource(sourceData);
+    }
+  }, [postMapState, sourceStateLatest])
+
 
   useEffect(() => {
     toggleTheme(false);

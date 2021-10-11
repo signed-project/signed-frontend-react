@@ -18,9 +18,9 @@ const PostContent = ({ text, postHash, imgHostArr, hosts, address }) => {
     }
     const post_url = getFilePath({ hash: postHash, fileExtension: "json" });
     const path = `${routes.post}/${postHash}?post_url=${post_url}&title=${title}&img=${img}`;
-    // window.open(path);
+    window.open(path);
     // `${routes.post}/${postHash}?post_url=${post_url}&title=${title}&img=${img}`
-    history.push(path);
+    // history.push(path);
   };
 
   if (hosts) {
