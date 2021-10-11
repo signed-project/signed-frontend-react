@@ -15,24 +15,46 @@ const apiHost = process.env.REACT_APP_API_HOST;
 let postCollecting = [];
 let sourceCollecting = [];
 
-const getMyIndex = async (address) => {
-  try {
-    let res = await axios.get(`${publicApiHost}/${address}`);
+// const getMyIndex = async (address) => {
+//   try {
+//     let res = await axios.get(`${publicApiHost}/${address}`);
 
-    return {
-      myPosts: res.data?.index?.recentPosts,
-      mySource: res.data?.source,
-    };
-  } catch (error) {
-    console.warn("[getMyIndex][error]", error);
-    return [];
-  }
-};
+//     return {
+//       myPosts: res.data?.index?.recentPosts,
+//       mySource: res.data?.source,
+//     };
+//   } catch (error) {
+//     console.warn("[getMyIndex][error]", error);
+//     return [];
+//   }
+// };
 
 // TODO rename
+
+function* callSelfOnTimer({ axios, address }) {
+
+  const index = yield call(getCashData, { arrPosts, arrSources });
+  yield put({ type: POST_ACTIONS.SET_POST_STREAM, payload: index.stream });
+  yield put({ type: POST_ACTIONS.SET_POST_HASH, payload: index.hashedPost });
+  yield put({ type: POST_ACTIONS.SET_POST_LATEST, payload: index.latestPost });
+  yield put({
+    type: SOURCE_ACTIONS.SET_SOURCE_LATEST,
+    payload: index.latestSource,
+  });
+  yield put({
+    type: SOURCE_ACTIONS.SET_SOURCE_HASH,
+    payload: index.latestSource,
+  });
+
+
+  if (address) {
+    yield delay(2000000);
+    yield call(callSelfOnTimer, { axios, address });
+  }
+}
+
 const getSubscribedIndex = async ({ subscribed }) => {
-  let postSubscribed = [],
-    gatheredPosts = [],
+  let gatheredPosts = [],
     hostSources = [];
   try {
     await Promise.allSettled(
@@ -40,9 +62,9 @@ const getSubscribedIndex = async ({ subscribed }) => {
         await Promise.allSettled(
           sbs.hosts.map(async (hst) => {
             let res = await axios.get(`${hst.index}`);
-
             if (res?.data?.index?.recentPosts) {
-              postSubscribed.push(res?.data?.index?.recentPosts);
+              const indexPosts = Array.isArray(res?.data?.index?.recentPosts) ? res?.data?.index?.recentPosts : [];
+              gatheredPosts.push(...indexPosts);
             }
             if (res?.data?.source) {
               hostSources.push(res?.data?.source);
@@ -50,28 +72,14 @@ const getSubscribedIndex = async ({ subscribed }) => {
             return;
           })
         );
-
-        // let res = await axios.get(`${sbs.hosts[0].index}`);
-        // if (res?.data?.posts) {
-        //   postSubscribed.push(res?.data?.posts);
-        // }
-        // if (res?.data?.source) {
-        //   hostSources.push(res?.data?.source);
-        // }
       })
     );
+
+
   } catch (e) {
     console.warn("[getSubscribedIndex][Promise.all]", e);
   }
 
-  try {
-    postSubscribed.map((posts) => {
-      gatheredPosts = [...gatheredPosts, ...posts];
-      return posts;
-    });
-  } catch (e) {
-    console.warn("[getSubscribedIndex][gatheredPosts]", e);
-  }
   return { gatheredPosts, hostSources };
 };
 
@@ -121,27 +129,7 @@ function accessDataFrontStorage() {
   }
 };
 
-function* callSelfOnTimer({ axios, address }) {
 
-  const index = yield call(getCashData, { arrPosts, arrSources });
-  yield put({ type: POST_ACTIONS.SET_POST_STREAM, payload: index.stream });
-  yield put({ type: POST_ACTIONS.SET_POST_HASH, payload: index.hashedPost });
-  yield put({ type: POST_ACTIONS.SET_POST_LATEST, payload: index.latestPost });
-  yield put({
-    type: SOURCE_ACTIONS.SET_SOURCE_LATEST,
-    payload: index.latestSource,
-  });
-  yield put({
-    type: SOURCE_ACTIONS.SET_SOURCE_HASH,
-    payload: index.latestSource,
-  });
-
-
-  if (address) {
-    yield delay(2000000);
-    yield call(callSelfOnTimer, { axios, address });
-  }
-}
 
 function* workerGetIndex(action) {
   const { isRegistered } = action.payload;
@@ -189,27 +177,27 @@ function* workerGetIndex(action) {
   }
 
   if (user.isAuth) {
-    try {
-      userSubscribedSources = user.subscribed.map((sub) => {
-        console.log("sub.source", sub);
-        return sub;
-      });
-    } catch (e) {
-      userSubscribedSources = [];
-      console.warn("[getIndexSaga][data.subscribed.map]", e);
-    }
+    // try {
+    //   userSubscribedSources = user.subscribed.map((sub) => {
+    //     console.log("sub.source", sub);
+    //     return sub;
+    //   });
+    // } catch (e) {
+    //   userSubscribedSources = [];
+    //   console.warn("[getIndexSaga][data.subscribed.map]", e);
+    // }
 
-    try {
-      ({ myPosts, mySource } = yield call(getMyIndex, user.source.address));
-    } catch (e) {
-      myPosts = [];
-      console.warn("[workerGetIndex][getMyIndex]", e);
-    }
+    // try {
+    //   ({ myPosts, mySource } = yield call(getMyIndex, user.source.address));
+    // } catch (e) {
+    //   myPosts = [];
+    //   console.warn("[workerGetIndex][getMyIndex]", e);
+    // }
 
     try {
       if (Array.isArray(user.subscribed)) {
         ({ gatheredPosts, hostSources } = yield call(getSubscribedIndex, {
-          subscribed: user.subscribed,
+          subscribed: [...user.subscribed, user.source],
         }));
       }
     } catch (e) {
@@ -217,8 +205,8 @@ function* workerGetIndex(action) {
     }
 
     try {
-      arrSources = [...userSubscribedSources, ...hostSources, mySource];
-      arrPosts = [...myPosts, ...gatheredPosts];
+      arrSources = [...hostSources];
+      arrPosts = [...gatheredPosts];
     } catch (e) {
       console.warn(
         "[getIndexSaga][Destructuring myPost, hostPost, hostsSources]",
@@ -239,6 +227,10 @@ function* workerGetIndex(action) {
   if (!arrPosts) {
     return;
   }
+
+
+
+
   const index = yield call(getCashData, { arrPosts, arrSources });
   yield put({ type: POST_ACTIONS.SET_POST_STREAM, payload: index.stream });
   yield put({ type: POST_ACTIONS.SET_POST_HASH, payload: index.hashedPost });
