@@ -9,12 +9,14 @@ export const ACTIONS = {
   SET_POST_HASH: "POST::SET_POST_HASH",
   SET_POST_LATEST: "POST::SET_POST_LATEST",
   GET_INDEX: "POST::GET_INDEX",
+  ADD_TEMP_POST_ITEM: 'POST::ADD_TEMP_POST_ITEM',
 };
 
 const initialState = {
   stream: [],
   latest: {},
   hashed: {},
+  tempPosts: []
 };
 
 const postReducer = (state = initialState, action) => {
@@ -62,6 +64,14 @@ const postReducer = (state = initialState, action) => {
           ...state.latest,
           [compositeKey]: action.payload,
         },
+      };
+    case ACTIONS.ADD_TEMP_POST_ITEM:
+      return {
+        ...state,
+        tempPosts: [
+          ...state.tempPosts,
+          ...action.payload,
+        ],
       };
     default:
       return state;

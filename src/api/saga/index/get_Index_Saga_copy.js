@@ -29,6 +29,31 @@ const getMyIndex = async (address) => {
   }
 };
 
+
+function* callSelfOnTimer({ axios, address }) {
+  let notificationsList;
+  const { data } = yield call(getInbox, { axios: axios, address: address });
+
+  console.log('data-----------data', data);
+
+  if (!Array.isArray(data)) return;
+  try {
+    notificationsList = data.map(notification => {
+      notification.post = parseJson(notification.postJson);
+      return notification;
+    });
+  } catch (error) {
+    console.warn("[getInboxSaga][callSelfOnTimer]", error);
+  }
+
+  notificationsList = notificationsList.sort((a, b) => b.post.createdAt - a.post.createdAt)
+  yield put({ type: INBOX_ACTIONS.SET_INBOX, payload: notificationsList });
+  if (address) {
+    yield delay(2000000);
+    yield call(callSelfOnTimer, { axios, address });
+  }
+}
+
 // TODO rename
 const getSubscribedIndex = async ({ subscribed }) => {
   let postSubscribed = [],
@@ -50,14 +75,6 @@ const getSubscribedIndex = async ({ subscribed }) => {
             return;
           })
         );
-
-        // let res = await axios.get(`${sbs.hosts[0].index}`);
-        // if (res?.data?.posts) {
-        //   postSubscribed.push(res?.data?.posts);
-        // }
-        // if (res?.data?.source) {
-        //   hostSources.push(res?.data?.source);
-        // }
       })
     );
   } catch (e) {

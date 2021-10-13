@@ -1,11 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+
 import { BrowserRouter } from 'react-router-dom';
 import LayoutProvider from '../layout/LayoutProvider';
 import MainRouts from './MainRoutes';
 import { layoutType } from '../layout/LayoutProvider.jsx';
 
 const App = () => {
+
   const [themeVal, setThemeVal] = useState(layoutType.showLayout);
+  useEffect(() => {
+
+  }, [])
 
   const state = {
     theme: themeVal,

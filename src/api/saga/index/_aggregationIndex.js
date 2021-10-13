@@ -93,10 +93,13 @@ const getLatestSource = (arr) => {
 }
 
 export const getCashData = ({ arrPosts, arrSources }) => {
+
     const postHashValid = getDataHashValid(arrPosts);
+    console.log('postHashValid[getCashData]', postHashValid.length);
     const sourcesHashValid = getDataHashValid(arrSources);
 
     const postSignatureValid = getDataSignatureValid({ arr: postHashValid, isPost: true });
+    console.log('postSignatureValid', postSignatureValid.length);
     const sourcesSignatureValid = getDataSignatureValid({ arr: sourcesHashValid, isPost: false });
 
     return {

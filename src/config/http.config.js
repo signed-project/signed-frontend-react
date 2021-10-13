@@ -17,7 +17,7 @@ export const filesApi = {
   // GET_FILE_PATH: "https://kuku-staging.s3-us-west-2.amazonaws.com/public/static/img/",
   GET_FILE_PATH: "https://kuku-staging.s3-us-west-2.amazonaws.com/public/file_storage/",
 };
-
+ 
 export const userApi = {
   REGISTER: '/register',
   CHECK_LOGIN: '/register/checkLogin',

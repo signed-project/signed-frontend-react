@@ -26,13 +26,14 @@ if (process.env.NODE_ENV === "development") {
     store = createStore(
         reducer,
         // reducer,
-        composeWithDevTools(applyMiddleware(createStateSyncMiddleware(), logger, sagaMiddleware))
+        composeWithDevTools(applyMiddleware(logger, sagaMiddleware))
+        // composeWithDevTools(applyMiddleware(createStateSyncMiddleware(), logger, sagaMiddleware))
     );
 } else {
-    store = createStore(reducer, applyMiddleware(createStateSyncMiddleware(), sagaMiddleware));
+    store = createStore(reducer, applyMiddleware(sagaMiddleware));
 }
 sagaMiddleware.run(saga);
-initMessageListener(store);
+// initMessageListener(store);
 
 
 export default store;

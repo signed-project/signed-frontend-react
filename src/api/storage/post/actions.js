@@ -26,4 +26,9 @@ export const getIndex = (payload) => ({
   payload,
 });
 
- 
+export const addTempPost = (payload) => ({
+  type: ACTIONS.ADD_TEMP_POST_ITEM,
+  payload,
+});
+
+
