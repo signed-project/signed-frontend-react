@@ -1,49 +1,27 @@
-import React from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import Layout from '../layout/Layout';
 import LayoutProvider from '../layout/LayoutProvider';
 import Feed from '../pages/Feed/Feed';
-import SingUp from '../pages/Register/Register';
 import Search from '../pages/Search/Search';
 import NewPost from '../pages/NewPost/NewPost';
 import PostPage from '../pages/PostPage/PostPage';
 import Profile from '../pages/Profile/Profile';
-import Notification from '../pages/Notification/Notification';
-// import PageNotFound from '../pages/PageNotFound/PageNotFound';
+import NotificationPage from '../pages/NotificationPage/NotificationPage';
 import routes from '../../config/routes.config';
 import Login from '../pages/Login/Login';
 import Register from '../pages/Register/Register';
-import jwt from 'jsonwebtoken';
-import { userAction } from '../../api/storage/user';
+import Source from '../pages/Source/Source';
+import { postActions } from '../../api/storage/post';
+import TagPage from '../pages/TagPage/TagPage';
 
 const MainRouts = () => {
-    const user = useSelector((state) => state.user);
-
-    const checkAuth = () => {
-        const accessToken = localStorage.getItem("accessToken");
-        const refreshToken = localStorage.getItem("refreshToken");
-        const accessTokenDecoded = jwt.decode(accessToken);
-        const refreshTokenDecoded = jwt.decode(refreshToken);
-        console.log('accessTokenDecoded', accessTokenDecoded);
-        if (!user.isAuth) {
-            if (accessToken && refreshToken) {
-                if (accessTokenDecoded.exp * 1000 < new Date().getTime()) {
-                    if (refreshTokenDecoded.exp < new Date().getTime() / 1000) {
-                        //     direct to sign up 
-                    }
-                    else {
-                        // get new token and get user
-                    }
-                }
-                // send to get user data from server without get new token
-            }
-            else {
-                // sing up/in
-            }
-        }
-    };
-
+    const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(postActions.getIndex({ isRegistered: false }));
+        // dispatch(inboxActions.getInbox());
+    }, []);
 
     return (
         <>
@@ -64,24 +42,30 @@ const MainRouts = () => {
                                 <Route path={routes.postHash}
                                     component={() => <PostPage theme={theme} toggleTheme={toggleTheme} />}
                                 />
+                                <Route path={routes.sourceAddress}
+                                    component={() => <Source theme={theme} toggleTheme={toggleTheme} />}
+                                />
                                 <Route path={routes.profile} exact
                                     component={() => <Profile theme={theme} toggleTheme={toggleTheme} />}
                                 />
+                                <Route path={routes.tagTagName} exact
+                                    component={() => <TagPage theme={theme} toggleTheme={toggleTheme} />}
+                                />
                                 <Route path={routes.notification} exact
-                                    component={() => <Notification theme={theme} toggleTheme={toggleTheme} />}
+                                    component={() => <NotificationPage theme={theme} toggleTheme={toggleTheme} />}
                                 />
                                 <Route path={routes.login} exact
-                                    component={() => <Login theme={theme} toggleTheme={toggleTheme} />} />
+                                    component={() => <Login theme={theme} toggleTheme={toggleTheme} />}
+                                />
                                 <Route path={routes.register} exact
                                     component={() => <Register theme={theme} toggleTheme={toggleTheme} />} />
-                                {checkAuth()}
+
                             </Switch>
                         </Layout>
                     )
                 }
                 }
             </LayoutProvider.Consumer>
-
         </>
     )
 }

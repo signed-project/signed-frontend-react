@@ -1,8 +1,0 @@
-{
-  "type": "object",
-  "properties": {
-    "one": { "type": "string" },
-    "neone": { "type": "string" }
-  },
-  "required": ["neone"]
-}

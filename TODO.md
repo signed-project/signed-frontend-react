@@ -32,3 +32,17 @@
 
 
 - [ ] refactor edit and  component `Post` if possible
+
+- [ ] save only refresh token on localStorage, so assess save on sessionStorage
+ 
+- [ ] split post store/reducer to post and index or like this
+ 
+- [ ] add test unit !!!!!! !!!!!!!!!! !!!!!!!!!!
+
+- [ ] use async when for example sent mentions !!!!!! !!!!!!!!!! !!!!!!!!!!
+ 
+
+  <!-- "homepage": "/public", -->
+<!--     "output": {
+    "path": "public/"
+  }, -->

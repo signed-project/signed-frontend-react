@@ -7,164 +7,236 @@ import Input from '../../utils/Input/Input';
 import Button from '../../utils/Button/Button';
 import routes from '../../../config/routes.config';
 import { userApi } from '../../../config/http.config';
-import srp from 'secure-remote-password/client';
-import { getRegisterUserData } from '../../../libs/signature.js';
 import { userActions } from '../../../api/storage/user';
+import { isWifFormat } from '../../../libs/signature';
+import ChangeUserPic from '../../utils/ChangeUserPic/ChangeUserPic';
+import userPlaceHolder from "../../../assets/svg/icon/userPlaceHolder.jpg"
+import useFiles from "../../customHooks/useFiles";
+
 
 const Register = ({ toggleTheme }) => {
-
-  const history = useHistory();
-  const dispatch = useDispatch();
-  useEffect(() => {
-    toggleTheme(false);
-  }, [toggleTheme]);
-
+  const typeMap = {
+    createAddress: 'createAddress',
+    haveAddress: 'haveAddress'
+  };
+  const avatarInitial = {
+    file: '',
+    imageSrc: userPlaceHolder,
+  }
   const initialForm = {
-    login: { value: '', warning: '' },
+    wif: { value: '', warning: '' },
+    userName: { value: '', warning: '' },
+    publicName: { value: '', warning: '' },
     password: { value: '', warning: '' },
     passwordRepeat: { value: '', warning: '' }
   }
 
+  const history = useHistory();
+  const dispatch = useDispatch();
+
   const axios = useSelector(state => state.axios.axios);
-  const [form, setForm] = useState(initialForm)
+  const isLoginProcess = useSelector(state => state.user.isLoginProcess);
+
+  const [form, setForm] = useState(initialForm);
+  const [chooseTypeRegistration, setChooseTypeRegistration] = useState(true);
+  const [typeRegistration, setTypeRegistration] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [avatar, setAvatar] = useState(avatarInitial);
+
+  const { uploadFile } = useFiles();
+
+  useEffect(() => {
+    toggleTheme(false);
+  }, [toggleTheme]);
+
+  useEffect(() => {
+    setIsLoading(isLoginProcess);
+    if (isLoginProcess) {
+      setChooseTypeRegistration(false)
+    };
+  }, [isLoginProcess]);
+
+
+
+  useEffect(() => {
+    if (typeRegistration === typeMap.createAddress) {
+      setForm(prev => {
+        delete prev.wif;
+        return ({
+          ...prev
+        })
+      })
+    }
+
+  }, [typeRegistration]);
 
   const handleForm = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-    setForm(prev => {
-      const itemForm = form[name];
-      return {
-        ...prev,
-        [name]: {
-          ...itemForm,
-          value: value
-        }
-      }
-    })
+    const newForm = JSON.parse(JSON.stringify(form));
+    newForm[name].warning = '';
 
-  }
-
-  const getSendDataSrp = ({ login, password }) => {
-    const salt = srp.generateSalt();
-    const privateKey = srp.derivePrivateKey(salt, login, password)
-    const verifier = srp.deriveVerifier(privateKey);
-    return {
-      salt,
-      privateKey,
-      verifier
+    if (name === 'password') {
+      newForm['passwordRepeat'].warning = '';
     }
+    newForm[name].value = value;
+    setForm(newForm);
   }
 
+  const handleChangeFile = (e) => {
+    let file = e.target.files[0];
+    const filePrev = {
+      file: file,
+      imageSrc: URL.createObjectURL(file),
+    };
+    setAvatar(filePrev);
+  };
 
-  const checkIsLoginFree = async ({ login }) => {
+  const checkIsLoginFree = async ({ userName }) => {
     try {
-      let { data } = await axios.post(userApi.IS_FREE_LOGIN, { login: login });
-      console.log('data', data);
-      const isFreeLogin = data?.isFreeLogin
+      let { data } = await axios.post(userApi.CHECK_LOGIN, { userName });
+      const isFreeLogin = data?.isFreeLogin;
       let warningMessage = '';
       if (isFreeLogin === false) {
-        warningMessage = 'The login you entered is already in use'
+        warningMessage = 'The login you entered is already in use';
+        dispatch(userActions.setLoading(false));
       }
       setForm((prev) => {
-        const loginItem = form['login'];
+        const userNameItem = form['userName'];
         return ({
           ...prev,
-          login: { ...loginItem, warning: warningMessage }
+          userName: { ...userNameItem, warning: warningMessage }
         })
-      })
+      });
       return isFreeLogin;
     } catch (e) {
       console.warn('[checkIsLoginFree]', e);
+      return false
     }
   }
 
-  const setNewUser = ({ address, wif, name, updatedAt, refreshToken, accessToken }) => {
 
-    const data = {
-      isAuth: true,
-      source: {
-        address: address,
-        name: name,
-        updatedAt: updatedAt,
-        avatar: {
-          contentType: "image/jpeg",
-          hash: "f433c21fe3c6c7475f7be0017294547e93d7fcd44617f62bf7f369a13b48e764"
-        },
-        hosts: [{
-          fileStores: ['jdjjdj'],
-          index: "url"
-        }],
-        signatures: 'fjdjd343243jkdfjdk343',
-        hash: 'fjdjd343243jkdfjdk343',
-      },
-      wfi: wif,
-    };
-    console.log('data---------------[setNewUser]', data);
-    console.log('data---------------[userActions.setUser(data)]', userActions.setUser(data));
-    dispatch(userActions.setUser(data));
-    localStorage.setItem('refreshToken', refreshToken);
-    localStorage.setItem('accessToken', accessToken);
-    history.push(routes.feed)
+  const formValidate = () => {
+    let isValid = true;
+    let formCopy = JSON.parse(JSON.stringify(form));
+
+    if (form.password.value !== form.passwordRepeat.value) {
+      isValid = false;
+      formCopy.passwordRepeat.warning = 'Password mismatch';
+    }
+
+    if (form?.wif?.value && !isWifFormat({ wif: form?.wif?.value })) {
+      isValid = false;
+      formCopy.wif.warning = 'Wrong format';
+    }
+
+    Object.keys(formCopy).map(fieldName => {
+      if (formCopy[fieldName].value.length === 0) {
+        formCopy[fieldName].warning = 'Field this field';
+        isValid = false
+      }
+    })
+
+    setForm(formCopy);
+    return isValid;
   }
 
+  const formClear = () => {
+    if (form.wif.value) {
+      setForm(initialForm);
+    }
+    else {
+      delete initialForm.wif
+      setForm(initialForm);
+    }
+  }
 
   const handleSendForm = async () => {
-    //  TODO : validation form
-    const srpData = getSendDataSrp({ login: form.login.value, password: form.password.value });
-    const userBitcoinData = getRegisterUserData({ password: form.password.value });
-    const data = {
-      address: userBitcoinData.address,
-      wif: userBitcoinData.address,
-      salt: srpData.salt,
-      privateKey: srpData.privateKey,
-      verifier: srpData.verifier,
-      login: form.login.value
+    let uploadAvatarData;
+    if (!formValidate()) {
+      return;
+    }
+    dispatch(userActions.setLoading(true));
+
+    if (!await checkIsLoginFree({ userName: form.userName.value })) {
+      dispatch(userActions.setLoading(false));
+      return;
     }
 
-    try {
-      const isLoginFree = await checkIsLoginFree({ login: data.login });
-      if (isLoginFree === false) {
-        return;
+    if (avatar.file) {
+      try {
+        ({ data: uploadAvatarData } = await uploadFile(avatar.file));
+      } catch (e) {
+        console.warn("[handleSendForm][uploadFile]", e);
       }
-    } catch (e) {
-      console.warn('[handleSendForm----1]', e);
     }
 
-    try {
-      let res = await axios.post(userApi.REGISTER, data);
-      if (res.data) {
-        // TODO add validation
-        setNewUser({
-          address: res.data.address,
-          name: res.data.name,
-          wif: res.data.wif,
-          accessToken: res.data.accessToken,
-          refreshToken: res.data.refreshToken
-        });
+    let data = {};
+    Object.keys(form).map(field => {
+      if (field !== 'passwordRepeat') {
+        data[field] = form[field].value;
       }
-      return res;
-    } catch (e) {
-      console.warn('[handleSendForm----2]', e)
+    });
+
+    data = { ...data, history, avatar: uploadAvatarData ? uploadAvatarData : '' };
+
+    dispatch(userActions.sendRegisterData(data));
+    // formClear();
+  }
+
+  const handleChooseRegistration = ({ type }) => {
+    if (!Object.keys(typeMap).includes(type)) {
+      return
+    }
+    setChooseTypeRegistration(false);
+    switch (type) {
+      case typeMap.createAddress: {
+        setTypeRegistration(type)
+      }
+      case typeMap.haveAddress: {
+        setTypeRegistration(type)
+      }
+      default: return
     }
   }
+
 
 
   return (
     <>
       <RegisterHeader />
       <div className={styles.page}>
-        <div>
-          <h3 className={styles.title}>Register</h3>
-        </div>
-        <div className={styles.formWrapper}>
-          <Input title={'Nickname'} name={'login'} warning={form.login.warning} type={'text'} handleChange={handleForm} value={form.login.value} />
-          <Input title={'Password'} type={'password'} name={'password'} handleChange={handleForm} value={form.password.value} />
-          <Input title={'Repeat password'} type={'password'} name={'passwordRepeat'} handleChange={handleForm} value={form.passwordRepeat.value} />
-          <NavLink to={routes.passwordRecovery} className={styles.passForgot}> Forgot your password?</NavLink>
-          <Button className="primary" onClick={() => { handleSendForm() }}>Register</Button>
+        <div className={styles.bodyBlock}>
+          <div className={styles.title}>
+            <h3>Register</h3>
+          </div>
+
+          {chooseTypeRegistration ?
+            <>
+              <div className={styles.chooseButtonWrapper}>
+                <Button className="primary fontSizeBig" onClick={() => handleChooseRegistration({ type: 'createAddress' })}>Create new Bitcoin address</Button>
+              </div>
+              <div className={styles.chooseButtonWrapper}>
+                <Button className="clean fontSizeBig" onClick={() => handleChooseRegistration({ type: 'haveAddress' })}>I have Bitcoin address</Button>
+              </div>
+
+            </>
+            : <form>
+              <div className={styles.formWrapper}>
+                <ChangeUserPic srcData={avatar.imageSrc} handleChangeFile={handleChangeFile} />
+                {typeRegistration === typeMap.haveAddress && <Input title={'Enter Bitcoin address'} name={'wif'} warning={form.wif.warning} type={'text'} handleChange={handleForm} value={form.wif.value} />}
+                <Input title={'Public name'} name={'publicName'} warning={form.publicName.warning} type={'text'} handleChange={handleForm} value={form.publicName.value} />
+                <Input title={'User name'} name={'userName'} warning={form.userName.warning} type={'text'} handleChange={handleForm} value={form.userName.value} />
+                <Input title={'Password'} type={'password'} warning={form.password.warning} name={'password'} handleChange={handleForm} value={form.password.value} />
+                <Input title={'Repeat password'} type={'password'} warning={form.passwordRepeat.warning} name={'passwordRepeat'} handleChange={handleForm} value={form.passwordRepeat.value} />
+                <NavLink to={routes.passwordRecovery} className={styles.passForgot}> Forgot your password?</NavLink>
+                <Button className="primary fontSizeBig" isLoading={isLoading} onClick={() => { handleSendForm() }}>Register</Button>
+              </div>
+            </form>
+          }
         </div>
         <div className={styles.footer}>
-          <NavLink to={routes.login} className={styles.passForgot}> I don't have an account</NavLink>
+          <NavLink to={routes.login} className={styles.passForgot}> I have an account</NavLink>
         </div>
       </div>
     </>

@@ -1,58 +1,30 @@
 export const ACTIONS = {
   SET_USER: 'USER::SET_USER',
   GET_USER: 'USER::GET_USER',
-  GET_USER_DATA: 'USER::GET_USER_DATA',
-  GET_PAIRS_TOKEN: 'USER::GET_PAIRS_TOKEN',
-
-
-  SET_TOKEN: 'USER::SET_TOKEN',
-  LOGIN: 'USER::LOGIN',
-  LOGIN_SUCCESS: 'USER::LOGIN_SUCCESS',
-  LOGIN_ERROR: 'USER::LOGIN_ERROR',
-  LOGOUT: 'USER::LOGOUT',
-  OPEN_MODAL_403: 'USER::OPEN_MODAL_403',
+  UPDATE_USER: 'USER::UPDATE_USER',
+  SEND_REGISTER_DATA: 'USER::SEND_REGISTER_DATA',
+  SEND_LOGIN_DATA: 'USER::SEND_LOGIN_DATA',
+  SET_LOGIN_ERROR: 'USER::SET_LOGIN_ERROR',
+  SET_LOADING: 'USER::SET_LOADING',
 };
 
-
-
-
 const initialState = {
+  // isAuth: true,
   isAuth: false,
-  source: {
-    address: "19FRhaywUUpvMxUMSxgpTvc44Bj9VFd3BT",
-    name: "Name1",
-    updatedAt: 1312321321,
-    avatar: {
-      contentType: "image/jpeg",
-      hash: "f433c21fe3c6c7475f7be0017294547e93d7fcd44617f62bf7f369a13b48e764"
-    },
-    hosts: [{
-      fileStores: ['jdjjdj'],
-      index: "url"
-    }],
-    signatures: 'fjdjd343243jkdfjdk343',
-    hash: 'fjdjd343243jkdfjdk343',
-  },
-  subscribed: ['19FRhaywUUpvMxUMSxgpTvc44Bj9VFd3BT'],
-  wfi: 'Kx7DQ8DtiTaEYut5f85jAG3bhPNJUB6neER3yQaVgueeLDT7Ax8e',
-  token: 'fjkajslfdas434jk234j2k4j23l4j2l34j2l3'
+  subscribed: [],
+  wif: '',
+  token: '',
+  loginError: '',
+  isLoginProcess: false,
+  test: '',
+  source: {},
 };
 
 const userReducer = (state = initialState, action) => {
   switch (action.type) {
     case ACTIONS.SET_USER:
-      console.log('action.payload&&&&&&&&&&&&&&&&&', action.payload);
       return {
         ...action.payload
-      };
-    case ACTIONS.GET_USER:
-      return {
-        ...state,
-        USER: action.payload
-      };
-    case ACTIONS.LOGOUT:
-      return {
-        ...initialState,
       };
     case ACTIONS.SET_TOKEN:
       return {
@@ -60,8 +32,16 @@ const userReducer = (state = initialState, action) => {
         token: action.token,
         isAuth: true,
       };
-
-
+    case ACTIONS.SET_LOGIN_ERROR:
+      return {
+        ...state,
+        loginError: action.payload
+      };
+    case ACTIONS.SET_LOADING:
+      return {
+        ...state,
+        isLoginProcess: action.payload
+      };
     default:
       return state;
   }

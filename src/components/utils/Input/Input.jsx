@@ -5,11 +5,10 @@ const Input = ({ title, type, value, handleChange, name, placeholder, warning })
 
     return (
         <div className={styles.formItem}>
-            <p className={styles.title}>
-                {title}
-
-                {warning && <span className={styles.title_warning}>{warning}</span>}
-            </p>
+            <div className={styles.title}>
+                <span>{title}</span>
+                <span>{warning && <span className={styles.title_warning}>{warning}</span>}</span>
+            </div>
 
             <input
                 type="text"

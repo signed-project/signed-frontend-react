@@ -13,13 +13,13 @@ const Reaction = ({ likesCount, repostsCount, handleLike, handleRepost, handleRe
         <>
             <div className={styles.reaction}>
                 <div className={styles.reactionHistory}>
-                    <div className={styles.like}>
+                    <div className={styles.reactionHistoryItem}>
                         <img src={icon.like} alt="" className={styles.reactionHistoryIcon} />
                         <span className={styles.reactionHistoryData}>
                             {isNotNull(likesCount)}
                         </span>
                     </div>
-                    <div className={styles.like}>
+                    <div className={styles.reactionHistoryItem}>
                         <img src={icon.comment} alt="" className={styles.reactionHistoryIcon} />
                         <span className={styles.reactionHistoryData}>
                             {isNotNull(repostsCount)}
@@ -27,9 +27,9 @@ const Reaction = ({ likesCount, repostsCount, handleLike, handleRepost, handleRe
                     </div>
                 </div>
                 <div className={styles.actionReaction}>
-                    <Button className='clean_white' onClick={() => handleLike()}>Like</Button>
-                    <Button className='clean_white' onClick={() => handleReply()}>Reply</Button>
-                    <Button className='clean_white' onClick={() => handleRepost()}>Repost</Button>
+                    <div><Button className='clean_white' onClick={() => handleLike()}>Like</Button></div>
+                    <div> <Button className='clean_white' onClick={() => handleReply()}>Reply</Button></div>
+                    <div><Button className='clean_white' onClick={() => handleRepost()}>Repost</Button></div>
                 </div>
             </div>
 

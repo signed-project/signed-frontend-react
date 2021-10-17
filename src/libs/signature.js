@@ -40,7 +40,6 @@ import * as   bitcoinMessage from 'bitcoinjs-message';
 
 
 
-
     console.log(crypto.SHA256("password").toString());
     const crypto = sha256('nonce' + 'message');
 
@@ -55,47 +54,63 @@ import * as   bitcoinMessage from 'bitcoinjs-message';
 
  */
 
-
-
-export const getRegisterUserData = ({ password }) => {
-    const keyPair = bitcoin.ECPair.makeRandom();
-    const wifString = keyPair.toWIF();
-    const decoded = wif.decode(wifString);
-    const encryptedKey = bip38.encrypt(decoded.privateKey, decoded.compressed, password);
+export const getRegisterUserData = ({ password, wifString = '' }) => {
+    let wifBeforeEncrypt, keyPair;
+    if (!wifString) {
+        keyPair = bitcoin.ECPair.makeRandom();
+        wifBeforeEncrypt = keyPair.toWIF();
+    }
+    else {
+        wifBeforeEncrypt = wifString;
+        // KwLpfcbeeM1hPALhcGYz8gzVhu8a3YthLGWsgGicegQX2v1BVHzx
+        // Kx7DQ8DtiTaEYut5f85jAG3bhPNJUB6neER3yQaVgueeLDT7Ax8e
+        // keyPair = bitcoin.ECPair.fromWIF('6PYM2e1ruFg7j2um7JXnmuLry14YeqbHWjz65xCtUrk2XjkSTjmqcpyFPa');
+        keyPair = bitcoin.ECPair.fromWIF(wifBeforeEncrypt);
+    }
+    const decoded = wif.decode(wifBeforeEncrypt);
+    const encryptedWif = bip38.encrypt(decoded.privateKey, decoded.compressed, password);
     const { address } = bitcoin.payments.p2pkh({ pubkey: keyPair.publicKey });
     return {
-        wif: encryptedKey,
+        encryptedWif,
+        wif: wifBeforeEncrypt,
         address: address,
     };
-
-
 }
 
-
-export const getJsonStringFromObj = (postObj) => {
-    let jsonPost;
+export const isWifFormat = ({ wif }) => {
     try {
-        let postCopy = JSON.parse(JSON.stringify(postObj));
-        if (postCopy.hash || postCopy.signatures) {
-            delete postCopy.hash;
-            delete postCopy.signatures;
-        }
-        postCopy = sortKeys(postCopy);
-        jsonPost = stringify(postCopy);
+        const pair = bitcoin.ECPair.fromWIF(wif);
+        return !!pair;
     } catch (e) {
-        // console.error('[signature][getJsonStringFromObj]', e);
-        jsonPost = ''
+        console.warn('[isWifFormat]', e);
+        return false;
     }
-    return jsonPost;
 }
 
-export const getSignatures = (post, wfi) => {
+// clean object fubction add to getJsonStringFromObj
+
+export const getJsonStringFromObj = ({ objData }) => {
+    let jsonData;
+    try {
+        let objCopy = JSON.parse(JSON.stringify(objData));
+        delete objCopy.hash;
+        delete objCopy.signatures;
+        objCopy = sortKeys(objCopy);
+        jsonData = stringify(objCopy);
+    } catch (e) {
+        console.warn('[signature][getJsonStringFromObj]', e);
+        jsonData = ''
+    }
+    return jsonData;
+}
+
+export const getSignatures = ({ data, wif }) => {
     let signatureString;
     try {
-        const postJson = getJsonStringFromObj(post);
-        const keyPair = bitcoin.ECPair.fromWIF(wfi);
+        const dataJson = getJsonStringFromObj({ objData: data });
+        const keyPair = bitcoin.ECPair.fromWIF(wif);
         const privateKey = keyPair.privateKey;
-        const signature = bitcoinMessage.sign(postJson, privateKey, keyPair.compressed);
+        const signature = bitcoinMessage.sign(dataJson, privateKey, keyPair.compressed);
         signatureString = signature.toString('base64');
     }
     catch (e) {
@@ -103,19 +118,20 @@ export const getSignatures = (post, wfi) => {
         signatureString = ''
     }
     return signatureString;
-}
+};
 
-export const getHash = (post) => {
-    const postJson = getJsonStringFromObj(post);
+export const getHash = ({ data }) => {
+    const dataJson = getJsonStringFromObj({ objData: data });
     let resHash;
     try {
-        const hash = CryptoJS.SHA256(postJson);
+        const hash = CryptoJS.SHA256(dataJson);
         const hashString = hash.toString(CryptoJS.enc.Hex);
         const bytes = Buffer.from(hashString, 'hex');
         resHash = bs58.encode(bytes);
     } catch (e) {
         console.error('[getHash]', e);
     }
+
     return resHash;
 }
 
@@ -124,16 +140,26 @@ export const generateId = () => {
     return nanoid();
 }
 
-export const isSignatureValid = (post) => {
-    const { address } = post.source;
-    const { signatures } = post;
-    const message = getJsonStringFromObj(post);
-    let isValid;
+export const isSignatureValid = ({ data, address }) => {
+    const { signatures } = data;
+    const jsonString = getJsonStringFromObj({ objData: data });
+
+    let isValid = false, isSignatureArrValid;
     try {
-        isValid = bitcoinMessage.verify(message, address, signatures);
+        if (Array.isArray(signatures)) {
+            isSignatureArrValid = signatures.map(sign => {
+                return bitcoinMessage.verify(jsonString, sign.address, sign.signature);
+            })
+            if (!isSignatureArrValid.find(sign => sign === false)) {
+                isValid = true
+            }
+        } else {
+            isValid = bitcoinMessage.verify(jsonString, address, signatures);
+        }
     } catch (e) {
-        console.log("[isPostValid]", e);
+        console.warn("[isSignatureValid]", e);
         isValid = false;
     }
+
     return isValid;
 };

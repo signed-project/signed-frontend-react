@@ -14,33 +14,30 @@ import styles from "./post.module.scss";
 import useReaction from "../../customHooks/useReaction";
 import useTargetPost from "../../customHooks/useTargetPost";
 import getCommentTrees from "../../customHooks/getCommentTrees";
+import useSourcePost from "../../customHooks/useSourcePost";
 import Preview from "../Preview/Preview";
-import { filesApi } from "../../../config/http.config";
 import getImgArr from "../../customHooks/getImgSources";
 import MenuPost from "../MenuPost/MenuPost";
 
-// TODO rewrite signature functions to leave less parametrs
-const Post = ({
-  renderKey,
-  post,
-  name,
-  text,
-  createdAt,
-  likesCount,
-  repostsCount,
-  type,
-  postHash,
-  hash,
-  attachments,
-  handleShowMenu,
-  isShowMenu,
-  handleEditPost,
-}) => {
-  let targetPost = useTargetPost(postHash);
-  const reaction = useReaction();
-  const subscribedState = useSelector((state) => state.user.subscribed);
+const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
+  const {
+    type,
+    text,
+    likesCount,
+    repostsCount,
+    attachments,
+    hash,
+    createdAt,
+    source: { address, publicName, avatar },
+    target: { postHash },
+  } = post;
 
-  const [subscribed, setSubscribed] = useState([]);
+  let sourcePost = useSourcePost(address);
+  let targetPost = useTargetPost(postHash);
+
+  let sourceTargetPost = useSourcePost(targetPost?.source?.address);
+  const reaction = useReaction();
+
   const [postMap, setPostMap] = useState({});
   const [comments, setComments] = useState([]);
   const [imgPreview, setImgPreview] = useState([]);
@@ -57,10 +54,6 @@ const Post = ({
     });
     setComments(commentsTrees);
   }, [postMap, hash]);
-
-  useEffect(() => {
-    setSubscribed(subscribedState);
-  }, []);
 
   useEffect(() => {
     const imgSources = getImgArr(attachments);
@@ -82,7 +75,8 @@ const Post = ({
   }
 
   const renderComments = comments.map((c, i) => {
-    if (subscribed.includes(c.source.address) && i !== 3) {
+    if (true) {
+      // if (subscribed.includes(c.source.address) && i !== 3) {
       return (
         <CommentBlock
           key={i}
@@ -90,16 +84,10 @@ const Post = ({
           renderKey={i}
           removeLastLine={i + 1 === comments.length}
           dotsLine={true}
-          name={c.source?.name}
-          text={c.text}
-          createdAt={c.createdAt}
           showReactionBlock={true}
-          hash={c.hash}
-          type={c.type}
         />
       );
     } else if (i === 3) {
-      // TODO: clear this mock
       return (
         <div key={i} className={styles.gap}>
           <div className={styles.gapBlockLine}></div>
@@ -122,111 +110,156 @@ const Post = ({
   };
 
   const isHideLine = comments.length < 1;
+
   return (
-    <div key={renderKey} className={styles.post}>
-      {type === "post" && (
-        <>
-          <div className={styles.typePost}>
-            <div className={styles.avatarBlock}>
-              <Avatar />
-              <div
-                className={`${styles.verticalLine}  ${comments.length === 0 && styles.verticalLineRemove
-                  }`}
-              ></div>
-            </div>
-            <div className={styles.postMain}>
-              <div className={styles.hover}>
-                <InfoAuthor createdAt={getReadFormat(createdAt)} name={name} />
-                <img
-                  src={icon.menu}
-                  alt="menu icon"
-                  className={styles.menuIcon}
-                  onClick={() => handleShowMenu(hash)}
-                  data-hash={hash}
-                />
-                {isShowMenu(hash) && (
-                  <MenuPost dataHash={hash} handleEditPost={handleEditPost} />
-                )}
-              </div>
-              <div className={styles.bodyWrapper}>
-                <PostContent sourceAddress={hash} text={text} type={type} />
-                <Preview uploadImgArr={imgPreview} postHash={hash} />
-              </div>
-              {reactionBlock()}
-            </div>
-          </div>
-        </>
-      )}
-
-      {type === "like" && targetPost && (
-        <>
-          <div className={styles.typeLike}>
-            <LikeMark createdAt={getReadFormat(createdAt)} name={name} />
-            <div className={styles.avatarWrapper}>
-              <div className={styles.avatarBlock}>
-                <Avatar />
-                <div
-                  className={`${styles.verticalLine}    ${type === "like" && styles.verticalLineRemove
-                    }`}
-                ></div>
-              </div>
-              <div className={styles.postBody}>
-                <div className={styles.hover}>
-                  <InfoAuthor
-                    createdAt={getReadFormat(createdAt)}
-                    name={name}
-                  />
+    <>
+      {sourcePost && (
+        <div className={styles.post}>
+          {type === "post" && sourcePost.hosts && (
+            <>
+              <div className={styles.typePost}>
+                <div className={styles.avatarBlock}>
+                  <Avatar avatar={sourcePost.avatar} address={address} />
+                  <div
+                    className={`${styles.verticalLine}  ${comments.length === 0 && styles.verticalLineRemove
+                      }`}
+                  ></div>
                 </div>
-                <div className={styles.bodyWrapper}>
-                  <PostContent
-                    sourceAddress={targetPost.hash}
-                    text={targetPost?.text}
-                    type={type}
-                  />
-                  <Preview
-                    uploadImgArr={imgPreview}
-                    postHash={targetPost.hash}
-                  />
-                </div>
-                {reactionBlock()}
-              </div>
-            </div>
-          </div>
-        </>
-      )}
+                <div className={styles.postMain}>
+                  <div className={styles.hover}>
+                    <InfoAuthor
+                      createdAt={getReadFormat(createdAt)}
+                      name={sourcePost.publicName}
+                      address={address}
+                    />
+                    <div
+                      className={styles.menuIconWrapper}
+                      onClick={() => handleShowMenu(hash)}
+                      data-hash={hash}
+                    >
+                      <img
+                        src={icon.menu}
+                        alt="menu icon"
+                        className={styles.menuIcon}
+                        onClick={() => handleShowMenu(hash)}
+                        data-hash={hash}
+                      />
+                    </div>
 
-      {type === "repost" && targetPost && (
-        <>
-          <div className={styles.typePost}>
-            <div className={styles.avatarBlock}>
-              <Avatar />
-              <div
-                className={`${styles.verticalLine}  ${comments.length === 0 && styles.verticalLineRemove
-                  }`}
-              ></div>
-            </div>
-            <div className={styles.postMain}>
-              <div className={styles.hover}>
-                <InfoAuthor createdAt={getReadFormat(createdAt)} name={name} />
-                <img
-                  src={icon.menu}
-                  alt="menu icon"
-                  className={styles.menuIcon}
+                    {isShowMenu(hash) && (
+                      <MenuPost
+                        dataHash={hash}
+                        handleEditPost={handleEditPost}
+                      />
+                    )}
+                  </div>
+                  <div className={styles.bodyWrapper}>
+                    {/*  text, postHash, imgHostArr, hosts */}
+                    <PostContent
+                      hosts={sourcePost.hosts}
+                      postHash={hash}
+                      text={text}
+                      address={address}
+                    // imgHostArr={imgPreview}
+                    />
+                    <Preview uploadImgArr={imgPreview} postHash={hash} />
+                  </div>
+                  {reactionBlock()}
+                </div>
+              </div>
+            </>
+          )}
+
+          {type === "like" && targetPost && sourceTargetPost && (
+            <>
+              <div className={styles.typeLike}>
+                <LikeMark
+                  createdAt={getReadFormat(createdAt)}
+                  name={sourcePost.publicName}
+                  address={address}
                 />
+                <div className={styles.avatarWrapper}>
+                  <div className={styles.avatarBlock}>
+                    <Avatar
+                      avatar={sourceTargetPost.avatar}
+                      address={address}
+                    />
+                    <div
+                      className={`${styles.verticalLine}    ${type === "like" && styles.verticalLineRemove
+                        }`}
+                    ></div>
+                  </div>
+                  <div className={styles.postBody}>
+                    <div className={styles.hover}>
+                      <InfoAuthor
+                        address={targetPost.source.address}
+                        createdAt={getReadFormat(targetPost.createdAt)}
+                        name={sourceTargetPost.publicName}
+                      />
+                    </div>
+                    <div className={styles.bodyWrapper}>
+                      <PostContent
+                        hostAssets={targetPost.source.hosts[0].assets}
+                        postHash={targetPost.hash}
+                        text={targetPost?.text}
+                        type={type}
+                        imgPrevSrc={imgPreview[0]?.imagePreviewUrl}
+                      />
+                      <Preview
+                        uploadImgArr={imgPreview}
+                        postHash={targetPost.hash}
+                      />
+                    </div>
+                    {reactionBlock()}
+                  </div>
+                </div>
               </div>
-              <div className={styles.bodyWrapper}>
-                <PostContent sourceAddress={hash} text={text} type={type} />
+            </>
+          )}
+          {type === "repost" && targetPost && (
+            <>
+              <div className={styles.typePost}>
+                <div className={styles.avatarBlock}>
+                  <Avatar avatar={sourcePost.avatar} address={address} />
+                  <div
+                    className={`${styles.verticalLine}  ${comments.length === 0 && styles.verticalLineRemove
+                      }`}
+                  ></div>
+                </div>
+                <div className={styles.postMain}>
+                  <div className={styles.hover}>
+                    <InfoAuthor
+                      createdAt={getReadFormat(createdAt)}
+                      name={sourcePost.publicName}
+                      address={address}
+                    />
+                    <img
+                      src={icon.menu}
+                      alt="menu icon"
+                      className={styles.menuIcon}
+                    />
+                  </div>
+                  <div className={styles.bodyWrapper}>
+                    <PostContent
+                      hostAssets={sourcePost?.hosts[0]?.assets}
+                      postHash={hash}
+                      text={text}
+                      type={type}
+                      imgPrevSrc={imgPreview[0]?.imagePreviewUrl}
+                    />
+                  </div>
+                  <RepostBlock postHash={targetPost.hash} />
+                  {reactionBlock()}
+                </div>
               </div>
-              <RepostBlock postHash={postHash} postHash={targetPost.hash} />
-              {reactionBlock()}
-            </div>
-          </div>
-        </>
+            </>
+          )}
+          {comments && (
+            <div className={styles.commentsWrapper}>{renderComments}</div>
+          )}
+        </div>
       )}
-      {comments && (
-        <div className={styles.commentsWrapper}>{renderComments}</div>
-      )}
-    </div>
+    </>
   );
 };
 

@@ -1,9 +1,15 @@
+// @import "/src/assets/css/index.scss";
+
+// app min width
+$appMaxWidth: 450px;
+
 // Белый
 $colorWhite: #fff;
 $colorBlack: 000;
 
 // primary colors
 $colorPrimary100: #1890ff;
+$colorPrimary200: #e6f7ff;
 
 // grey colors
 $colorGrey100: #8c8c8c;
@@ -13,6 +19,8 @@ $colorGrey400: #fafafa;
 $colorGrey500: #f0f0f0;
 $colorGrey600: #434343;
 $colorGrey700: rgba(11, 32, 56, 0.7);
+$colorGrey800: rgba(0, 0, 0, 0.65);
+$colorGrey900: #595959;
 
 // font
 $textColorMain: #000000;
@@ -20,4 +28,17 @@ $textColorGrey100: #828282;
 // $textMein: rgba(0, 0, 0, 0.65);
 $textGrey: rgba(0, 0, 0, 0.65);
 
+$fontSizeMain: 15px;
+
 $mainFont: Roboto, sans-serif;
+
+// img preview dimensions
+// $imgBigWidth: 250px;
+// $imgSmallSquare: 83px;
+
+$imgBigWidth: 230px;
+$imgSmallSquare: 74px;
+
+// margin
+// margin vertical Line
+$marginVerticalLine: -3px 0 -3px -15px;

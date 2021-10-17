@@ -1,14 +1,26 @@
+@import "/src/assets/css/index.scss";
+
 .imgAvatar {
   border-radius: 50%;
   width: 36px;
+  height: 36px;
+  background: $colorGrey400;
+  cursor: pointer;
 }
 
 .imgAvatarSmall {
   width: 24px;
+  height: 24px;
+}
+
+.imgAvatarBig {
+  height: 72px;
+  width: 72px;
 }
 .imgAvatarWrapper {
   //   clip-path: circle(36px at center);
   width: 50px;
+  // width: 100%;
   border-radius: 50%;
-  margin-right: 12px;
+  // margin-right: 10px;
 }

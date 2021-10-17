@@ -2,6 +2,7 @@
 
 .backBlock {
   top: 0;
+  cursor: pointer;
   background: white;
   position: fixed;
   height: 48px;
@@ -53,6 +54,7 @@
   justify-content: flex-start;
 }
 .avatarBlock {
+  cursor: pointer;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -61,14 +63,15 @@
 }
 .dotsVerticalLine {
   border-left: 1px dashed $colorGrey200;
-  height: 110%;
-  margin: -3px 0 -3px -25px;
+  height: 120%;
+  margin: $marginVerticalLine;
+  z-index: -1;
 }
 
 .verticalLine {
   border-left: 1px solid $colorGrey200;
   height: 100%;
-  margin: -3px 0 -3px -25px;
+  margin: $marginVerticalLine;
 }
 
 .verticalLineRemove {
@@ -92,4 +95,5 @@
 }
 .bodyWrapper {
   margin: 8px 8px;
+  cursor: pointer;
 }

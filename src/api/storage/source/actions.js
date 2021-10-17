@@ -9,3 +9,8 @@ export const sendPost = (payload) => ({
     type: ACTIONS.SEND_POST,
     payload,
 });
+
+export const addTempSourceItem = (payload) => ({
+    type: ACTIONS.ADD_TEMP_SOURCE_ITEM,
+    payload,
+});

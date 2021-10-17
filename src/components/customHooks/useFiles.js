@@ -15,14 +15,9 @@ const useFiles = () => {
   });
 
   const uploadFile = (file) => {
-    // mime.getExtension('text/plain');
     const type = mime.getExtension(file.type);
-    // const fileName = `${hash}.${type}`;
     const formData = new FormData();
     formData.append("File", file, file.name);
-    // formData.append("File", file, file.name);
-    // formData.append("FileType", fileType);
-    console.log("file77777777777777", file);
 
     setIsLoading(true);
 
@@ -33,7 +28,7 @@ const useFiles = () => {
         return res;
       })
       .catch((err) => {
-        console.log("CATCH ERR: ", err);
+        console.warn("CATCH ERR: ", err);
         const errors =
           err.response.data.errors || err.response.data.Error.Message;
         let errorString = "";
@@ -75,7 +70,7 @@ const useFiles = () => {
         return res;
       })
       .catch((err) => {
-        console.log("CATCH ERR: ", err);
+        console.warn("CATCH ERR: ", err);
         const errors =
           err.response.data.errors || err.response.data.Error.Message;
         let errorString = "";

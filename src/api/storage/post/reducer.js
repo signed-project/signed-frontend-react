@@ -5,19 +5,28 @@ export const ACTIONS = {
   ADD_POST_TO_HASH: "POST::ADD_POST_TO_HASH",
   ADD_POST_TO_LATEST: "POST::ADD_POST_TO_LATEST",
   SET_POST_STREAM: "POST::SET_POST_STREAM",
+  UPDATE_POST_STREAM: "POST::UPDATE_POST_STREAM",
   SET_POST_HASH: "POST::SET_POST_HASH",
   SET_POST_LATEST: "POST::SET_POST_LATEST",
+  GET_INDEX: "POST::GET_INDEX",
+  ADD_TEMP_POST_ITEM: 'POST::ADD_TEMP_POST_ITEM',
 };
 
 const initialState = {
   stream: [],
   latest: {},
   hashed: {},
+  tempPosts: []
 };
 
 const postReducer = (state = initialState, action) => {
   switch (action.type) {
     case ACTIONS.SET_POST_STREAM:
+      return {
+        ...state,
+        stream: action.payload,
+      };
+    case ACTIONS.UPDATE_POST_STREAM:
       return {
         ...state,
         stream: action.payload,
@@ -33,13 +42,10 @@ const postReducer = (state = initialState, action) => {
         hashed: action.payload,
       };
     case ACTIONS.ADD_POST_TO_STREAM:
-      const currentStream = state.stream.filter(post => post.id !== action.payload.id)
-
-
+      // const currentStream = state.stream.filter(post => post.id !== action.payload.id);
       return {
         ...state,
-        stream: [...currentStream, action.payload],
-        // stream: [...state.stream, action.payload],
+        stream: [action.payload, ...state.stream],
       };
     case ACTIONS.ADD_POST_TO_HASH:
       return {
@@ -58,6 +64,14 @@ const postReducer = (state = initialState, action) => {
           ...state.latest,
           [compositeKey]: action.payload,
         },
+      };
+    case ACTIONS.ADD_TEMP_POST_ITEM:
+      return {
+        ...state,
+        tempPosts: [
+          ...state.tempPosts,
+          ...action.payload,
+        ],
       };
     default:
       return state;

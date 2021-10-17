@@ -2,12 +2,21 @@
 .page {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bodyBlock {
+  // min-height: 600px;
+  display: flex;
+  flex-direction: column;
   justify-content: flex-start;
   align-items: center;
 }
 
 .title {
   text-align: center;
+  margin-bottom: 44px;
 }
 
 .formWrapper {
@@ -33,6 +42,18 @@
 }
 
 .footer {
-  position: absolute;
-  bottom: 45px;
+  margin-top: 45px;
+  margin-bottom: 20px;
+}
+
+.chooseButtonWrapper {
+  margin-top: 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-width: 253px;
+}
+
+.chooseButtonWrapper :first-child {
+  margin-bottom: 24px;
 }

@@ -51,6 +51,16 @@ export const schemaId = {
 };
 
 
+const signatureItemSchema = {
+  $id: schemaId.signatureItemSchema,
+  type: "object",
+  properties: {
+    signature: { type: "string" },
+    address: { type: "string" },
+  },
+  required: ["signature", "address"],
+  additionalProperties: false,
+}
 
 
 const mediaSchema = {
@@ -60,9 +70,11 @@ const mediaSchema = {
     contentType: { type: "string" },
     hash: { type: "string" },
     width: { type: "string" },
-    height: { type: "string" }
+    height: { type: "string" },
+    // thumbnail: { type: mediaSchema },
+    url: { type: 'string' }
   },
-  required: ["contentType", "hash"],
+  // required: ["contentType", "hash"],
   additionalProperties: true,
 }
 
@@ -70,26 +82,24 @@ export const hostSchema = {
   $id: schemaId.host,
   type: "object",
   properties: {
-    fileStores: { type: "array", items: { type: "string" } },
+    assets: { type: "string" },
     index: { type: "string" }
   }
 }
-
+//   assets: { type: "array", items: { type: "string" } },
 export const sourceSchema = {
   $id: schemaId.source,
   type: "object",
   properties: {
     address: { type: "string" },
-    name: { type: "string" },
     updatedAt: { type: "integer" },
-    avatar: mediaSchema,
     hosts: {
       "type": "array",
       "items": hostSchema
     },
     hash: { type: "string" }
   },
-  required: ["address", "name", "updatedAt", "avatar", "hosts", "hash"],
+  required: ["address", "updatedAt", "avatar", "hosts", "hash"],
   additionalProperties: true
 };
 
@@ -115,7 +125,9 @@ const postSchema = {
     "updatedAt": { type: "integer" },
     "text": { type: "string" },
     "attachments": { type: "array", items: mediaSchema },
-    "signatures": { type: "string" },
+    "signatures": { type: "array", items: signatureItemSchema },
+    // "signatures": { type: "array", items: { type: "string" } },
+    // "signatures": { type: "string" },
     "likesCount": { type: "integer" },
     "repostsCount": { type: "integer" },
     "commentsCount": { type: "integer" },

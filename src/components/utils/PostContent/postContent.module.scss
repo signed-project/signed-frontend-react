@@ -1,6 +1,7 @@
 @import "/src/assets/css/index.scss";
 
 .postContent {
+  cursor: pointer;
   margin-bottom: 16px;
   word-wrap: break-word;
   display: flex;
@@ -8,11 +9,15 @@
   justify-content: flex-start;
 }
 
+.postContentPostPage {
+  cursor: auto;
+}
+
 .postContent span {
   font-family: $mainFont;
   font-style: normal;
   font-weight: 500;
-  font-size: 13px;
+  font-size: $fontSizeMain;
   color: $textColorMain;
 }
 
@@ -26,5 +31,3 @@
   border-radius: 4px;
   margin-right: 8px;
 }
-
-

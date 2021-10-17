@@ -9,6 +9,7 @@ const useTargetPost = (postHash) => {
             setTargetPost(hashedPostState[postHash])
         }
     }, [hashedPostState, postHash]);
+
     return targetPost
 };
 export default useTargetPost;

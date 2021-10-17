@@ -1,0 +1,25 @@
+@import "/src/assets/css/index.scss";
+
+.avatar {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.avatarChange {
+  color: $colorGrey100;
+  font-family: $mainFont;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 500;
+  text-decoration-line: underline;
+}
+
+.uploadWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  cursor: pointer;
+}

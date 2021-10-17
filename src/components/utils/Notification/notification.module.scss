@@ -1,0 +1,199 @@
+@import "/src/assets/css/index.scss";
+
+.post {
+  padding: 12px 12px 0 12px;
+  word-wrap: break-word;
+  // margin-top: 16px;
+  // margin-bottom: 16px;
+  border-bottom: 1px solid $colorGrey500;
+}
+// .post:first-child {
+//   // margin-top: 16px;
+//   // padding-bottom: 16px;
+//   border-bottom: 1px solid #f0f0f0;
+// }
+
+.transparent {
+  opacity: 0.7;
+}
+
+.post:last-child {
+  border-bottom: none;
+  margin-bottom: 40px;
+}
+
+.typeLike {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.typePost {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  position: relative;
+}
+
+.avatarWrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.menuIconWrapper {
+  width: 30px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.menuIcon {
+  margin-right: 14px;
+  height: 15px;
+  cursor: pointer;
+}
+
+.wrapperContent {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.repostBlock {
+  padding: 8px;
+  // min-height: 50px;
+  // margin-left: 50px;
+  border: 1px solid $colorGrey300;
+  background: $colorGrey400;
+  // min-width: 288px;
+  margin-bottom: 16px;
+  border-radius: 4px;
+}
+
+.commentBlock {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.dotsVerticalLine {
+  border-left: 1px dashed $colorGrey200;
+  height: 110%;
+  margin: $marginVerticalLine;
+}
+
+.verticalLine {
+  border-left: 1px solid $colorGrey200;
+  height: 100%;
+  margin: $marginVerticalLine;
+}
+
+.verticalLineRemove {
+  border-left: none;
+  height: 50%;
+}
+
+.avatarBlock {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  // padding-bottom: 102px;
+}
+
+.bodyWrapper {
+  margin-top: 8px;
+  cursor: pointer;
+}
+
+.postBody {
+  padding-bottom: 26px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.postMain {
+  padding-bottom: 26px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.commentsWrapper {
+  // margin: 160px 0 1600px;
+}
+
+.gapTitle {
+  font-family: $mainFont;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  line-height: 20px;
+  /* identical to box height, or 154% */
+  /* Daybreak Blue/6 */
+  color: $colorPrimary100;
+  margin-left: 40px;
+}
+
+.gap {
+  height: 20px;
+  margin: 5px 0 20px 18px;
+  display: flex;
+  flex-direction: fow;
+  justify-content: flex-start;
+}
+
+.gapBlockLine {
+  border-left: 1px dashed $colorGrey200;
+}
+
+.hover {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.targetPostWrapper {
+  background: $colorGrey400;
+  border-radius: 4px;
+  border: 1px solid #d9d9d9;
+  color: $colorGrey900;
+  padding: 8px;
+  margin-bottom: 12px;
+
+  cursor: pointer;
+  margin-bottom: 16px;
+  word-wrap: break-word;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.buttonWrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.notNewStatus {
+  font-family: $mainFont;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 20px;
+  color: $colorGrey900;
+  margin-left: 40px;
+}
+
+.imgTargetPost {
+  width: 56px;
+  height: 56px;
+  border-radius: 4px;
+  margin-right: 8px;
+}

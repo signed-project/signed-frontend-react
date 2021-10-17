@@ -1,143 +1,190 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import queryString from "query-string";
-import icon from '../../../assets/svg/icon';
-import styles from './postPage.module.scss';
+import icon from "../../../assets/svg/icon";
+import styles from "./postPage.module.scss";
 import { useLocation, useParams, useHistory } from "react-router-dom";
-import RepostBlock from '../../utils/Post/RepostBlock';
-import CommentBlock from '../../utils/Post/CommentBlock';
-import AuthorBlock from '../../utils/AuthorBlock/AuthorBlock';
-import { getReadFormat } from '../../../libs/date.js';
-import Reaction from '../../utils/Reaction/Reaction';
-import PostContent from '../../utils/PostContent/PostContent';
-import useReaction from '../../customHooks/useReaction';
-import getCommentTrees from '../../customHooks/getCommentTrees';
-import getImgSources from '../../customHooks/getImgSources';
-import Preview from '../../utils/Preview/Preview';
-import Avatar from '../../utils/Avatar/Avatar';
-import InfoAuthor from '../../utils/InfoAuthor/InfoAuthor';
-import Slider from '../../utils/Slider/Slider';
-
+import RepostBlock from "../../utils/Post/RepostBlock";
+import CommentBlock from "../../utils/Post/CommentBlock";
+import AuthorBlock from "../../utils/AuthorBlock/AuthorBlock";
+import { getReadFormat } from "../../../libs/date.js";
+import Reaction from "../../utils/Reaction/Reaction";
+import PostContent from "../../utils/PostContent/PostContent";
+import useReaction from "../../customHooks/useReaction";
+import getCommentTrees from "../../customHooks/getCommentTrees";
+import getImgSources from "../../customHooks/getImgSources";
+import Preview from "../../utils/Preview/Preview";
+import Avatar from "../../utils/Avatar/Avatar";
+import InfoAuthor from "../../utils/InfoAuthor/InfoAuthor";
+import Slider from "../../utils/Slider/Slider";
+import routes from "../../../config/routes.config";
+import useSourcePost from "../../customHooks/useSourcePost";
 
 // TODO: refactor this component to use module Post if it possible
 const PostPage = ({ toggleTheme }) => {
-    const user = useSelector(state => state.user);
-    const postMapState = useSelector(state => state.post.hashed);
-    const location = useLocation();
-    const { slider } = queryString.parse(location.search);
+  const user = useSelector((state) => state.user);
+  const postMapState = useSelector((state) => state.post.hashed);
+  const sourceStateLatest = useSelector(state => state.source.latest);
+  const location = useLocation();
+  const { slider } = queryString.parse(location.search);
 
-    let { hash } = useParams();
-    const history = useHistory();
-    const reaction = useReaction();
+  let { hash } = useParams();
+  const history = useHistory();
+  const reaction = useReaction();
 
-    const [post, setPost] = useState('');
-    const [comments, setComments] = useState([]);
-    const [imgPreview, setImgPreview] = useState([]);
-    const [showSlider, setShowSlider] = useState(false);
-    const [sliderNum, setSliderNum] = useState('');
+  const [post, setPost] = useState("");
+  const [comments, setComments] = useState([]);
+  const [imgPreview, setImgPreview] = useState([]);
+  const [showSlider, setShowSlider] = useState(false);
+  const [sliderNum, setSliderNum] = useState("");
+  const [currentPost, setCurrentPost] = useState("");
+  const [source, setSource] = useState("");
 
-    useEffect(() => {
-        toggleTheme(false);
-    }, [toggleTheme]);
 
-    useEffect(() => {
-        const currentPost = postMapState[hash];
-        setPost(currentPost);
-    }, [hash, postMapState]);
+  // console.log('currentPost', currentPost);
+  // console.log('source[currentPost]', source);
+  // console.log('source[currentPost.source.address]', currentPost.source.address);
+  // const source = useSourcePost(currentPost.source.address);
 
-    useEffect(() => {
-        const commentsTrees = getCommentTrees({ hashMap: postMapState, currentHash: hash });
-        setComments(commentsTrees);
-    }, [postMapState, hash]);
+  useEffect(() => {
+    const post = postMapState[hash];
+    setCurrentPost(post);
+    if (currentPost?.source?.address) {
+      const sourceData = sourceStateLatest[currentPost.source.address];
+      setSource(sourceData);
+    }
+  }, [postMapState, sourceStateLatest])
 
-    useEffect(() => {
-        if (post?.attachments?.length) {
-            const imgSourceArr = getImgSources(post.attachments);
-            setImgPreview(imgSourceArr)
-        }
-    }, [post]);
 
-    useEffect(() => {
-        if (slider) {
-            setSliderNum(slider);
-            setShowSlider(true);
-        }
-    }, [slider]);
+  useEffect(() => {
+    toggleTheme(false);
+  }, [toggleTheme]);
 
-    const renderComments = comments.slice().map((post, i) =>
-    (
-        <CommentBlock
-            post={post}
-            type={post.type}
-            key={i}
-            img={post?.source?.avatar?.hash}
-            name={post.source?.name}
-            text={post.text}
-            createdAt={post.createdAt}
-            removeLastLine={comments.length === i + 1}
-            hash={post.hash}
-        />
+  useEffect(() => {
+    setPost(currentPost);
+  }, [hash, postMapState]);
+
+  useEffect(() => {
+    const commentsTrees = getCommentTrees({
+      hashMap: postMapState,
+      currentHash: hash,
+    });
+    setComments(commentsTrees);
+  }, [postMapState, hash]);
+
+  useEffect(() => {
+    if (post?.attachments?.length) {
+      const imgSourceArr = getImgSources(post.attachments);
+      setImgPreview(imgSourceArr);
+    }
+  }, [post]);
+
+  useEffect(() => {
+    if (slider) {
+      setSliderNum(slider);
+      setShowSlider(true);
+    }
+  }, [slider]);
+
+  console.log('post[post]', post);
+
+  const renderComments = comments
+    .slice()
+    .map((post, i) => (
+      <CommentBlock
+        post={post}
+        type={post.type}
+        key={i}
+        img={post?.source?.avatar?.hash}
+        name={post.source?.name}
+        text={post.text}
+        createdAt={post.createdAt}
+        removeLastLine={comments.length === i + 1}
+        hash={post.hash}
+      />
     ));
 
-    const handleFullSlider = (i) => {
-        setShowSlider(true)
-        setSliderNum(i)
-    }
+  const handleFullSlider = (i) => {
+    setShowSlider(true);
+    setSliderNum(i);
+  };
 
-    return (
-        showSlider ?
-            <Slider
-                uploadImgArr={imgPreview}
-                firstSlide={sliderNum}
-                setIsFullImgPrev={setShowSlider}
-            />
-            :
-            <>
-                <div div className={styles.backBlock} >
-                    <img src={icon.arrowBack} onClick={() => history.goBack()} alt="arrow back icon" />
-                </div >
-                {
-                    post &&
-                    <div className={styles.bodyBlock}>
-                        <div className={styles.typePost}>
-                            <div className={styles.avatarBlock}>
-                                <Avatar />
-                                {/*  ${styles.verticalLineRemove} */}
-                                <div className={`${styles.verticalLine} 
-                             ${comments.length === 0 && styles.verticalLineRemove}`}></div>
-                            </div>
-                            <div className={styles.postMain}>
-                                <div className={styles.hover}>
-                                    <InfoAuthor createdAt={getReadFormat(post.createdAt)} name={post?.source?.name} />
-                                    <img src={icon.menu} alt="menu icon" className={styles.menuIcon} />
-                                </div>
-                                <div className={styles.bodyWrapper}>
-                                    {/* TODO: find out name sourceAddress,are is better  hash ?  */}
-                                    <PostContent sourceAddress={post.hash} text={post.text} type={post.type} />
-                                    <Preview uploadImgArr={imgPreview} handleFullSlider={handleFullSlider} />
-                                </div>
-                                <Reaction
-                                    likesCount={post.likesCount}
-                                    repostsCount={post.repostsCount}
-                                    handleLike={() => reaction.handleLike(post)}
-                                    handleRepost={() => reaction.handleRepost(post)}
-                                    handleReply={() => reaction.handleReply(post)} />
-                            </div>
-                        </div>
-                        {post?.type === 'repost' &&
-                            <div className={styles.repostBlockWrapper}>
-                                <RepostBlock postHash={post.target.postHash} />
-                            </div>}
-                        {comments.length > 0 &&
-                            <div className={styles.commentsWrapper}>
-                                {renderComments}
-                            </div>
-                        }
+  return showSlider ? (
+    <Slider
+      uploadImgArr={imgPreview}
+      firstSlide={sliderNum}
+      setIsFullImgPrev={setShowSlider}
+    />
+  ) : (
+    <>
+      <div div className={styles.backBlock}>
+        <img
+          src={icon.arrowBack}
+          onClick={() => history.push(routes.feed)}
+          alt="arrow back icon"
+        />
+      </div>
+      {post && source && (
+        <div className={styles.bodyBlock}>
+          <div className={styles.typePost}>
+            <div className={styles.avatarBlock}>
+              <Avatar avatar={post.source.avatar} address={source.address} />
+              {/*  ${styles.verticalLineRemove} */}
+              <div
+                className={`${styles.verticalLine} 
+                             ${comments.length === 0 &&
+                  styles.verticalLineRemove
+                  }`}
+              ></div>
+            </div>
+            <div className={styles.postMain}>
+              <div className={styles.hover}>
+                <InfoAuthor
+                  createdAt={getReadFormat(post.createdAt)}
+                  name={source?.publicName}
+                  address={source.address}
+                />
+                <img
+                  src={icon.menu}
+                  alt="menu icon"
+                  className={styles.menuIcon}
+                />
+              </div>
+              <div className={styles.bodyWrapper}>
+                {/* TODO: find out name sourceAddress,are is better  hash ?  */}
+                <PostContent
+                  hosts={source.hosts}
+                  text={post.text}
+                  type={post.type}
+                  address={currentPost.source.address}
+                />
+                <Preview
+                  uploadImgArr={imgPreview}
+                  handleFullSlider={handleFullSlider}
+                />
+                {post?.type === "repost" && (
+                  <div className={styles.repostBlockWrapper}>
+                    <RepostBlock postHash={post.target.postHash} />
+                  </div>
+                )}
+              </div>
+              <Reaction
+                likesCount={post.likesCount}
+                repostsCount={post.repostsCount}
+                handleLike={() => reaction.handleLike(post)}
+                handleRepost={() => reaction.handleRepost(post)}
+                handleReply={() => reaction.handleReply(post)}
+              />
+            </div>
+          </div>
 
-                    </div>
-                }
-            </>
-    );
+          {comments.length > 0 && (
+            <div className={styles.commentsWrapper}>{renderComments}</div>
+          )}
+        </div>
+      )}
+    </>
+  );
 };
 
 export default PostPage;

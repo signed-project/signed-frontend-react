@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import {
-  animateScroll as scroll,
-} from "react-scroll";
+import { animateScroll as scroll } from "react-scroll";
 import icon from "../../../assets/svg/icon";
+// import icon from "@/assets/svg/icon";
+
 import Avatar from "../../utils/Avatar/Avatar";
 import style from "./newPost.module.scss";
 import Button from "../../utils/Button/Button";
@@ -43,7 +43,7 @@ const NewPost = ({ toggleTheme }) => {
   } = queryString.parse(location.search);
 
   const { uploadFile } = useFiles();
-
+  const isLoginProcess = useSelector((state) => state.user.isLoginProcess);
   const history = useHistory();
   const dispatch = useDispatch();
   const [message, setMessage] = useState("");
@@ -53,6 +53,7 @@ const NewPost = ({ toggleTheme }) => {
   const [others, setOthers] = useState(false);
   const [isFullImgPrev, setIsFullImgPrev] = useState(false);
   const [firstSlide, setFirstSlide] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [post, setPost] = useState({
     type: "post",
@@ -60,6 +61,10 @@ const NewPost = ({ toggleTheme }) => {
     source: "",
     isComment: false,
   });
+
+  useEffect(() => {
+    setIsLoading(isLoginProcess);
+  }, [isLoginProcess]);
 
   useEffect(() => {
     scroll.scrollToBottom();
@@ -74,7 +79,7 @@ const NewPost = ({ toggleTheme }) => {
     setPost((prev) => ({
       ...prev,
       type,
-      target: { sourceHash: source, postHash: hash }
+      target: { sourceHash: source, postHash: hash },
     }));
   }, [hash, source, type]);
 
@@ -86,7 +91,7 @@ const NewPost = ({ toggleTheme }) => {
         (p) => p.hash === hash
       );
       if (
-        filterComment.type === "reply" &&
+        filterComment?.type === "reply" &&
         !commentWay.find((p) => p.hash === filterComment.hash)
       ) {
         commentWay.push(filterComment);
@@ -101,12 +106,18 @@ const NewPost = ({ toggleTheme }) => {
   };
 
   useEffect(() => {
-    if (post.target?.postHash && hashedPost) {
-      const commentsKnitFlow = getCommentStoryKnots(hashedPost, post.target?.postHash);
+    if (post?.target?.postHash && hashedPost) {
+      const commentsKnitFlow = getCommentStoryKnots(
+        hashedPost,
+        post.target?.postHash
+      );
       const commentsCheckbox = commentsKnitFlow.map((comment) => {
-        comment.isMention = false;
-        return comment;
+        if (comment) {
+          comment.isMention = false;
+          return comment;
+        }
       });
+
       setComments(commentsCheckbox);
     }
   }, [post, hashedPost]);
@@ -114,7 +125,6 @@ const NewPost = ({ toggleTheme }) => {
   useEffect(() => {
     if (edit && hashedPost) {
       const editedPost = hashedPost[edit];
-      console.log("editedPost", editedPost);
       if (editedPost?.attachments) {
         const imgSours = getImgArr(editedPost?.attachments);
         setUploadedImg(imgSours);
@@ -122,7 +132,7 @@ const NewPost = ({ toggleTheme }) => {
       setMessage(editedPost?.text);
 
       setPost((prev) => ({
-        ...editedPost
+        ...editedPost,
       }));
     }
   }, [edit, hashedPost]);
@@ -130,7 +140,6 @@ const NewPost = ({ toggleTheme }) => {
   /**
    *    /*   let reader = new FileReader();
          reader.onloadend = () => {
-             console.log('onloadend', reader.result);
              const filePrev = {
                file: file,
                imagePreviewUrl: reader.result
@@ -145,11 +154,30 @@ const NewPost = ({ toggleTheme }) => {
    *  growth  height when add text in one row
    */
 
+  const getTags = (text) => {
+    // let textLowerCase = text.toLowerCase();
+
+    if (text.indexOf("#") === -1) {
+      return "";
+    }
+    const tagArr = [];
+    const dirtyTextArr = text.split("#");
+    const resMap = dirtyTextArr.map((tagDirtyArr, i) => {
+      if (i > 0) {
+        const tagItem = tagDirtyArr.split(" ")[0];
+        tagArr.push(tagItem);
+        return tagDirtyArr;
+      }
+    });
+    return tagArr;
+  };
+
   const handleChangeMessage = (e) => {
     const value = e.target.value;
     e.target.style.height = 0;
     e.target.style.height = `${e.target.scrollHeight}px`;
     // scroll.scrollToBottom();
+    // console.log('getTags(value)', getTags(value));
     setMessage(value);
   };
 
@@ -164,52 +192,64 @@ const NewPost = ({ toggleTheme }) => {
     return mentions;
   };
 
-  const handlePublicPost = async () => {
+  const handlePublicPost = () => {
+    if (isLoading) {
+      return;
+    }
     if (post.type === "reply" && !replyingPage) {
       setReplyingPage(true);
       return;
     }
     const mentions = getMentions();
-
-    const attachments = await Promise.all(
-      uploadedImg.map(async (val) => {
-        if (val.file) {
-          let data, newMedia;
-          try {
-            ({ data } = await uploadFile(val.file));
-            const media = new Media({ type: data.type, hash: data.hash });
-            newMedia = media.newMedia;
-          } catch (e) {
-            console.warn("[NewPost][attachments]", e);
+    (async () => {
+      // change Promise.all to Promise.allSettled
+      // { status: "fulfilled", value: 1 }
+      // const attachments = await Promise.allSettled(
+      const attachments = await Promise.all(
+        uploadedImg.map(async (val) => {
+          if (val.file) {
+            let data, newMedia;
+            try {
+              ({ data } = await uploadFile(val.file));
+              const media = new Media({
+                contentType: data.contentType,
+                hash: data.hash,
+              });
+              newMedia = media.newMedia;
+            } catch (e) {
+              console.warn("[NewPost][attachments]", e);
+            }
+            return newMedia;
+          } else {
+            delete val.imagePreviewUrl;
+            return val;
           }
-          return newMedia;
-        } else {
-          delete val.imagePreviewUrl;
-          return val;
-        }
-      })
-    );
+        })
+      );
 
-    const postInstance = new PostModel({
-      id: post.id ? post.id : '',
-      source: user.source,
-      type: post.type,
-      text: message,
-      target: {
-        postHash: post.target?.postHash ? post.target?.postHash : '',
-        sourceHash: post.target?.sourceHash ? post.target?.sourceHash : '',
-      },
-      // target: post.hash ? { postHash: post.hash, sourceHash: post.source } : "",
-      mentions: mentions?.length ? mentions : "",
-      attachments: attachments.length > 0 ? attachments : "",
-      wfi: user.wfi,
-    });
+      const tagsArr = getTags(message);
 
-    const newPost = postInstance.newPost;
-    console.log('newPost-------------', newPost);
+      const postInstance = new PostModel({
+        id: post.id ? post.id : "",
+        source: user.source,
+        type: post.type,
+        text: message,
+        target: {
+          postHash: post.target?.postHash ? post.target?.postHash : "",
+          sourceHash: post.target?.sourceHash ? post.target?.sourceHash : "",
+        },
+        mentions: mentions?.length ? mentions : "",
+        attachments: attachments.length > 0 ? attachments : "",
+        wif: user.wif,
+      });
 
-    dispatch(postActions.sendPost(newPost));
-    history.push(routes.feed);
+      const newPost = postInstance.newPost;
+
+      setMessage("");
+      setUploadedImg([]);
+      dispatch(postActions.sendPost({ post: newPost, tags: tagsArr }));
+      history.push(routes.feed);
+    })();
   };
 
   const renderComments = comments
@@ -220,7 +260,7 @@ const NewPost = ({ toggleTheme }) => {
         key={i}
         type={post.type}
         img={post?.source?.avatar?.hash}
-        name={post.source?.name}
+        name={post.source?.publicName}
         text={post.text}
         createdAt={post.createdAt}
         post={post}
@@ -252,18 +292,28 @@ const NewPost = ({ toggleTheme }) => {
   };
 
   const renderReplyingUser = comments.map((post, i) => {
-    if (i > 0) {
+    // if (i > 0 && post.source.address) {
+    if (i > 0 && post.source.address !== user.source.address) {
       return (
         <ReplyingUser
           key={i}
-          name={post.source.name}
+          avatar={post.source.avatar}
+          name={post.source.publicName}
           checked={post.isMention}
           checkBoxName={post.hash}
           onChange={handleMention}
         />
       );
+    } else if (post.source.address === user.source.address) {
+      return (
+        <div key={i} className={style.gap}>
+          <div className={style.gapBlockLine}></div>
+          {/* <span className={style.gapTitle}>Show this thread</span> */}
+        </div>
+      );
     }
-    return post;
+
+    return "";
   });
 
   const handleChangeFile = (e) => {
@@ -287,7 +337,6 @@ const NewPost = ({ toggleTheme }) => {
     setFirstSlide(i);
   };
 
-  console.log("uploadedImg: ", uploadedImg);
   const handleDeleteImgPreview = (i) => {
     const newUploadedImg = uploadedImg.filter((img, index) => index !== i);
 
@@ -319,7 +368,7 @@ const NewPost = ({ toggleTheme }) => {
         ) : (
           <img
             src={icon.arrowBack}
-            onClick={() => history.goBack()}
+            onClick={() => history.push(routes.feed)}
             alt="arrow back icon"
           />
         )}
@@ -329,7 +378,8 @@ const NewPost = ({ toggleTheme }) => {
         {replyingPage ? (
           <div className={style.replyingBlock}>
             <ReplyingUser
-              name={comments[0].source.name}
+              avatar={comments[0].source.avatar}
+              name={comments[0].source.publicName}
               checked={comments[0].isMention}
               checkBoxName={comments[0].hash}
               onChange={handleMention}
@@ -350,9 +400,9 @@ const NewPost = ({ toggleTheme }) => {
           </div>
         ) : (
           <div className={style.newPostPage}>
-            {post.type === "reply" && <div>{renderComments}</div>}
+            {post.type === "reply" && comments && <div>{renderComments}</div>}
             <div className={style.messageBlock}>
-              <Avatar />
+              <Avatar avatar={user.source.avatar} />
               <textarea
                 value={message}
                 onChange={handleChangeMessage}
@@ -380,33 +430,59 @@ const NewPost = ({ toggleTheme }) => {
       </div>
 
       <div className={style.toolsBlock}>
-        <div className={style.uploadBlock}>
-          <input
-            accept="image/*"
-            multiple
-            id="icon-button-file"
-            type="file"
-            style={{ display: "none" }}
-            onChange={(e) => handleChangeFile(e)}
-          />
-          <label htmlFor="icon-button-file">
-            <img
-              src={icon.uploadImg}
-              alt="send message icon"
-              style={{ marginRight: "8px" }}
+        {!replyingPage && (
+          <div className={style.uploadBlock}>
+            <input
+              accept="image/*"
+              multiple
+              id="icon-button-file"
+              type="file"
+              style={{ display: "none" }}
+              onChange={(e) => handleChangeFile(e)}
             />
-          </label>
-        </div>
-        <div className={style.buttonWrapper}>
-          <Button className="primary withIcon " onClick={handlePublicPost}>
-            <img
-              src={icon.messageSend}
-              alt="send message icon"
-              style={{ marginRight: "8px" }}
-            />
-            Publish
-          </Button>
-        </div>
+            <label htmlFor="icon-button-file">
+              <img
+                src={icon.uploadImg}
+                alt="send message icon"
+                style={{ marginRight: "8px" }}
+              />
+            </label>
+          </div>
+        )}
+        {!replyingPage && (
+          <div className={style.buttonWrapper}>
+            <Button
+              isLoading={isLoading}
+              disabled={isLoading}
+              className="primary withIcon"
+              onClick={() => {
+                post?.type !== "reply" && !replyingPage && setIsLoading(true);
+                handlePublicPost();
+              }}
+            >
+              <img
+                src={icon.messageSend}
+                alt="send message icon"
+                style={{ marginRight: "8px" }}
+              />
+              Publish
+            </Button>
+          </div>
+        )}
+        {replyingPage && (
+          <div className={style.buttonWrapperDone}>
+            <Button
+              isLoading={isLoading}
+              disabled={isLoading}
+              className="primary fullWidth"
+              onClick={() => {
+                handlePublicPost();
+              }}
+            >
+              Done
+            </Button>
+          </div>
+        )}
       </div>
     </>
   );

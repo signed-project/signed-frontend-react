@@ -1,9 +1,7 @@
-import mime from "mime/lite";
-
 export class Media {
   constructor(data) {
     this.data = {
-      contentType: data.type ? data.type : "",
+      contentType: data.contentType ? data.contentType : "",
       hash: data.hash ? data.hash : "",
       width: data.width ? data.width : "",
       height: data.height ? data.height : "",
@@ -11,12 +9,6 @@ export class Media {
     };
   }
   get newMedia() {
-    console.log(
-      " this.data.contentType^^^^^^^^^^^^^[media]",
-      this.data.contentType
-    );
-    console.log(mime.getType(this.data.contentType));
-
     const media = {
       hash: this.data.hash,
       contentType: this.data.contentType ? this.data.contentType : "",

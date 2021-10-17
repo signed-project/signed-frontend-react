@@ -1,6 +1,8 @@
-export const bookApi = {
+export const postApi = {
   SEND_POST: "/post",
-  GET_BOOK: "/book",
+};
+export const publicApi = {
+  HOST_ASSETS: "/public/file_storage",
 };
 
 export const filesApi = {
@@ -11,11 +13,47 @@ export const filesApi = {
   FILES_LIST: "/files/list",
   FILES_TYPE: "/files/types",
   FILE_SIGNATURE: "/files/signatures",
-  GET_FILE_PATH: "http://localhost:4000/static/",
+  GET_FILE_PATH: "http://localhost:4001/static/",
+  // GET_FILE_PATH: "https://kuku-staging.s3-us-west-2.amazonaws.com/public/static/img/",
+  GET_FILE_PATH: "https://kuku-staging.s3-us-west-2.amazonaws.com/public/file_storage/",
+};
+ 
+export const userApi = {
+  REGISTER: '/register',
+  CHECK_LOGIN: '/register/checkLogin',
+  LOGIN_EXCHANGE_EPHEMERAL_KEYS: '/login/exchangeEphemeralKeys',
+  LOGIN_SESSION_PROOF: '/login/validateSessionProofs',
+  LOGIN_GET_USER_TOKEN: '/login/getUserToken',
+  GET_USER: '/user',
+  GET_TOKEN_PAIR: '/tokens-pair',
+  SUBSCRIBED: '/subscribed',
+  UPDATE_USER: '/user/update',
+  FOLLOW_USER: '/user/follow',
 };
 
-export const userApi = {
-  LOGIN: '/login',
-  REGISTER: '/register',
-  IS_FREE_LOGIN: '/isFreeLogin',
+export const inboxApi = {
+  INBOX: '/inbox',
+  INBOX_UPDATE_STATE: '/inbox/update',
 };
+
+// 24, 36, 72
+export const robotHash = ({ hash, size }) => {
+  return `https://robohash.org/${hash}.png`
+}
+
+// url: 'https://robohash.org/asfdsdf.png?size=200x200',
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // inbox statuses new/rejected/accepted

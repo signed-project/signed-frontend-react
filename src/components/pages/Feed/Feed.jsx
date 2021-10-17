@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Link, NavLink, useHistory } from "react-router-dom";
-
+import { useHistory } from "react-router-dom";
 import Post from "../../utils/Post/Post";
-import style from "./feed.module.scss";
 import routes from "../../../config/routes.config";
 
 const Feed = ({ toggleTheme }) => {
-  const hashedPostMap = useSelector((state) => state.post.hashed);
   const stream = useSelector((state) => state.post.stream);
   const [openMenuHash, setOpenMenuHash] = useState(null);
 
@@ -19,7 +16,7 @@ const Feed = ({ toggleTheme }) => {
   }, [toggleTheme]);
 
   useEffect(() => {
-    setPosts(stream);
+    setPosts([...stream]);
   }, [stream]);
 
   const handleShowMenu = (hash) => {
@@ -43,37 +40,23 @@ const Feed = ({ toggleTheme }) => {
     history.push(`${routes.newPost}?edit=${hash}`);
   };
 
-  // TODO : refactor change less signature
-  const renderPosts = posts
-    .slice()
-    .reverse()
-    .map((p, i) => {
-      return (
-        <Post
-          post={p}
-          key={i}
-          renderKey={i}
-          type={p.type}
-          name={p.source.name}
-          text={p.text}
-          postHash={p?.target?.postHash}
-          createdAt={p.createdAt}
-          likesCount={p.likesCount}
-          repostsCount={p.repostsCount}
-          attachments={p.attachments}
-          hash={p.hash}
-          handleShowMenu={handleShowMenu}
-          isShowMenu={isShowMenu}
-          handleEditPost={handleEditPost}
-        />
-      );
-    });
+  const renderPosts = posts.map((p, i) => {
+    return (
+      <Post
+        key={i}
+        renderKey={i}
+        post={p}
+        handleShowMenu={handleShowMenu}
+        isShowMenu={isShowMenu}
+        handleEditPost={handleEditPost}
+      />
+    );
+  });
+
 
   return (
     <>
-      <div className={style.feed} onClick={(e) => handleMenuClose(e)}>
-        {posts && renderPosts}
-      </div>
+      {posts && <div onClick={(e) => handleMenuClose(e)}>{renderPosts}</div>}
     </>
   );
 };

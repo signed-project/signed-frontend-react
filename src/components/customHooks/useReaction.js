@@ -12,35 +12,37 @@ const useReaction = () => {
     const history = useHistory();
     const dispatch = useDispatch();
 
-
     const handleLike = (p) => {
         let data;
         if (p.type === 'post' || p.type === 'reply') {
             data = {
                 source: user.source,
                 type: 'like',
-                wfi: user.wfi,
+                wif: user.wif,
                 target: {
-                    "sourceHash": p.source.hash,
+                    "sourceHash": user.source.hash,
                     "postHash": p.hash
-                }
+                },
+                mentions: [p.source],
             }
         }
         else {
             const postData = postMapState[p?.target?.postHash];
             data = {
-                ...postData,
+                source: user.source,
                 type: 'like',
-                wfi: user.wfi,
+                wif: user.wif,
                 target: {
-                    sourceHash: postData.source.hash,
-                    postHash: postData.hash
-                }
+                    sourceHash: p.source.hash,
+                    postHash: p?.target?.postHash
+                },
+                mentions: [p.source],
             }
         };
         const post = new PostModel(data);
         const likePost = post.newPost;
-        dispatch(postActions.sendPost(likePost));
+
+        dispatch(postActions.sendPost({ post: likePost }));
         history.push(`${routes.feed}`);
     };
 
@@ -71,14 +73,11 @@ const useReaction = () => {
         const type = 'reply';
         history.push(`${routes.newPost}?post=${sourcePost}&user=${sourceAddress}&type=${type}`);
     }
-
-
     return {
         handleLike,
         handleRepost,
         handleReply
     }
-
 }
 
 export default useReaction;

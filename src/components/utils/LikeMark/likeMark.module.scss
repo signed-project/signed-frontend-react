@@ -5,6 +5,7 @@
   display: flex;
   justify-content: row;
   justify-content: space-between;
+  cursor: pointer;
 }
 .likeRow {
   display: flex;
@@ -49,8 +50,7 @@
   text-align: left;
 }
 
-
 .menuIcon {
-    height: 15px;
-    margin-right: 10px;
-  }
+  height: 15px;
+  margin-right: 10px;
+}
