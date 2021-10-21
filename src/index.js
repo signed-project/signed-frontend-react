@@ -15,9 +15,5 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
-/**
- * @tutorial
- * @param "homepage": "/public", in @module package.json for bould on aws s3 hosting
-  */
 
 

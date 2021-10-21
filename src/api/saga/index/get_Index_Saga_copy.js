@@ -121,7 +121,6 @@ const getUser = async ({ axios, token }) => {
     res = await axios.post(userApi.GET_USER, data);
   } catch (error) {
     console.warn("[getUserInfo][error]", error);
-    return res;
   }
   return res;
 };

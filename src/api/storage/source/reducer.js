@@ -6,12 +6,16 @@ export const ACTIONS = {
     SET_SOURCE_LATEST: 'SOURCE::SET_SOURCE_LATEST',
     UPDATE_SOURCE_LATEST: 'SOURCE::UPDATE_SOURCE_LATEST',
     ADD_TEMP_SOURCE_ITEM: 'SOURCE::ADD_TEMP_SOURCE_ITEM',
+    ALL_RECEIVED_SOURCE_NUMBER: 'SOURCE::ALL_RECEIVED_SOURCE_NUMBER',
+    CURRENT_ALREADY_SET_SOURCE_NUMBER: 'SOURCE::CURRENT_ALREADY_SET_SOURCE_NUMBER',
 };
 
 const initialState = {
     latest: [],
     hashed: [],
-    tempSource: []
+    temp: [],
+    allReceivedNumber: '',
+    currentAlreadySetNumber: '',
 };
 
 const sourceReducer = (state = initialState, action) => {
@@ -36,13 +40,22 @@ const sourceReducer = (state = initialState, action) => {
                 }
             };
         case ACTIONS.ADD_TEMP_SOURCE_ITEM:
-            // const updateSource = { [action.payload.address]: action.payload.address };
             return {
                 ...state,
-                tempSource: [
-                    ...state.tempSource,
+                temp: [
+                    ...state.temp,
                     action.payload
                 ]
+            };
+        case ACTIONS.ALL_RECEIVED_SOURCE_NUMBER:
+            return {
+                ...state,
+                allReceivedNumber: action.payload
+            };
+        case ACTIONS.CURRENT_ALREADY_SET_SOURCE_NUMBER:
+            return {
+                ...state,
+                currentAlreadySetNumber: action.payload
             };
         default:
             return state;

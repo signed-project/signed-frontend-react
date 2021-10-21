@@ -1,4 +1,4 @@
-import { isPostFieldValid } from '../../../libs/validation';
+import { isPostFieldValid } from './validation';
 
 
 const sortPostUpdateAt = (arr) => {
@@ -32,15 +32,7 @@ const sortPostUpdateAt = (arr) => {
             };
             return post;
         });
-
     const sortUniquePost = uniquePost.slice().sort((a, b) => b.updatedAt - a.updatedAt)
-
-    // const sortUniquePost = uniquePost.slice().map(post => {
-    //     if (post.length > 1) {
-    //         post.sort((a, b) => b.updatedAt - a.updatedAt)
-    //         return post[0]
-    //     } else return post[0];
-    // })
     return sortUniquePost
 }
 // && isSignatureValid({ data: post })
@@ -54,7 +46,7 @@ const getPostStream = (arr) => {
             return false;
         }
     });
-  
+
     return sortPostUpdateAt(newArr);
 }
 
