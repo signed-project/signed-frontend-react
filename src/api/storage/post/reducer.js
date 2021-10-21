@@ -10,7 +10,7 @@ export const ACTIONS = {
   SET_POST_LATEST: "POST::SET_POST_LATEST",
   SET_HASHED_TARGET_POST: "POST::SET_HASHED_TARGET_POST",
   GET_INDEX: "POST::GET_INDEX",
-  ADD_TEMP_POST_ITEM: 'POST::ADD_TEMP_POST_ITEM',
+  ADD_TEMP_POST_ITEM: "POST::ADD_TEMP_POST_ITEM",
 };
 
 const initialState = {
@@ -18,7 +18,7 @@ const initialState = {
   latest: {},
   hashed: {},
   hashedTargetPost: {},
-  temp: []
+  temp: [],
 };
 
 const postReducer = (state = initialState, action) => {
@@ -75,10 +75,7 @@ const postReducer = (state = initialState, action) => {
     case ACTIONS.ADD_TEMP_POST_ITEM:
       return {
         ...state,
-        temp: [
-          ...state.temp,
-          ...action.payload,
-        ],
+        temp: [...state.temp, ...action.payload],
       };
     default:
       return state;
