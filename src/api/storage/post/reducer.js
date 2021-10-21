@@ -17,6 +17,7 @@ const initialState = {
   stream: [],
   latest: {},
   hashed: {},
+  hashedTargetPost: {},
   temp: []
 };
 
