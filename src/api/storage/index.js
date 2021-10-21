@@ -25,8 +25,8 @@ let store;
 if (process.env.NODE_ENV === "development") {
     store = createStore(
         reducer,
-        // reducer,
-        composeWithDevTools(applyMiddleware(logger, sagaMiddleware))
+        composeWithDevTools(applyMiddleware(sagaMiddleware))
+        // composeWithDevTools(applyMiddleware(logger, sagaMiddleware))
         // composeWithDevTools(applyMiddleware(createStateSyncMiddleware(), logger, sagaMiddleware))
     );
 } else {

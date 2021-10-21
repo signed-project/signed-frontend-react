@@ -2,88 +2,23 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import axios from 'axios';
 import Header from './Header/Header';
 import Navigation from './Navigation/Navigation';
 import WelcomeSing from './WelcomeSign/WelcomeSign';
 import router from '../../config/routes.config';
 import styles from './layout.module.scss';
+import { getDefaultSources, getSourcesIndex } from '../../api/customNpmPackage/loadIndexes';
 import { inboxActions } from '../../api/storage/inbox';
 import { sourceActions } from '../../api/storage/source';
 import { postActions } from '../../api/storage/post';
 import { userApi } from '../../config/http.config.js';
 const apiHost = process.env.REACT_APP_API_HOST;
 
-
 const Layout = ({ children, theme }) => {
   const [isAuthPage, setISAuthPage] = useState(false)
-  const { isAuth } = useSelector(state => state.user);
+  const { isAuth, subscribed, source: userSource } = useSelector(state => state.user);
   const location = useLocation();
   const dispatch = useDispatch();
-
-
-  const getSubscribedIndex = async ({ subscribed }) => {
-    console.log('getSubscribedIndex[subscribed.length]', subscribed.length);
-
-    let gatheredPosts = [],
-      hostSources = [];
-
-
-    try {
-      await Promise.allSettled(
-        subscribed.map(async (sbs) => {
-          await Promise.allSettled(
-            sbs.hosts.map(async (hst) => {
-              let res = await axios.get(`${hst.index}`);
-              if (res?.data?.index?.recentPosts) {
-                // gatheredPosts.push(...indexPosts);
-                const indexPosts = res?.data?.index?.recentPosts;
-
-                console.log('res?.data?.index?.recentPosts[indexPosts]', indexPosts);
-                console.log('Array.isArray(indexPosts) && indexPosts.length > 0', Array.isArray(indexPosts) && indexPosts.length > 0);
-                if (Array.isArray(indexPosts) && indexPosts.length > 0)
-                  dispatch(postActions.addTempPost(indexPosts));
-              }
-              if (res?.data?.source) {
-                // hostSources.push(res?.data?.source);
-                dispatch(sourceActions.addTempSourceItem(res?.data?.source));
-              }
-              return;
-            })
-          );
-        })
-      );
-
-    } catch (e) {
-      console.warn("[getSubscribedIndex][Promise.all]", e);
-    }
-
-    console.log('gatheredPosts', gatheredPosts.length);
-    console.log('hostSources', hostSources.length);
-    return { gatheredPosts, hostSources };
-  };
-
-
-  const getAllHostsIndex = async () => {
-    let data;
-    try {
-      ({ data } = await axios.get(`${apiHost}${userApi.SUBSCRIBED}`));
-      console.log('[getAllHostsIndex][]data', data.length);
-    } catch (e) {
-      console.warn("[getIndexSaga][getAllHostsIndex]", e);
-    }
-
-    try {
-      const { gatheredPosts, hostSources } = await getSubscribedIndex({
-        subscribed: data,
-      });
-      // return { gatheredPosts, hostSources };
-    } catch (e) {
-      console.warn("[getIndexSaga][getAllHostsIndex][getSubscribedIndex]", e);
-      return [];
-    }
-  };
-
 
   useEffect(() => {
     if (isAuth) {
@@ -91,16 +26,40 @@ const Layout = ({ children, theme }) => {
     }
   }, [isAuth]);
 
+  const setAllReceivedSourcesNumber = (number) => {
+    dispatch(sourceActions.setAllReceivedNumber(number));
+  }
+
+  const setCurrentAlreadySetSourcesNumber = (number) => {
+    dispatch(sourceActions.setCurrentAlreadySetNumber(number));
+  }
+
+  const addTempPostArr = (postsArr) => {
+    dispatch(postActions.addTempPost(postsArr));
+  }
+
+  const setAddTempSourceItem = (sourceItem) => {
+    dispatch(sourceActions.addTempSourceItem(sourceItem));
+  }
+
   useEffect(() => {
     if (!isAuth) {
-
       (async () => {
-        await getAllHostsIndex()
+        await getDefaultSources({
+          dispatch, setAllReceivedSourcesNumber, setCurrentAlreadySetSourcesNumber,
+          addTempPostArr, setAddTempSourceItem, getSubscribedPath: `${apiHost}${userApi.SUBSCRIBED}`
+        })
       })()
-
-
     }
-  }, []);
+    else {
+      (async () => {
+        await getSourcesIndex({
+          sources: [...subscribed, userSource], setAllReceivedSourcesNumber,
+          setCurrentAlreadySetSourcesNumber, addTempPostArr, setAddTempSourceItem,
+        })
+      })()
+    }
+  }, [isAuth]);
 
   useEffect(() => {
     setISAuthPage(false)

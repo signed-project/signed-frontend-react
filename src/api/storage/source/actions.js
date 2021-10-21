@@ -14,3 +14,13 @@ export const addTempSourceItem = (payload) => ({
     type: ACTIONS.ADD_TEMP_SOURCE_ITEM,
     payload,
 });
+
+export const setAllReceivedNumber = (payload) => ({
+    type: ACTIONS.ALL_RECEIVED_SOURCE_NUMBER,
+    payload,
+});
+
+export const setCurrentAlreadySetNumber = (payload) => ({
+    type: ACTIONS.CURRENT_ALREADY_SET_SOURCE_NUMBER,
+    payload,
+});
