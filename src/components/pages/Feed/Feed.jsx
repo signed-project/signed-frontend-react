@@ -3,9 +3,15 @@ import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import Post from "../../utils/Post/Post";
 import routes from "../../../config/routes.config";
+import styles from './feed.module.scss';
+
 
 const Feed = ({ toggleTheme }) => {
   const stream = useSelector((state) => state.post.stream);
+  const { allReceivedNumber, currentAlreadySetNumber } = useSelector((state) => state.source);
+
+  console.log('currentAlreadySetNumber', currentAlreadySetNumber);
+
   const [openMenuHash, setOpenMenuHash] = useState(null);
 
   const [posts, setPosts] = useState([]);
@@ -56,6 +62,9 @@ const Feed = ({ toggleTheme }) => {
 
   return (
     <>
+      <div className={styles.louder}>
+        {currentAlreadySetNumber} of  {allReceivedNumber}
+      </div>
       {posts && <div onClick={(e) => handleMenuClose(e)}>{renderPosts}</div>}
     </>
   );

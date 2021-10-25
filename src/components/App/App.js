@@ -6,7 +6,6 @@ import MainRouts from './MainRoutes';
 import { layoutType } from '../layout/LayoutProvider.jsx';
 
 const App = () => {
-
   const [themeVal, setThemeVal] = useState(layoutType.showLayout);
   useEffect(() => {
 
