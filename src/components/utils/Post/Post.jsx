@@ -45,11 +45,11 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
 
   useEffect(() => {
     setTargetPostHashMap(hashedTargetPostStore);
-  }, [hashedTargetPostStore, postHash]);
+  }, [hashedTargetPostStore]);
 
   useEffect(() => {
     const commentsTrees = getCommentTrees({
-      targetHashMap: targetPostHashMap ?? [],
+      targetHashMap: targetPostHashMap,
       currentPostHash: hash,
     });
     setComments(commentsTrees);

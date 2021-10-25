@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import queryString from "query-string";
 import icon from "../../../assets/svg/icon";
 import styles from "./postPage.module.scss";
 import { useLocation, useParams, useHistory } from "react-router-dom";
 import RepostBlock from "../../utils/Post/RepostBlock";
 import CommentBlock from "../../utils/Post/CommentBlock";
-import AuthorBlock from "../../utils/AuthorBlock/AuthorBlock";
 import { getReadFormat } from "../../../libs/date.js";
 import Reaction from "../../utils/Reaction/Reaction";
 import PostContent from "../../utils/PostContent/PostContent";
@@ -18,12 +17,11 @@ import Avatar from "../../utils/Avatar/Avatar";
 import InfoAuthor from "../../utils/InfoAuthor/InfoAuthor";
 import Slider from "../../utils/Slider/Slider";
 import routes from "../../../config/routes.config";
-import useSourcePost from "../../customHooks/useSourcePost";
 
 // TODO: refactor this component to use module Post if it possible
 const PostPage = ({ toggleTheme }) => {
-  const user = useSelector((state) => state.user);
   const postMapState = useSelector((state) => state.post.hashed);
+  const hashedTargetPostStore = useSelector((state) => state.post.hashedTargetPost);
   const sourceStateLatest = useSelector(state => state.source.latest);
   const location = useLocation();
   const { slider } = queryString.parse(location.search);
@@ -40,7 +38,6 @@ const PostPage = ({ toggleTheme }) => {
   const [currentPost, setCurrentPost] = useState("");
   const [source, setSource] = useState("");
 
-
   // console.log('currentPost', currentPost);
   // console.log('source[currentPost]', source);
   // console.log('source[currentPost.source.address]', currentPost.source.address);
@@ -49,12 +46,7 @@ const PostPage = ({ toggleTheme }) => {
   useEffect(() => {
     const post = postMapState[hash];
     setCurrentPost(post);
-    if (currentPost?.source?.address) {
-      const sourceData = sourceStateLatest[currentPost.source.address];
-      setSource(sourceData);
-    }
-  }, [postMapState, sourceStateLatest])
-
+  }, [hash, postMapState])
 
   useEffect(() => {
     toggleTheme(false);
@@ -62,15 +54,19 @@ const PostPage = ({ toggleTheme }) => {
 
   useEffect(() => {
     setPost(currentPost);
-  }, [hash, postMapState]);
+    if (currentPost?.source?.address) {
+      const sourceData = sourceStateLatest[currentPost.source.address];
+      setSource(sourceData);
+    }
+  }, [currentPost, sourceStateLatest]);
 
   useEffect(() => {
     const commentsTrees = getCommentTrees({
-      hashMap: postMapState,
-      currentHash: hash,
+      targetHashMap: hashedTargetPostStore,
+      currentPostHash: hash,
     });
     setComments(commentsTrees);
-  }, [postMapState, hash]);
+  }, [hashedTargetPostStore, hash]);
 
   useEffect(() => {
     if (post?.attachments?.length) {
@@ -87,6 +83,7 @@ const PostPage = ({ toggleTheme }) => {
   }, [slider]);
 
   console.log('post[post]', post);
+  console.log('post[source]', source);
 
   const renderComments = comments
     .slice()
@@ -117,7 +114,7 @@ const PostPage = ({ toggleTheme }) => {
     />
   ) : (
     <>
-      <div div className={styles.backBlock}>
+      <div className={styles.backBlock}>
         <img
           src={icon.arrowBack}
           onClick={() => history.push(routes.feed)}

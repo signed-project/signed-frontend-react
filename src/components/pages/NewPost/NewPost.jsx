@@ -34,6 +34,8 @@ import getImgArr from "../../customHooks/getImgSources";
 const NewPost = ({ toggleTheme }) => {
   const user = useSelector((state) => state.user);
   const hashedPost = useSelector((state) => state.post.hashed);
+  const hashedTargetPostStore = useSelector((state) => state.post.hashedTargetPost);
+
   const location = useLocation();
   const {
     post: hash,
@@ -45,7 +47,9 @@ const NewPost = ({ toggleTheme }) => {
   const { uploadFile } = useFiles();
   const isLoginProcess = useSelector((state) => state.user.isLoginProcess);
   const history = useHistory();
+
   const dispatch = useDispatch();
+
   const [message, setMessage] = useState("");
   const [replyingPage, setReplyingPage] = useState(false);
   const [comments, setComments] = useState([]);
@@ -83,34 +87,43 @@ const NewPost = ({ toggleTheme }) => {
     }));
   }, [hash, source, type]);
 
-  const getCommentStoryKnots = (objHashed, postHash) => {
+  const getCommentStoryKnots = (hashMapComments, postHash) => {
     let commentWay = [];
-    const recursion = (hash, level) => {
-      if (!level) return;
-      const filterComment = Object.values(objHashed).find(
-        (p) => p.hash === hash
-      );
-      if (
-        filterComment?.type === "reply" &&
-        !commentWay.find((p) => p.hash === filterComment.hash)
-      ) {
-        commentWay.push(filterComment);
-        recursion(filterComment.target.postHash, level - 1);
-      } else {
-        commentWay.push(filterComment);
-        return;
-      }
-    };
-    recursion(postHash, 30);
+
+    const foundCommentsByPostHash = hashMapComments[postHash];
+
+    if (foundCommentsByPostHash) {
+      commentWay = foundCommentsByPostHash.slice();
+    }
+
+    // const recursion = (hash, level) => {
+    //   if (!level) return;
+    //   const filterComment = Object.values(objHashed).find(
+    //     (p) => p.hash === hash
+    //   );
+    //   if (
+    //     filterComment?.type === "reply" &&
+    //     !commentWay.find((p) => p.hash === filterComment.hash)
+    //   ) {
+    //     commentWay.push(filterComment);
+    //     recursion(filterComment.target.postHash, level - 1);
+    //   } else {
+    //     commentWay.push(filterComment);
+    //     return;
+    //   }
+    // };
+
+    // recursion(postHash, 30);
+
     return commentWay;
   };
 
   useEffect(() => {
-    if (post?.target?.postHash && hashedPost) {
-      const commentsKnitFlow = getCommentStoryKnots(
-        hashedPost,
-        post.target?.postHash
-      );
+    const postHash = post?.target?.postHash; 
+
+    if (postHash && hashedTargetPostStore) {
+      const commentsKnitFlow = getCommentStoryKnots(hashedTargetPostStore, postHash);
+
       const commentsCheckbox = commentsKnitFlow.map((comment) => {
         if (comment) {
           comment.isMention = false;
@@ -120,7 +133,7 @@ const NewPost = ({ toggleTheme }) => {
 
       setComments(commentsCheckbox);
     }
-  }, [post, hashedPost]);
+  }, [post, hashedTargetPostStore]);
 
   useEffect(() => {
     if (edit && hashedPost) {
@@ -193,6 +206,8 @@ const NewPost = ({ toggleTheme }) => {
   };
 
   const handlePublicPost = () => {
+    console.log('comments');
+    console.dir(comments);
     if (isLoading) {
       return;
     }
@@ -244,6 +259,8 @@ const NewPost = ({ toggleTheme }) => {
       });
 
       const newPost = postInstance.newPost;
+
+      console.log('newPost[newPost]', newPost);
 
       setMessage("");
       setUploadedImg([]);
@@ -378,10 +395,10 @@ const NewPost = ({ toggleTheme }) => {
         {replyingPage ? (
           <div className={style.replyingBlock}>
             <ReplyingUser
-              avatar={comments[0].source.avatar}
-              name={comments[0].source.publicName}
-              checked={comments[0].isMention}
-              checkBoxName={comments[0].hash}
+              avatar={comments[0]?.source?.avatar}
+              name={comments[0]?.source?.publicName}
+              checked={comments[0]?.isMention}
+              checkBoxName={comments[0]?.hash}
               onChange={handleMention}
             />
             {comments.length > 1 && (
