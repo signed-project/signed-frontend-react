@@ -21,6 +21,7 @@ export const getFilePath = ({ hash, fileExtension, contentType }) => {
     second: hash.slice(2, 4),
     fileName: hash.slice(4),
   };
+  // TODO This should be source.host.assets instead of filesApi.GET_FILE_PATH
   return `${filesApi.GET_FILE_PATH}${pathStructure.first}/${pathStructure.second}/${pathStructure.fileName}.${fileExtension}`
 };
 
