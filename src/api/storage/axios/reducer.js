@@ -1,10 +1,10 @@
 import axios from "axios";
-
+import { hostApi } from '../../../config/http.config';
 export const ACTIONS = {
   SET_TOKEN: "AXIOS::SET_TOKEN",
 };
 
-const API_HOST = process.env.REACT_APP_API_HOST;
+const API_HOST = hostApi.API_HOST;
 
 const initialState = {
   axios: axios.create({
