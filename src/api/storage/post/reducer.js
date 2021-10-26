@@ -50,6 +50,7 @@ const postReducer = (state = initialState, action) => {
         hashedTargetPost: action.payload,
       };
     case ACTIONS.ADD_HASHED_TARGET_POST:
+      // TODO: Think about reply on reply, how to better organize it
       console.log("action.payload");
       console.dir(action.payload);
 
