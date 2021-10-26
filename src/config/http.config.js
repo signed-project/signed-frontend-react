@@ -13,11 +13,18 @@ export const filesApi = {
   FILES_LIST: "/files/list",
   FILES_TYPE: "/files/types",
   FILE_SIGNATURE: "/files/signatures",
-  GET_FILE_PATH: "http://localhost:4001/static/",
   // GET_FILE_PATH: "https://kuku-staging.s3-us-west-2.amazonaws.com/public/static/img/",
   GET_FILE_PATH: "https://kuku-staging.s3-us-west-2.amazonaws.com/public/file_storage/",
 };
- 
+
+export const hostApi = {
+  API_HOST_ASSETS: `https://kuku-staging.s3-us-west-2.amazonaws.com/public/file_storage`,
+  API_HOST: `https://2poeme803i.execute-api.us-west-2.amazonaws.com`,
+  API_TAG_HOST: `https://uljlagwuji.execute-api.us-west-2.amazonaws.com/prod`,
+  PUBLIC_API_INDEX_HOST: `https://ph04gkkcyd.execute-api.us-west-2.amazonaws.com/prod`
+}
+
+
 export const userApi = {
   REGISTER: '/register',
   CHECK_LOGIN: '/register/checkLogin',

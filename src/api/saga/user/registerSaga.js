@@ -1,5 +1,5 @@
 import { takeEvery, call, select, put } from "redux-saga/effects";
-import { inboxApi, userApi, publicApi } from "../../../config/http.config";
+import { inboxApi, userApi, publicApi, hostApi } from "../../../config/http.config";
 import { ACTIONS as ACTIONS_USER } from "../../storage/user";
 import { ACTIONS as ACTIONS_POST } from "../../storage/post";
 import { ACTIONS as ACTIONS_AXIOS } from "../../storage/axios";
@@ -38,13 +38,14 @@ export function* workerRegister(action) {
     const userBitcoinData = getRegisterUserData({ password: action.payload.password, wifString: action.payload.wif });
     console.log('{ password: action.payload.password, wifString: action.payload.wif }', { password: action.payload.password, wifString: action.payload.wif });
 
+ 
 
     const hosts = [
         {
-            assets: `${process.env.REACT_APP_API_HOST}${publicApi.HOST_ASSETS}`,
-            index: `${process.env.REACT_APP_PUBLIC_API_INDEX_HOST}/${userBitcoinData.address}`,
-            inbox: `${process.env.REACT_APP_API_HOST}${inboxApi.INBOX}`,
-            tag: `${process.env.REACT_APP_PUBLIC_API_TAG_HOST}`,
+            assets: `${hostApi.API_HOST_ASSETS}`,
+            index: `${hostApi.PUBLIC_API_INDEX_HOST}/${userBitcoinData.address}`,
+            inbox: `${hostApi.API_HOST}${inboxApi.INBOX}`,
+            tag: `${hostApi.API_TAG_HOST}`,
         }];
 
     const userModel = new User({

@@ -11,8 +11,9 @@ import { getDefaultSources, getSourcesIndex } from '../../api/customNpmPackage/l
 import { inboxActions } from '../../api/storage/inbox';
 import { sourceActions } from '../../api/storage/source';
 import { postActions } from '../../api/storage/post';
-import { userApi } from '../../config/http.config.js';
-const apiHost = process.env.REACT_APP_API_HOST;
+import { userApi, hostApi } from '../../config/http.config.js';
+ 
+const apiHost = hostApi.API_HOST;
 
 const Layout = ({ children, theme }) => {
   const [isAuthPage, setISAuthPage] = useState(false)

@@ -1,5 +1,5 @@
 import { call, select, put, takeEvery, delay, all } from "redux-saga/effects";
-import { publicApi, userApi } from "../../../config/http.config";
+import { publicApi, userApi, hostApi } from "../../../config/http.config";
 import { ACTIONS as POST_ACTIONS } from "../../storage/post";
 import { ACTIONS as USER_ACTIONS } from "../../storage/user";
 import { ACTIONS as SOURCE_ACTIONS } from "../../storage/source";
@@ -10,8 +10,8 @@ import axios from "axios";
 import jwt from "jsonwebtoken";
 import { User } from "../../models/user";
 
-const publicApiHost = process.env.REACT_APP_PUBLIC_API_INDEX_HOST;
-const apiHost = process.env.REACT_APP_API_HOST;
+const publicApiHost = hostApi.PUBLIC_API_INDEX_HOST;
+const apiHost = hostApi.API_HOST;
 
 let postCollecting = [];
 let sourceCollecting = [];
