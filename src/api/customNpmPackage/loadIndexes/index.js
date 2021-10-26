@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+// TODO: Добавить функцию загрузки архивов
+// getArchives({ archives, callbackReceivedArchives, callbackAddTempPostArr, ... и др колбеки})
 
 const getSourcesIndex = async ({ sources, setAllReceivedSourcesNumber,
     setCurrentAlreadySetSourcesNumber,
