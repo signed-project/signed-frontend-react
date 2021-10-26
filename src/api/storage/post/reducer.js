@@ -9,8 +9,9 @@ export const ACTIONS = {
   SET_POST_HASH: "POST::SET_POST_HASH",
   SET_POST_LATEST: "POST::SET_POST_LATEST",
   SET_HASHED_TARGET_POST: "POST::SET_HASHED_TARGET_POST",
+  ADD_HASHED_TARGET_POST: "POST::ADD_HASHED_TARGET_POST",
   GET_INDEX: "POST::GET_INDEX",
-  ADD_TEMP_POST_ITEM: 'POST::ADD_TEMP_POST_ITEM',
+  ADD_TEMP_POST_ITEM: "POST::ADD_TEMP_POST_ITEM",
 };
 
 const initialState = {
@@ -18,7 +19,7 @@ const initialState = {
   latest: {},
   hashed: {},
   hashedTargetPost: {},
-  temp: []
+  temp: [],
 };
 
 const postReducer = (state = initialState, action) => {
@@ -48,6 +49,40 @@ const postReducer = (state = initialState, action) => {
         ...state,
         hashedTargetPost: action.payload,
       };
+    case ACTIONS.ADD_HASHED_TARGET_POST:
+      console.log("action.payload");
+      console.dir(action.payload);
+
+      const stateHashedTargetPost = { ...state.hashedTargetPost };
+      const currHashPost = action.payload.target.postHash;
+
+      console.log("currHashPost");
+      console.dir(currHashPost);
+
+      console.log(" ---- before-add ---- stateHashedTargetPost");
+      console.dir(stateHashedTargetPost);
+
+      const currHashedTargetPost = stateHashedTargetPost[currHashPost];
+
+      console.log(" ----------------- currHashedTargetPost -----------------");
+      console.dir(currHashedTargetPost);
+
+      if (currHashedTargetPost) {
+        console.log(" ----------------- if -----------------");
+        stateHashedTargetPost[currHashPost].push(action.payload);
+      } else {
+        console.log(" ----------------- else -----------------");
+        stateHashedTargetPost[currHashPost] = [];
+        stateHashedTargetPost[currHashPost].push(action.payload);
+      }
+
+      console.log("stateHashedTargetPost");
+      console.dir(stateHashedTargetPost);
+
+      return {
+        ...state,
+        hashedTargetPost: stateHashedTargetPost,
+      };
     case ACTIONS.ADD_POST_TO_STREAM:
       // const currentStream = state.stream.filter(post => post.id !== action.payload.id);
       return {
@@ -75,10 +110,7 @@ const postReducer = (state = initialState, action) => {
     case ACTIONS.ADD_TEMP_POST_ITEM:
       return {
         ...state,
-        temp: [
-          ...state.temp,
-          ...action.payload,
-        ],
+        temp: [...state.temp, ...action.payload],
       };
     default:
       return state;

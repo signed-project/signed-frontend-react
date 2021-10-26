@@ -8,7 +8,7 @@
     "@testing-library/react": "^11.2.6",
     "@testing-library/user-event": "^12.8.3",
     "ajv": "^8.1.0",
-    "axios": "^0.21.1",
+    "axios": "^0.21.4",
     "bip38": "^3.1.1",
     "bitcoinjs-lib": "^5.2.0",
     "bitcoinjs-message": "^2.2.0",
@@ -47,7 +47,10 @@
   "scripts": {
     "start": "set HTTPS=true&&react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test"
+    "test": "node ./test/index.js",
+    "eject": "react-scripts eject",
+    "start_craco": "craco start",
+    "build_craco": "craco build"
   },
   "homepage": "/",
   "eslintConfig": {
@@ -67,5 +70,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "pending-xhr-puppeteer": "^2.3.3",
+    "puppeteer": "^10.4.0"
   }
 }

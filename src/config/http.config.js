@@ -13,8 +13,6 @@ export const filesApi = {
   FILES_LIST: "/files/list",
   FILES_TYPE: "/files/types",
   FILE_SIGNATURE: "/files/signatures",
-  // GET_FILE_PATH: "https://kuku-staging.s3-us-west-2.amazonaws.com/public/static/img/",
-  GET_FILE_PATH: "https://kuku-staging.s3-us-west-2.amazonaws.com/public/file_storage/",
 };
 
 export const hostApi = {

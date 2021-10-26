@@ -12,7 +12,6 @@ const Feed = ({ toggleTheme }) => {
 
   console.log('currentAlreadySetNumber', currentAlreadySetNumber);
 
-
   const [openMenuHash, setOpenMenuHash] = useState(null);
 
   const [posts, setPosts] = useState([]);

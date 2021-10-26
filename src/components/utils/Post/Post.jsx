@@ -38,22 +38,22 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
   let sourceTargetPost = useSourcePost(targetPost?.source?.address);
   const reaction = useReaction();
 
-  const [postMap, setPostMap] = useState({});
+  const [targetPostHashMap, setTargetPostHashMap] = useState({});
   const [comments, setComments] = useState([]);
   const [imgPreview, setImgPreview] = useState([]);
-  const postMapState = useSelector((state) => state.post.hashed);
+  const hashedTargetPostStore = useSelector((state) => state.post.hashedTargetPost);
 
   useEffect(() => {
-    setPostMap(postMapState);
-  }, [postMapState, postHash]);
+    setTargetPostHashMap(hashedTargetPostStore);
+  }, [hashedTargetPostStore]);
 
   useEffect(() => {
     const commentsTrees = getCommentTrees({
-      hashMap: postMap,
-      currentHash: hash,
+      targetHashMap: targetPostHashMap,
+      currentPostHash: hash,
     });
     setComments(commentsTrees);
-  }, [postMap, hash]);
+  }, [targetPostHashMap, hash]);
 
   useEffect(() => {
     const imgSources = getImgArr(attachments);
@@ -75,19 +75,7 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
   }
 
   const renderComments = comments.map((c, i) => {
-    if (true) {
-      // if (subscribed.includes(c.source.address) && i !== 3) {
-      return (
-        <CommentBlock
-          key={i}
-          post={c}
-          renderKey={i}
-          removeLastLine={i + 1 === comments.length}
-          dotsLine={true}
-          showReactionBlock={true}
-        />
-      );
-    } else if (i === 3) {
+    if (i === 3) {
       return (
         <div key={i} className={styles.gap}>
           <div className={styles.gapBlockLine}></div>
@@ -95,6 +83,18 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
         </div>
       );
     }
+
+    // if (subscribed.includes(c.source.address) && i !== 3) {
+    return (
+      <CommentBlock
+        key={i}
+        post={c}
+        renderKey={i}
+        removeLastLine={i + 1 === comments.length}
+        dotsLine={true}
+        showReactionBlock={true}
+      />
+    );
   });
 
   const reactionBlock = () => {
