@@ -29,7 +29,7 @@ const PostContent = ({ text, postHash, imgHostArr, hosts, address }) => {
 
   if (hosts) {
     options = {
-      target: '_blank',
+      // target: '_blank',
       tagName: {
         hashtag: () => Link,
       },
@@ -58,7 +58,8 @@ const PostContent = ({ text, postHash, imgHostArr, hosts, address }) => {
         {img && <img src={img} alt="" className={styles.imgCommentPreview} />}
         {/* <span>{text}</span> */}
         {hosts ? (
-          <Linkify options={options}>{text}</Linkify>
+          <Linkify properties={{ target: '_blank', style: { color: 'red', fontWeight: 'bold' } }}>{text}</Linkify>
+          // <Linkify target='_blank' options={options}>
         ) : (
           <span>{text}</span>
         )}
