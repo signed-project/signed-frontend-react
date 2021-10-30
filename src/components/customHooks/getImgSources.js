@@ -1,5 +1,5 @@
 import mime from "mime/lite";
-import { filesApi } from "../../config/http.config";
+import { filesApi, hostApi } from "../../config/http.config";
 
 /**
  *  example how build path to img
@@ -22,7 +22,7 @@ export const getFilePath = ({ hash, fileExtension, contentType }) => {
     fileName: hash.slice(4),
   };
   // TODO This should be source.host.assets instead of filesApi.GET_FILE_PATH
-  return `${filesApi.GET_FILE_PATH}${pathStructure.first}/${pathStructure.second}/${pathStructure.fileName}.${fileExtension}`
+  return `${hostApi.API_HOST_ASSETS}${pathStructure.first}/${pathStructure.second}/${pathStructure.fileName}.${fileExtension}`
 };
 
 

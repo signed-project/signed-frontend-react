@@ -1,8 +1,7 @@
+import hostApiConfig from '../hostApiConfig.json';
+
 export const postApi = {
   SEND_POST: "/post",
-};
-export const publicApi = {
-  HOST_ASSETS: "/public/file_storage",
 };
 
 export const filesApi = {
@@ -16,12 +15,11 @@ export const filesApi = {
 };
 
 export const hostApi = {
-  API_HOST_ASSETS: `https://kuku-staging.s3-us-west-2.amazonaws.com/public/file_storage`,
-  API_HOST: `https://2poeme803i.execute-api.us-west-2.amazonaws.com`,
-  API_TAG_HOST: `https://uljlagwuji.execute-api.us-west-2.amazonaws.com/prod`,
-  PUBLIC_API_INDEX_HOST: `https://ph04gkkcyd.execute-api.us-west-2.amazonaws.com/prod`
+  API_HOST_ASSETS: hostApiConfig.API_HOST_ASSETS,
+  API_HOST: hostApiConfig.API_HOST,
+  API_TAG_HOST: hostApiConfig.API_TAG_HOST,
+  PUBLIC_API_INDEX_HOST: hostApiConfig.PUBLIC_API_INDEX_HOST
 }
-
 
 export const userApi = {
   REGISTER: '/register',
@@ -47,18 +45,4 @@ export const robotHash = ({ hash, size }) => {
 }
 
 // url: 'https://robohash.org/asfdsdf.png?size=200x200',
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   // inbox statuses new/rejected/accepted
