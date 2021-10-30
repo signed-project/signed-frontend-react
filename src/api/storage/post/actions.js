@@ -1,4 +1,3 @@
-
 import { ACTIONS } from "./reducer";
 
 export const setPostStream = (payload) => ({
@@ -30,5 +29,3 @@ export const addTempPost = (payload) => ({
   type: ACTIONS.ADD_TEMP_POST_ITEM,
   payload,
 });
-
-

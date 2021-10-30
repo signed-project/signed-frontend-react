@@ -1,5 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import Layout from '../layout/Layout';
 import LayoutProvider from '../layout/LayoutProvider';
@@ -13,16 +12,9 @@ import routes from '../../config/routes.config';
 import Login from '../pages/Login/Login';
 import Register from '../pages/Register/Register';
 import Source from '../pages/Source/Source';
-import { postActions } from '../../api/storage/post';
 import TagPage from '../pages/TagPage/TagPage';
 
 const MainRouts = () => {
-    const dispatch = useDispatch();
-    useEffect(() => {
-        dispatch(postActions.getIndex({ isRegistered: false }));
-        // dispatch(inboxActions.getInbox());
-    }, []);
-
     return (
         <>
             <LayoutProvider.Consumer >

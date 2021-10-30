@@ -7,17 +7,18 @@ import Navigation from './Navigation/Navigation';
 import WelcomeSing from './WelcomeSign/WelcomeSign';
 import router from '../../config/routes.config';
 import styles from './layout.module.scss';
-import { getDefaultSources, getSourcesIndex } from '../../api/customNpmPackage/loadIndexes';
+// import { getDefaultSources, getSourcesIndex } from '../../api/customNpmPackage/loadIndexes';
 import { inboxActions } from '../../api/storage/inbox';
-import { sourceActions } from '../../api/storage/source';
-import { postActions } from '../../api/storage/post';
-import { userApi, hostApi } from '../../config/http.config.js';
+// import { sourceActions } from '../../api/storage/source';
+// import { postActions } from '../../api/storage/post';
+// import { loadedStreamActions } from '../../api/storage/loadedStream';
+// import { userApi, hostApi } from '../../config/http.config.js';
  
-const apiHost = hostApi.API_HOST;
+// const apiHost = hostApi.API_HOST;
 
 const Layout = ({ children, theme }) => {
-  const [isAuthPage, setISAuthPage] = useState(false)
-  const { isAuth, subscribed, source: userSource } = useSelector(state => state.user);
+  const [isAuthPage, setISAuthPage] = useState(false);
+  const { isAuth } = useSelector(state => state.user);
   const location = useLocation();
   const dispatch = useDispatch();
 
@@ -27,40 +28,57 @@ const Layout = ({ children, theme }) => {
     }
   }, [isAuth]);
 
-  const setAllReceivedSourcesNumber = (number) => {
-    dispatch(sourceActions.setAllReceivedNumber(number));
-  }
+  // const setAllReceivedSourcesNumber = (number) => {
+  //   dispatch(sourceActions.setAllReceivedNumber(number));
+  // }
 
-  const setCurrentAlreadySetSourcesNumber = (number) => {
-    dispatch(sourceActions.setCurrentAlreadySetNumber(number));
-  }
+  // const setCurrentAlreadySetSourcesNumber = (number) => {
+  //   dispatch(sourceActions.setCurrentAlreadySetNumber(number));
+  // }
 
-  const addTempPostArr = (postsArr) => {
-    dispatch(postActions.addTempPost(postsArr));
-  }
+  // const addTempPostArr = (postsArr) => {
+  //   dispatch(postActions.addTempPost(postsArr));
+  // }
 
-  const setAddTempSourceItem = (sourceItem) => {
-    dispatch(sourceActions.addTempSourceItem(sourceItem));
-  }
+  // const setAddTempSourceItem = (sourceItem) => {
+  //   dispatch(sourceActions.addTempSourceItem(sourceItem));
+  // }
 
-  useEffect(() => {
-    if (!isAuth) {
-      (async () => {
-        await getDefaultSources({
-          dispatch, setAllReceivedSourcesNumber, setCurrentAlreadySetSourcesNumber,
-          addTempPostArr, setAddTempSourceItem, getSubscribedPath: `${apiHost}${userApi.SUBSCRIBED}`
-        })
-      })()
-    }
-    else {
-      (async () => {
-        await getSourcesIndex({
-          sources: [...subscribed, userSource], setAllReceivedSourcesNumber,
-          setCurrentAlreadySetSourcesNumber, addTempPostArr, setAddTempSourceItem,
-        })
-      })()
-    }
-  }, [isAuth]);
+  // const setLoadedStream = (loadedStream) => {
+  //   dispatch(loadedStreamActions.setLoadedStream(loadedStream));
+  // }
+
+  // useEffect(() => {
+  //   if (!isAuth) {
+  //     (async () => {
+  //       await getDefaultSources({
+  //         dispatch, 
+  //         setAllReceivedSourcesNumber, 
+  //         setCurrentAlreadySetSourcesNumber,
+  //         addTempPostArr, 
+  //         setAddTempSourceItem, 
+  //         getSubscribedPath: `${apiHost}${userApi.SUBSCRIBED}`,
+  //         setLoadedStream,
+  //       })
+  //     })().then(() => {
+  //       dispatch(postActions.getIndex({ isRegistered: false }));
+  //     });
+  //   }
+  //   else {
+  //     (async () => {
+  //       await getSourcesIndex({
+  //         sources: [...subscribed, userSource], 
+  //         setAllReceivedSourcesNumber,
+  //         setCurrentAlreadySetSourcesNumber, 
+  //         addTempPostArr, 
+  //         setAddTempSourceItem,
+  //         setLoadedStream,
+  //       })
+  //     })().then(() => {
+  //       dispatch(postActions.getIndex({ isRegistered: false }));
+  //     });
+  //   }
+  // }, [isAuth]);
 
   useEffect(() => {
     setISAuthPage(false)
@@ -76,7 +94,7 @@ const Layout = ({ children, theme }) => {
   return (
     <div className={styles.app}>
       {theme && <Header title='signed.移动' />}
-      <main >
+      <main>
         {children}
       </main>
       {theme && isAuth && <Navigation />}

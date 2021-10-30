@@ -4,36 +4,41 @@ import { reducer as userReducer } from "../storage/user";
 import { reducer as postReducer } from "../storage/post";
 import { reducer as sourceReducer } from "../storage/source";
 import { reducer as inboxReducer } from "../storage/inbox";
+import { loadedStreamReducer } from "../storage/loadedStream";
+import { currentStreamReducer } from "../storage/currentStream";
 import { composeWithDevTools } from "redux-devtools-extension";
 import logger from "redux-logger";
-import { createStateSyncMiddleware, initMessageListener } from "redux-state-sync";
+import {
+  createStateSyncMiddleware,
+  initMessageListener,
+} from "redux-state-sync";
 import createSagaMiddleware from "redux-saga";
 import saga from "../saga";
 
-
 const reducer = combineReducers({
-    axios: axiosReducer,
-    post: postReducer,
-    user: userReducer,
-    source: sourceReducer,
-    inbox: inboxReducer,
+  axios: axiosReducer,
+  post: postReducer,
+  user: userReducer,
+  source: sourceReducer,
+  inbox: inboxReducer,
+  loadedStream: loadedStreamReducer,
+  currentStream: currentStreamReducer,
 });
 
 const sagaMiddleware = createSagaMiddleware();
 
 let store;
 if (process.env.NODE_ENV === "development") {
-    store = createStore(
-        reducer,
-        composeWithDevTools(applyMiddleware(sagaMiddleware))
-        // composeWithDevTools(applyMiddleware(logger, sagaMiddleware))
-        // composeWithDevTools(applyMiddleware(createStateSyncMiddleware(), logger, sagaMiddleware))
-    );
+  store = createStore(
+    reducer,
+    composeWithDevTools(applyMiddleware(sagaMiddleware))
+    // composeWithDevTools(applyMiddleware(logger, sagaMiddleware))
+    // composeWithDevTools(applyMiddleware(createStateSyncMiddleware(), logger, sagaMiddleware))
+  );
 } else {
-    store = createStore(reducer, applyMiddleware(sagaMiddleware));
+  store = createStore(reducer, applyMiddleware(sagaMiddleware));
 }
 sagaMiddleware.run(saga);
 // initMessageListener(store);
-
 
 export default store;
