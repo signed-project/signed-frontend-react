@@ -8,8 +8,8 @@ const internalStore = {
   // all archives => hash: JSON.parse(hash.json)
   archivesByHash: {},
 
-  // set actual time range
-  archiveDepth: 1635675379,
+  // actual time range
+  archiveDepth: 0,
 
   // source.hosts.index => { index }
   indexesByAddress: {},

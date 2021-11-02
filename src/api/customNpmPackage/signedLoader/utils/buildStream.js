@@ -1,4 +1,4 @@
-const buildStream = ({ internalStore, sources, afterPost, limit }) => {
+export const buildStream = ({ internalStore, sources, afterPost, limit }) => {
   // Проходит по всем постам в internalStore.postsById и отбирает те, которые
   // - являются корневыми
   // - попадают в диапазон заданный afterPost, limit

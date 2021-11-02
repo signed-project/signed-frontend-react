@@ -1,7 +1,4 @@
-import Ajv from "ajv";
-const ajv = new Ajv({ allErrors: true, async: true });
-
-export const schemaId = {
+const schemaId = {
   post: "validation//post",
   target: "validation//target",
   source: "validation//source",
@@ -29,14 +26,12 @@ const mediaSchema = {
     hash: { type: "string" },
     width: { type: "string" },
     height: { type: "string" },
-    // thumbnail: { type: mediaSchema },
     url: { type: "string" },
   },
-  // required: ["contentType", "hash"],
   additionalProperties: true,
 };
 
-export const hostSchema = {
+const hostSchema = {
   $id: schemaId.host,
   type: "object",
   properties: {
@@ -44,7 +39,7 @@ export const hostSchema = {
     index: { type: "string" },
   },
 };
-//   assets: { type: "array", items: { type: "string" } },
+
 export const sourceSchema = {
   $id: schemaId.source,
   type: "object",
@@ -72,7 +67,7 @@ const targetSchema = {
   additionalProperties: false,
 };
 
-const postSchema = {
+export const postSchema = {
   $id: schemaId.post,
   type: "object",
   properties: {
@@ -84,8 +79,6 @@ const postSchema = {
     text: { type: "string" },
     attachments: { type: "array", items: mediaSchema },
     signatures: { type: "array", items: signatureItemSchema },
-    // "signatures": { type: "array", items: { type: "string" } },
-    // "signatures": { type: "string" },
     likesCount: { type: "integer" },
     repostsCount: { type: "integer" },
     commentsCount: { type: "integer" },
@@ -121,6 +114,3 @@ const postSchema = {
   ],
   additionalProperties: true,
 };
-
-export const isSource = ajv.compile(sourceSchema);
-export const isPostFieldValid = ajv.compile(postSchema);

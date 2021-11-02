@@ -46,7 +46,7 @@ const getStreamPage = ({ sources, afterPost, limit, callback }) => {
 
   onLoadMore = () => {
     stream = buildStream({ internalStore, sources, afterPost, limit });
-    callback(stream);
+    callback(stream); // callback this is function from Redux store for update visiable stream
   };
 
   // Создаем обработчик колбеков от лоадера, который
@@ -57,6 +57,27 @@ const getStreamPage = ({ sources, afterPost, limit, callback }) => {
   // Возвращаем что есть пока
   return stream;
 };
+
+/**
+ * loadIndexes - pass through sources and get indexes => archives & recentPosts & sources instance
+ * loadArchives - we will call it for download archives
+ * buildStream - build a stream on page
+ * addPost - we will use it in loadArchives & loadIndexes
+ * addSource - we will use it in loadIndexes
+ * getPageStream - we will use it in Feed component for get stream on page and pass callback for update visiable stream on page
+ * callback - this is a Redux function for update visiable stream on page
+ * loadMore - this is a callback for update internalStore stream and call the callback Redux function
+ */
+
+/**
+ * addPost & addSource | 1
+ * loadIndexes | 2
+ * loadArchives | 3
+ * buildStream | 4
+ * loadMore | 5
+ * getPageStream | 6
+ * callback | 7
+ */
 
 const buildStream = ({ internalStore, sources, afterPost, limit }) => {
   // Проходит по всем постам в internalStore.postsById и отбирает те, которые
