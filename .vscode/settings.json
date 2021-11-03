@@ -34,5 +34,5 @@
         "statusBarItem.remoteForeground": "#e7e7e7"
     },
     "peacock.color": "#1e1324",
-    "compile-hero.disable-compile-files-on-did-save-code": false
+    "compile-hero.disable-compile-files-on-did-save-code": true
 }
