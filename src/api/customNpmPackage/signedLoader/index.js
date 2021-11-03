@@ -5,6 +5,12 @@ const internalStore = {
   // all actual posts (post (rootPost), reply, repost, like)
   postsById: {},
 
+  // post.target?.postHash : posts[] with the same hash as post.target.postHash
+  postsByTargetHash: {},
+
+  // posts with type such as like, repost, post but not reply
+  rootPosts: [],
+
   // all archives => hash: JSON.parse(hash.json)
   archivesByHash: {},
 
@@ -16,4 +22,6 @@ const internalStore = {
 
   // source.hosts.index => { source }
   sourcesByAddress: {},
+
+  blacklistedSources: {},
 };

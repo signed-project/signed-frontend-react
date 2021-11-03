@@ -8,10 +8,26 @@ export const addPost = ({ internalStore, post }) => {
     internalStore.postsByHash[post.hash] = post;
     const id = post.source.address + post.id;
 
+    if (!post.target) {
+      internalStore.rootPosts.push(post);
+    } else {
+      const postHash = post.target.postHash;
+
+      if (postHash in internalStore.postsByTargetHash) {
+        const replyPosts = internalStore.postsByTargetHash[postHash].slice();
+
+        replyPosts.push(post);
+
+        internalStore.postsByTargetHash[postHash] = replyPosts;
+      } else {
+        internalStore.postsByTargetHash[postHash] = [post];
+      }
+    }
+
     if (id in internalStore.postsById) {
       const existing = internalStore.postsById[id];
 
-      if (existing.dateUpdated < post.dateUpdated) {
+      if (existing.updatedAt < post.updatedAt) {
         internalStore.postsById[id] = post; // Заменяем пост более новым
       }
     } else {

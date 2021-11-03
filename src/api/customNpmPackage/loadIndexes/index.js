@@ -44,9 +44,13 @@ const getSourcesIndex = async ({
     await Promise.allSettled(
       sources.map(async (src, i) => {
         setCurrentAlreadySetSourcesNumber(i + 1);
+        console.log("src");
+        console.dir(src);
         await Promise.allSettled(
           src.hosts.map(async (hst) => {
             let res = await axios.get(`${hst.index}`);
+            console.log("res.data");
+            console.dir(res.data);
             if (res?.data?.index?.recentPosts) {
               const indexPosts = res?.data?.index?.recentPosts;
               if (Array.isArray(indexPosts) && indexPosts.length > 0)
