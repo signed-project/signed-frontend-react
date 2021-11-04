@@ -1,12 +1,49 @@
-export const buildStream = ({ internalStore, sources, afterPost, limit }) => {
-  // Проходит по всем постам в internalStore.postsById и отбирает те, которые
-  // - являются корневыми
-  // - попадают в диапазон заданный afterPost, limit
-  // - если не указан afterPost, то условие по afterPost не применяем
-  rootPosts = getRootPosts({ internalStore, sources, afterPost, limit });
+/*
+  Лента это массив тредов. Тред это объект содержащий корневой пост и массив ответов к нему. 
+  Thread = {
+      rootPost: {},
+      replies: []
+  }
+  Корневой пост, который не является ответом ни к какому другому посту. 
+*/
 
-  // Создаем индекс threadsByHash из rootPosts - у каждого thread пустой массив ответов
-  // Проходим по всем постам в internalStore.postsById и те, которые ссылаются на тред
-  // из threadsByHash, добавляем в массив ответов соответсвующего треда
-  stream = addRepliesToThreads({ internalStore, rootPosts });
+export const buildStream = ({
+  internalStore,
+  sources,
+  blacklistedSources,
+  afterPost,
+  limit,
+}) => {
+  let rootPosts = internalStore.rootPosts.slice();
+
+  sources.map((source) => {
+    rootPosts = rootPosts.filter((rootPost) => {
+      let ok = false;
+
+      rootPost.signatures.map((signature) => {
+        if (
+          signature.address === source.address &&
+          !(signature.address in blacklistedSources)
+        ) {
+          ok = true;
+        }
+
+        return;
+      });
+
+      return ok;
+    });
+
+    return;
+  });
+
+  rootPosts = rootPosts.sort(
+    (a, b) => new Date(b.createAt) - new Date(a.createAt)
+  );
+  // get rootPosts
+  // filter rootPosts === from sources and !== blacklisted sources
+  // sort posts by date <<
+  // slice posts from afterPost to limit
+  // if afterPost did not find in posts then get it createdAt property
+  // for every post apply getReplies method
 };

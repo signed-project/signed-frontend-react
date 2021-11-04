@@ -1,7 +1,7 @@
 import { validatePost } from "./validation";
 
 // Добавляем пост в internalStore
-// Этот метод вызывается методами loadIndexes и loadArrays для каждого загруженного поста
+// Этот метод вызывается методами loadIndexes и loadArchives для каждого загруженного поста
 export const addPost = ({ internalStore, post }) => {
   // Проверим подписи и наличие необходимых полей в объекте
   if (validatePost({ post })) {
