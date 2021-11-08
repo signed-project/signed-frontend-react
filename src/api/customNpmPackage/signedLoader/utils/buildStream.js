@@ -7,43 +7,63 @@
   Корневой пост, который не является ответом ни к какому другому посту. 
 */
 
-export const buildStream = ({
+const { getReplies } = require("./getReplies");
+const { filterPostsBySources } = require("./helpers/filterPostsBySources");
+
+const buildStream = ({
   internalStore,
-  sources,
-  blacklistedSources,
+  subscribedSourcesByAddress,
+  blacklistedSourcesByAddress,
   afterPost,
   limit,
 }) => {
-  let rootPosts = internalStore.rootPosts.slice();
-
-  sources.map((source) => {
-    rootPosts = rootPosts.filter((rootPost) => {
-      let ok = false;
-
-      rootPost.signatures.map((signature) => {
-        if (
-          signature.address === source.address &&
-          !(signature.address in blacklistedSources)
-        ) {
-          ok = true;
-        }
-
-        return;
-      });
-
-      return ok;
-    });
-
-    return;
+  const stream = [];
+  let actualRootPosts = [];
+  let rootPosts = filterPostsBySources({
+    posts: internalStore.rootPosts,
+    subscribedSourcesByAddress,
+    blacklistedSourcesByAddress,
   });
 
   rootPosts = rootPosts.sort(
     (a, b) => new Date(b.createAt) - new Date(a.createAt)
   );
-  // get rootPosts
-  // filter rootPosts === from sources and !== blacklisted sources
-  // sort posts by date <<
-  // slice posts from afterPost to limit
-  // if afterPost did not find in posts then get it createdAt property
-  // for every post apply getReplies method
+
+  if (afterPost || Object.keys(afterPost).length > 0) {
+    let foundIndexOfAfterPost = rootPosts.findIndex(
+      (rootPost) =>
+        rootPost.source.address === afterPost.source.address &&
+        rootPost.id === afterPost.id
+    );
+
+    if (!foundIndexOfAfterPost && foundIndexOfAfterPost !== 0) {
+      foundIndexOfAfterPost = rootPosts.findIndex(
+        (rootPost) => rootPost.createAt === afterPost.createAt
+      );
+
+      if (foundIndexOfAfterPost) {
+        actualRootPosts = rootPosts.slice(foundIndexOfAfterPost, limit);
+      }
+    } else {
+      actualRootPosts = rootPosts.slice(foundIndexOfAfterPost, limit);
+    }
+  }
+
+  actualRootPosts.forEach((actualRootPost) => {
+    const replies = getReplies({
+      post: actualRootPost,
+      subscribedSourcesByAddress,
+      blacklistedSourcesByAddress,
+    });
+    stream.push({
+      rootPost: actualRootPost,
+      replies,
+    });
+  });
+
+  return stream;
+};
+
+module.exports = {
+  buildStream,
 };

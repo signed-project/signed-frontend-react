@@ -1,12 +1,12 @@
-import stringify from "fast-json-stable-stringify";
-import sortKeys from "sort-keys";
-import { nanoid } from "nanoid";
-import CryptoJS from "crypto-js";
-import bs58 from "bs58";
-import wif from "wif";
-import bip38 from "bip38";
-import * as bitcoin from "bitcoinjs-lib";
-import * as bitcoinMessage from "bitcoinjs-message";
+const stringify = require("fast-json-stable-stringify");
+const sortKeys = require("sort-keys");
+const { nanoid } = require("nanoid");
+const CryptoJS = require("crypto-js");
+const bs58 = require("bs58");
+const wif = require("wif");
+const bip38 = require("bip38");
+const bitcoin = require("bitcoinjs-lib");
+const bitcoinMessage = require("bitcoinjs-message");
 
 /**
  * @tutorial way to get wif and atc 
@@ -49,7 +49,7 @@ import * as bitcoinMessage from "bitcoinjs-message";
     console.log('signature', signature); 
  */
 
-export const getRegisterUserData = ({ password, wifString = "" }) => {
+const getRegisterUserData = ({ password, wifString = "" }) => {
   let wifBeforeEncrypt, keyPair;
 
   if (!wifString) {
@@ -76,7 +76,7 @@ export const getRegisterUserData = ({ password, wifString = "" }) => {
   };
 };
 
-export const isWifFormat = ({ wif }) => {
+const isWifFormat = ({ wif }) => {
   try {
     const pair = bitcoin.ECPair.fromWIF(wif);
     return !!pair;
@@ -86,7 +86,7 @@ export const isWifFormat = ({ wif }) => {
   }
 };
 
-export const getJsonStringFromObj = ({ objData }) => {
+const getJsonStringFromObj = ({ objData }) => {
   let jsonData;
 
   try {
@@ -105,7 +105,7 @@ export const getJsonStringFromObj = ({ objData }) => {
   return jsonData;
 };
 
-export const getSignatures = ({ data, wif }) => {
+const getSignatures = ({ data, wif }) => {
   let signatureString;
 
   try {
@@ -127,7 +127,7 @@ export const getSignatures = ({ data, wif }) => {
   return signatureString;
 };
 
-export const getHash = ({ data }) => {
+const getHash = ({ data }) => {
   const dataJson = getJsonStringFromObj({ objData: data });
   let resHash;
 
@@ -143,11 +143,11 @@ export const getHash = ({ data }) => {
   return resHash;
 };
 
-export const generateId = () => {
+const generateId = () => {
   return nanoid();
 };
 
-export const isSignatureValid = ({ data, address }) => {
+const isSignatureValid = ({ data, address }) => {
   const { signatures } = data;
   const jsonString = getJsonStringFromObj({ objData: data });
 
@@ -172,4 +172,14 @@ export const isSignatureValid = ({ data, address }) => {
   }
 
   return isValid;
+};
+
+module.exports = {
+  isSignatureValid,
+  generateId,
+  getHash,
+  getSignatures,
+  getJsonStringFromObj,
+  isWifFormat,
+  getRegisterUserData,
 };

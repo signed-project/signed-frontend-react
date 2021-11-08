@@ -1,5 +1,5 @@
-import Ajv from "ajv";
-import { postSchema, sourceSchema } from "./schemas.js";
+const Ajv = require("ajv");
+const { postSchema, sourceSchema } = require("./schemas.js");
 
 const ajv = new Ajv({ allErrors: true, async: true });
 
@@ -43,5 +43,7 @@ const validate = ajv.getSchema("user")
 *
 */
 
-export const isValidSourceFields = ajv.compile(sourceSchema);
-export const isValidPostFields = ajv.compile(postSchema);
+module.exports = {
+  isValidSourceFields: ajv.compile(sourceSchema),
+  isValidPostFields: ajv.compile(postSchema),
+};

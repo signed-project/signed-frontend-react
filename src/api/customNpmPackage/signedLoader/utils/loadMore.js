@@ -1,11 +1,16 @@
-import { loadIndexes } from "./loadIndexes";
-import { loadArchives } from "./loadArchives";
+const { loadArchives } = require("./loadArchives");
+const { loadIndexes } = require("./loadIndexes");
 
 // Скачивалка индексов и архивов
-export const loadMore = ({ internalStore, stream, sources, callback }) => {
+const loadMore = ({
+  internalStore,
+  stream,
+  subscribedSourcesByAddress,
+  callback,
+}) => {
   // Для каждого источника проверяем, загружен ли его индекс и если нет, запускаем загрузку индекса
   // После скачки и обработки каждого индекса вызываем callback
-  loadIndexes({ internalStore, sources, callback });
+  loadIndexes({ internalStore, subscribedSourcesByAddress, callback });
 
   let unixtime = Math.floor(Date.now() / 1000);
   let maxDepth = -1;
@@ -22,5 +27,9 @@ export const loadMore = ({ internalStore, stream, sources, callback }) => {
 
   // Запускаем скачивание любого архива у которого dateStart > archiveDepth
   // После скачки и обработки каждого архива вызываем callback
-  loadArchives({ internalStore, sources, callback });
+  loadArchives({ internalStore, subscribedSourcesByAddress, callback });
+};
+
+module.exports = {
+  loadMore,
 };

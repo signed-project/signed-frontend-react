@@ -1,40 +1,41 @@
-export const getReplies = ({
+const { filterPostsBySources } = require("./helpers/filterPostsBySources");
+
+const getReplies = ({
   internalStore,
   post,
-  sources,
-  blacklistedSources,
+  subscribedSourcesByAddress,
+  blacklistedSourcesByAddress,
 }) => {
-  let replies = internalStore.postsByTargetHash[post.hash].slice();
+  let replies = internalStore.postsByTargetHash[post.hash];
+  const postWithReplies = [];
 
   if (!replies) {
     return [];
   }
 
-  sources.map((source) => {
-    replies = replies.filter((reply) => {
-      let ok = false;
-
-      reply.signatures.map((signature) => {
-        if (
-          signature.address === source.address &&
-          !(signature.address in blacklistedSources)
-        ) {
-          ok = true;
-        }
-
-        return;
-      });
-
-      return ok;
-    });
-
-    return;
+  replies = filterPostsBySources({
+    posts: replies,
+    subscribedSourcesByAddress,
+    blacklistedSourcesByAddress,
   });
 
   replies = replies.sort((a, b) => new Date(a.createAt) - new Date(b.createAt));
 
-  return [
-    ...replies,
-    ...getReplies({ internalStore, post, sources, blacklistedSources }),
-  ];
+  replies.forEach((reply) => {
+    postWithReplies.push(reply);
+    postWithReplies.push(
+      ...getReplies({
+        internalStore,
+        post: reply,
+        subscribedSourcesByAddress,
+        blacklistedSourcesByAddress,
+      })
+    );
+  });
+
+  return postWithReplies;
+};
+
+module.exports = {
+  getReplies,
 };

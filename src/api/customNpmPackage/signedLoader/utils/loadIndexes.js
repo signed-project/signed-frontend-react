@@ -1,37 +1,40 @@
-import axios from "axios";
-import { addPost } from "./addPost.js";
-import { addSource } from "./addSource.js";
+const axios = require("axios");
+const { addPost } = require("./addPost.js");
+const { addSource } = require("./addSource.js");
 
-export const loadIndexes = ({ internalStore, sources, callback }) => {
-  sources.map(async (source) => {
-    const currentSourceAddress = source.address;
+const loadIndexes = ({
+  internalStore,
+  subscribedSourcesByAddress,
+  callback,
+}) => {
+  const keysFromSubscribedSources = Object.keys(subscribedSourcesByAddress);
 
-    if (!(currentSourceAddress in internalStore.indexesByAddress)) {
+  keysFromSubscribedSources.map((sourceAddress) => {
+    if (!(sourceAddress in internalStore.indexesByAddress)) {
       try {
-        await Promise.allSettled(
-          source.hosts.map(async (host) => {
-            let res = await axios.get(`${host.index}`);
+        subscribedSourcesByAddress[sourceAddress].hosts.map(async (host) => {
+          console.log("AXIOS HERE %s", host.index);
+          let res = await axios.get(`${host.index}`).catch((e) => {
+            console.log("[getIndexError] %o", e.message);
+          });
 
-            internalStore.indexesByAddress[currentSourceAddress] =
-              res.data.index;
+          internalStore.indexesByAddress[sourceAddress] = res.data.index;
 
-            addSource({ internalStore, source: res.data.source });
+          addSource({ internalStore, source: res.data.source });
 
-            res.data.index.recentPosts.map((post) => {
-              addPost({ internalStore, post });
-              return;
-            });
+          res.data.index.recentPosts.map((post) => {
+            addPost({ internalStore, post });
+          });
 
-            callback();
-
-            return;
-          })
-        );
+          callback();
+        });
       } catch (e) {
-        console.warn("[loadIndexes][Promise.allSettled]", e);
+        console.warn("[loadIndexes][keysFromSubscribedSources.map]", e);
       }
     }
-
-    return;
   });
+};
+
+module.exports = {
+  loadIndexes,
 };

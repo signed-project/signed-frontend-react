@@ -50,7 +50,8 @@
     "test": "node ./test/index.js",
     "eject": "react-scripts eject",
     "start_craco": "craco start",
-    "build_craco": "craco build"
+    "build_craco": "craco build",
+    "testSignedLoader": "node testSignedLoader.js"
   },
   "homepage": "/",
   "eslintConfig": {

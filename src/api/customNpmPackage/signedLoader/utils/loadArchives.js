@@ -1,5 +1,5 @@
-import axios from "axios";
-import { addPost } from "./addPost";
+const axios = require("axios");
+const { addPost } = require("./addPost");
 
 const sliceHash = (hash) => {
   return (
@@ -7,24 +7,32 @@ const sliceHash = (hash) => {
   );
 };
 
-export const loadArchives = ({ internalStore, sources, callback }) => {
-  const archivesByIndexes = [];
+const loadArchives = ({
+  internalStore,
+  subscribedSourcesByAddress,
+  callback,
+}) => {
+  const keysFromSubscribedSources = Object.keys(subscribedSourcesByAddress);
+  const archives = [];
 
-  for (const index in internalStore.indexesByAddress) {
-    if (index.archives?.length > 0) {
-      archivesByIndexes.push(...index.archives);
+  keysFromSubscribedSources.map((address) => {
+    const currIndex = internalStore.indexesByAddress[address];
+
+    if (currIndex && currIndex.archives.length > 0) {
+      archives.push(...currIndex.archives);
     }
-  }
+  });
 
-  archivesByIndexes.map((archive) => {
-    sources.map((source) => {
-      source.hosts.map(async (host) => {
+  keysFromSubscribedSources.map((address) => {
+    archives.map((archive) => {
+      subscribedSourcesByAddress[address].hosts.map(async (host) => {
         if (
           internalStore.archiveDepth >= archive.startDate &&
           internalStore.archiveDepth <= archive.endDate &&
           !(archive.hash in internalStore.archivesByHash)
         ) {
           try {
+            // FIXME: use promise or async callback
             const res = await axios.get(
               `${host.assets}/${sliceHash(archive.hash)}.json`
             );
@@ -32,13 +40,12 @@ export const loadArchives = ({ internalStore, sources, callback }) => {
             console.log("res-res-[loadArchives][res-archive.json]");
             console.dir(res);
 
-            const archiveJSON = await JSON.parse(res.data);
+            const archiveJSON = JSON.parse(res.data);
 
             internalStore.archivesByHash[archive.hash] = archiveJSON;
 
             archiveJSON.posts.map((post) => {
               addPost({ post });
-              return;
             });
 
             callback();
@@ -46,13 +53,11 @@ export const loadArchives = ({ internalStore, sources, callback }) => {
             console.warn("[loadArchives][download JSON file]", e);
           }
         }
-
-        return;
       });
-
-      return;
     });
-
-    return;
   });
+};
+
+module.exports = {
+  loadArchives,
 };

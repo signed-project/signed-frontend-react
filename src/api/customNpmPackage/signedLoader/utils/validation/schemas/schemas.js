@@ -40,7 +40,7 @@ const hostSchema = {
   },
 };
 
-export const sourceSchema = {
+const sourceSchema = {
   $id: schemaId.source,
   type: "object",
   properties: {
@@ -67,7 +67,7 @@ const targetSchema = {
   additionalProperties: false,
 };
 
-export const postSchema = {
+const postSchema = {
   $id: schemaId.post,
   type: "object",
   properties: {
@@ -113,4 +113,9 @@ export const postSchema = {
     "hash",
   ],
   additionalProperties: true,
+};
+
+module.exports = {
+  postSchema,
+  sourceSchema,
 };

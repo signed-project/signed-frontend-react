@@ -1,8 +1,8 @@
-import { validateSource } from "./validation";
+const { validateSource } = require("./validation");
 
 // Добавляем source в internalStore
 // Этот метод вызывается метадом loadIndexes для каждого загруженного источника
-export const addSource = ({ internalStore, source }) => {
+const addSource = ({ internalStore, source }) => {
   // Проверим подписи и наличие необходимых полей в объекте
   if (validateSource({ source })) {
     let returnSource = {};
@@ -23,4 +23,8 @@ export const addSource = ({ internalStore, source }) => {
   }
 
   return false;
+};
+
+module.exports = {
+  addSource,
 };
