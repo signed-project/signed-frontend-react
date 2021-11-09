@@ -22,3 +22,6 @@ const {
 
   await new Promise((resolve) => setTimeout(resolve, 15000));
 })();
+// console.log("currentStream");
+// console.dir(currentStream);
+// (async () => await new Promise(resolve => setTimeout(resolve, 15000)))();
