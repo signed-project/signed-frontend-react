@@ -7,6 +7,8 @@ let currentStream = [];
 
 const callbackForFrontend = (stream) => {
   currentStream = stream;
+  console.log("callback");
+  console.dir(currentStream);
 };
 
 getStreamPage({
@@ -19,3 +21,4 @@ getStreamPage({
 
 console.log("currentStream");
 console.dir(currentStream);
+await new Promise(resolve => setTimeout(resolve, 15000));
