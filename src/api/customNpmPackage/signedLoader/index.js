@@ -69,6 +69,8 @@ const getStreamPage = ({
   });
 
   const onLoadMore = () => {
+    console.log("onLoadMore");
+
     stream = buildStream({
       internalStore,
       subscribedSourcesByAddress,

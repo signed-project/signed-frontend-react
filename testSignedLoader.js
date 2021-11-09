@@ -3,22 +3,22 @@ const {
   getStreamPage,
 } = require("./src/api/customNpmPackage/signedLoader/index.js");
 
-let currentStream = [];
+(async () => {
+  let currentStream = [];
 
-const callbackForFrontend = (stream) => {
-  currentStream = stream;
-  console.log("callback");
-  console.dir(currentStream);
-};
+  const callbackForFrontend = (stream) => {
+    currentStream = stream;
+    console.log("callback");
+    console.dir(currentStream[0]);
+  };
 
-getStreamPage({
-  subscribedSources: sources,
-  blacklistedSourcesByAddress: {},
-  afterPost: {},
-  limit: 10,
-  callback: callbackForFrontend,
-});
+  getStreamPage({
+    subscribedSources: sources,
+    blacklistedSourcesByAddress: {},
+    afterPost: {},
+    limit: 10,
+    callback: callbackForFrontend,
+  });
 
-console.log("currentStream");
-console.dir(currentStream);
-await new Promise(resolve => setTimeout(resolve, 15000));
+  await new Promise((resolve) => setTimeout(resolve, 15000));
+})();

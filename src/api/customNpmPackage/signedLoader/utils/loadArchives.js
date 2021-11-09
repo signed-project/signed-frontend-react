@@ -37,9 +37,6 @@ const loadArchives = ({
               `${host.assets}/${sliceHash(archive.hash)}.json`
             );
 
-            console.log("res-res-[loadArchives][res-archive.json]");
-            console.dir(res);
-
             const archiveJSON = JSON.parse(res.data);
 
             internalStore.archivesByHash[archive.hash] = archiveJSON;

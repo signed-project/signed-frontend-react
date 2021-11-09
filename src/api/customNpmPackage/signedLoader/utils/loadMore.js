@@ -8,6 +8,7 @@ const loadMore = ({
   subscribedSourcesByAddress,
   callback,
 }) => {
+  console.log("loadMore");
   // Для каждого источника проверяем, загружен ли его индекс и если нет, запускаем загрузку индекса
   // После скачки и обработки каждого индекса вызываем callback
   loadIndexes({ internalStore, subscribedSourcesByAddress, callback });
