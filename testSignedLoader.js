@@ -21,4 +21,4 @@ getStreamPage({
 
 console.log("currentStream");
 console.dir(currentStream);
-await new Promise(resolve => setTimeout(resolve, 15000));
+(async () => await new Promise(resolve => setTimeout(resolve, 15000)))();
