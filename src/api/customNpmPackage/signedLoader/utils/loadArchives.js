@@ -12,8 +12,14 @@ const loadArchives = ({
   subscribedSourcesByAddress,
   callback,
 }) => {
+  console.log("|-- LoadArchives");
   const keysFromSubscribedSources = Object.keys(subscribedSourcesByAddress);
   const archives = [];
+
+  console.log(
+    "|-- keysFromSubscribedSources ",
+    keysFromSubscribedSources.length
+  );
 
   keysFromSubscribedSources.map((address) => {
     const currIndex = internalStore.indexesByAddress[address];
@@ -22,6 +28,8 @@ const loadArchives = ({
       archives.push(...currIndex.archives);
     }
   });
+
+  console.log("|-- archives ", archives.length);
 
   keysFromSubscribedSources.map((address) => {
     archives.map((archive) => {
@@ -37,12 +45,13 @@ const loadArchives = ({
               `${host.assets}/${sliceHash(archive.hash)}.json`
             );
 
-            const archiveJSON = JSON.parse(res.data);
+            internalStore.archivesByHash[archive.hash] = res.data;
 
-            internalStore.archivesByHash[archive.hash] = archiveJSON;
+            console.log("archiveJSON");
+            console.dir(res.data.posts.length);
 
-            archiveJSON.posts.map((post) => {
-              addPost({ post });
+            res.data.posts.map((post) => {
+              addPost({ internalStore, post });
             });
 
             callback();

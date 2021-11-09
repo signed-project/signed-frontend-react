@@ -7,14 +7,12 @@ const loadIndexes = ({
   subscribedSourcesByAddress,
   callback,
 }) => {
-  console.log("loadIndexes subscribedSourcesByAddress");
-  console.dir(subscribedSourcesByAddress);
   const keysFromSubscribedSources = Object.keys(subscribedSourcesByAddress);
 
   keysFromSubscribedSources.map((sourceAddress) => {
     if (!(sourceAddress in internalStore.indexesByAddress)) {
-      try {
-        subscribedSourcesByAddress[sourceAddress].hosts.map(async (host) => {
+      subscribedSourcesByAddress[sourceAddress].hosts.map(async (host) => {
+        try {
           let res = await axios.get(`${host.index}`);
 
           internalStore.indexesByAddress[sourceAddress] = res.data.index;
@@ -26,10 +24,13 @@ const loadIndexes = ({
           });
 
           callback();
-        });
-      } catch (e) {
-        console.warn("[loadIndexes][keysFromSubscribedSources.map]", e);
-      }
+        } catch (e) {
+          console.warn(
+            "[loadIndexes][subscribedSourcesByAddress[sourceAddress].hosts.map]",
+            e
+          );
+        }
+      });
     }
   });
 };

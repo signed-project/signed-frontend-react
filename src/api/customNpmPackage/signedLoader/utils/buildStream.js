@@ -29,7 +29,8 @@ const buildStream = ({
     (a, b) => new Date(b.createAt) - new Date(a.createAt)
   );
 
-  if (afterPost || Object.keys(afterPost).length > 0) {
+  if (afterPost && Object.keys(afterPost).length > 0) {
+    console.log("inBuildStream in if afterPost");
     let foundIndexOfAfterPost = rootPosts.findIndex(
       (rootPost) =>
         rootPost.source.address === afterPost.source.address &&
@@ -47,10 +48,13 @@ const buildStream = ({
     } else {
       actualRootPosts = rootPosts.slice(foundIndexOfAfterPost, limit);
     }
+  } else {
+    actualRootPosts = rootPosts.slice(0, limit);
   }
 
   actualRootPosts.forEach((actualRootPost) => {
     const replies = getReplies({
+      internalStore,
       post: actualRootPost,
       subscribedSourcesByAddress,
       blacklistedSourcesByAddress,

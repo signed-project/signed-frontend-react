@@ -1,4 +1,5 @@
 const { buildStream } = require("./utils/buildStream.js");
+const { loadArchives } = require("./utils/loadArchives.js");
 const { loadMore } = require("./utils/loadMore.js");
 
 const internalStore = {
@@ -18,7 +19,7 @@ const internalStore = {
   archivesByHash: {},
 
   // actual time range
-  archiveDepth: 0,
+  archiveDepth: 0, // 1430642196000 - for test loading of archives
 
   // source.hosts.index => { index }
   indexesByAddress: {},
@@ -28,6 +29,36 @@ const internalStore = {
 
   blacklistedSourcesByAddress: {},
 };
+
+function outputInternalStore(internalStore) {
+  console.log("onLoadMore");
+  console.log("internalStore.archiveDepth ", internalStore.archiveDepth);
+  console.log(
+    "internalStore.archivesByHash ",
+    Object.keys(internalStore.archivesByHash).length
+  );
+  console.log(
+    "internalStore.postsByHash ",
+    Object.keys(internalStore.postsByHash).length
+  );
+  console.log(
+    "internalStore.postsById ",
+    Object.keys(internalStore.postsById).length
+  );
+  console.log(
+    "internalStore.postsByTargetHash ",
+    Object.keys(internalStore.postsByTargetHash).length
+  );
+  console.log("internalStore.rootPosts ", internalStore.rootPosts.length);
+  console.log(
+    "internalStore.indexesByAddress ",
+    Object.keys(internalStore.indexesByAddress).length
+  );
+  console.log(
+    "internalStore.sourcesByAddress ",
+    Object.keys(internalStore.sourcesByAddress).length
+  );
+}
 
 /*
  * Лента это массив тредов. Тред это объект содержащий корневой пост и массив ответов к нему. 
@@ -69,7 +100,7 @@ const getStreamPage = ({
   });
 
   const onLoadMore = () => {
-    console.log("onLoadMore");
+    outputInternalStore(internalStore);
 
     stream = buildStream({
       internalStore,
@@ -79,16 +110,29 @@ const getStreamPage = ({
       limit,
     });
 
+    console.log("stream.length - onLoadMoreIndexes callback");
+    console.log(stream.length);
+
     callback(stream);
+
+    // Запускаем скачивание любого архива у которого dateStart > archiveDepth
+    // После скачки и обработки каждого архива вызываем callback
+    loadArchives({
+      internalStore,
+      subscribedSourcesByAddress,
+      callback: onLoadMore,
+    });
   };
 
   // Создаем обработчик колбеков от лоадера, который
   // Инициирует фоновую загрузку данных
   // мо мере загрузки он обновляет internalStore и многократно вызывает onLoadMore
-  loadMore({ internalStore, stream, subscribedSourcesByAddress, onLoadMore });
-
-  // Возвращаем что есть пока
-  return stream;
+  loadMore({
+    internalStore,
+    stream,
+    subscribedSourcesByAddress,
+    callback: onLoadMore,
+  });
 };
 
 module.exports = {
