@@ -20,7 +20,11 @@ const loadMore = ({
     maxDepth = unixtime - 24 * 3600;
   }
 
-  if (internalStore.archiveDepth < maxDepth) {
+  // mb it need fix
+  if (
+    internalStore.archiveDepth === 0 ||
+    maxDepth < internalStore.archiveDepth
+  ) {
     internalStore.archiveDepth = maxDepth;
   }
 };
