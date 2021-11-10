@@ -19,7 +19,7 @@ const internalStore = {
   archivesByHash: {},
 
   // actual time range
-  archiveDepth: 0, // 1430642196000 - for test loading of archives
+  archiveDepth: 1430642196, // 1430642196 - for test loading of archives
 
   // source.hosts.index => { index }
   indexesByAddress: {},
@@ -110,10 +110,7 @@ const getStreamPage = ({
       limit,
     });
 
-    console.log("stream.length - onLoadMoreIndexes callback");
-    console.log(stream.length);
-
-    callback(stream);
+    callback({ stream, sourcePost: internalStore.sourcesByAddress });
 
     // Запускаем скачивание любого архива у которого dateStart > archiveDepth
     // После скачки и обработки каждого архива вызываем callback

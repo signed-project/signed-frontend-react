@@ -30,7 +30,6 @@ const buildStream = ({
   );
 
   if (afterPost && Object.keys(afterPost).length > 0) {
-    console.log("inBuildStream in if afterPost");
     let foundIndexOfAfterPost = rootPosts.findIndex(
       (rootPost) =>
         rootPost.source.address === afterPost.source.address &&

@@ -30,7 +30,7 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
     createdAt,
     source: { address, publicName, avatar },
     target: { postHash },
-  } = post;
+  } = post.rootPost;
 
   let sourcePost = useSourcePost(address);
   let targetPost = useTargetPost(postHash);
@@ -38,22 +38,22 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
   let sourceTargetPost = useSourcePost(targetPost?.source?.address);
   const reaction = useReaction();
 
-  const [targetPostHashMap, setTargetPostHashMap] = useState({});
-  const [comments, setComments] = useState([]);
+  // const [targetPostHashMap, setTargetPostHashMap] = useState({});
+  // const [comments, setComments] = useState([]);
   const [imgPreview, setImgPreview] = useState([]);
-  const hashedTargetPostStore = useSelector((state) => state.post.hashedTargetPost);
+  // const hashedTargetPostStore = useSelector((state) => state.post.hashedTargetPost);
 
-  useEffect(() => {
-    setTargetPostHashMap(hashedTargetPostStore);
-  }, [hashedTargetPostStore]);
+  // useEffect(() => {
+  //   setTargetPostHashMap(hashedTargetPostStore);
+  // }, [hashedTargetPostStore]);
 
-  useEffect(() => {
-    const commentsTrees = getCommentTrees({
-      targetHashMap: targetPostHashMap,
-      currentPostHash: hash,
-    });
-    setComments(commentsTrees);
-  }, [targetPostHashMap, hash]);
+  // useEffect(() => {
+  //   const commentsTrees = getCommentTrees({
+  //     targetHashMap: targetPostHashMap,
+  //     currentPostHash: hash,
+  //   });
+  //   setComments(commentsTrees);
+  // }, [targetPostHashMap, hash]);
 
   useEffect(() => {
     const imgSources = getImgArr(attachments);
@@ -74,7 +74,7 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
     };
   }
 
-  const renderComments = comments.map((c, i) => {
+  const renderComments = post.replies.map((c, i) => {
     if (i === 3) {
       return (
         <div key={i} className={styles.gap}>
@@ -90,7 +90,7 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
         key={i}
         post={c}
         renderKey={i}
-        removeLastLine={i + 1 === comments.length}
+        removeLastLine={i + 1 === post.replies.length}
         dotsLine={true}
         showReactionBlock={true}
       />
@@ -109,7 +109,7 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
     );
   };
 
-  const isHideLine = comments.length < 1;
+  const isHideLine = post.replies.length < 1;
 
   return (
     <>
@@ -121,7 +121,7 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
                 <div className={styles.avatarBlock}>
                   <Avatar avatar={sourcePost.avatar} address={address} />
                   <div
-                    className={`${styles.verticalLine}  ${comments.length === 0 && styles.verticalLineRemove
+                    className={`${styles.verticalLine}  ${post.replies.length === 0 && styles.verticalLineRemove
                       }`}
                   ></div>
                 </div>
@@ -222,7 +222,7 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
                 <div className={styles.avatarBlock}>
                   <Avatar avatar={sourcePost.avatar} address={address} />
                   <div
-                    className={`${styles.verticalLine}  ${comments.length === 0 && styles.verticalLineRemove
+                    className={`${styles.verticalLine}  ${post.replies.length === 0 && styles.verticalLineRemove
                       }`}
                   ></div>
                 </div>
@@ -254,7 +254,7 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
               </div>
             </>
           )}
-          {comments && (
+          {post.replies && (
             <div className={styles.commentsWrapper}>{renderComments}</div>
           )}
         </div>

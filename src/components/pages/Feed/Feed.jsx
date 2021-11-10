@@ -1,13 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import Post from "../../utils/Post/Post";
 import routes from "../../../config/routes.config";
 import styles from './feed.module.scss';
+import { getStreamPage } from './../../../api/customNpmPackage/signedLoader';
+import axios from "axios";
+import { postActions } from "./../../../api/storage/post";
+import { sourceActions } from "./../../../api/storage/source";
+import { hostApi, userApi } from "./../../../config/http.config.js";
 
+const apiHost = hostApi.API_HOST;
 
 const Feed = ({ toggleTheme }) => {
+  const dispatch = useDispatch();
   const stream = useSelector((state) => state.post.stream);
+  const { isAuth, subscribed, source: userSource } = useSelector(state => state.user);
   const { allReceivedNumber, currentAlreadySetNumber } = useSelector((state) => state.source);
 
   console.log('currentAlreadySetNumber', currentAlreadySetNumber);
@@ -42,6 +50,46 @@ const Feed = ({ toggleTheme }) => {
     }
   };
 
+  const updateStream = ({ stream, sourcePost }) => {
+    console.log('|------------------------------------ updateStream --------------------------|');
+    console.dir(stream);
+    dispatch(postActions.updatePostStream(stream));
+    dispatch(sourceActions.setLatestSource(sourcePost));
+  }
+
+  const handleNextPage = () => {
+    console.log('AFTER POST');
+    console.dir(posts.at(-1).rootPost);
+
+    const afterPost = posts.at(-1).rootPost;
+
+    if (!isAuth) {
+      (async ()=> {
+        try {
+          const { data } = await axios.get(`${apiHost}${userApi.SUBSCRIBED}`);
+
+          getStreamPage({ 
+            subscribedSources: data, 
+            blacklistedSourcesByAddress: {}, 
+            afterPost,
+            limit: 10,
+            callback: updateStream 
+          });
+        } catch (e) {
+          console.warn("[Layout][useEffect-52-line]", e);
+        }
+      })();
+    } else {
+      getStreamPage({ 
+        subscribedSources: [...subscribed, userSource], 
+        blacklistedSourcesByAddress: {}, 
+        afterPost,
+        limit: 10,
+        callback: updateStream 
+      });
+    }
+  }
+
   const handleEditPost = (hash) => {
     history.push(`${routes.newPost}?edit=${hash}`);
   };
@@ -66,6 +114,7 @@ const Feed = ({ toggleTheme }) => {
         {currentAlreadySetNumber} of  {allReceivedNumber}
       </div>
       {posts && <div onClick={(e) => handleMenuClose(e)}>{renderPosts}</div>}
+      <button onClick={() => handleNextPage()}>NEXT PAGE</button>
     </>
   );
 };

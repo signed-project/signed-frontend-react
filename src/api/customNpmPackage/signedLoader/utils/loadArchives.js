@@ -12,14 +12,8 @@ const loadArchives = ({
   subscribedSourcesByAddress,
   callback,
 }) => {
-  console.log("|-- LoadArchives");
   const keysFromSubscribedSources = Object.keys(subscribedSourcesByAddress);
   const archives = [];
-
-  console.log(
-    "|-- keysFromSubscribedSources ",
-    keysFromSubscribedSources.length
-  );
 
   keysFromSubscribedSources.map((address) => {
     const currIndex = internalStore.indexesByAddress[address];
@@ -29,34 +23,33 @@ const loadArchives = ({
     }
   });
 
-  console.log("|-- archives ", archives.length);
-
   keysFromSubscribedSources.map((address) => {
     archives.map((archive) => {
       subscribedSourcesByAddress[address].hosts.map(async (host) => {
         if (
-          internalStore.archiveDepth >= archive.startDate &&
-          internalStore.archiveDepth <= archive.endDate &&
-          !(archive.hash in internalStore.archivesByHash)
+          internalStore.archiveDepth >=
+            new Date(archive.startDate).getTime() / 1000 &&
+          internalStore.archiveDepth <=
+            new Date(archive.endDate).getTime() / 1000
         ) {
-          try {
-            // FIXME: use promise or async callback
-            const res = await axios.get(
-              `${host.assets}/${sliceHash(archive.hash)}.json`
-            );
+          if (!(archive.hash in internalStore.archivesByHash)) {
+            internalStore.archivesByHash[archive.hash] = true;
 
-            internalStore.archivesByHash[archive.hash] = res.data;
+            try {
+              const response = await axios.get(
+                `${host.assets}/${sliceHash(archive.hash)}.json`
+              );
 
-            console.log("archiveJSON");
-            console.dir(res.data.posts.length);
+              internalStore.archivesByHash[archive.hash] = response.data;
 
-            res.data.posts.map((post) => {
-              addPost({ internalStore, post });
-            });
+              response.data.posts.map((post) => {
+                addPost({ internalStore, post });
+              });
 
-            callback();
-          } catch (e) {
-            console.warn("[loadArchives][download JSON file]", e);
+              callback();
+            } catch (e) {
+              console.warn("[loadArchives][download JSON file]", e);
+            }
           }
         }
       });

@@ -12,6 +12,8 @@ import { inboxActions } from '../../api/storage/inbox';
 import { sourceActions } from '../../api/storage/source';
 import { postActions } from '../../api/storage/post';
 import { userApi, hostApi } from '../../config/http.config.js';
+import { getStreamPage } from "./../../api/customNpmPackage/signedLoader";
+import axios from 'axios';
 
 const apiHost = hostApi.API_HOST;
 
@@ -43,22 +45,51 @@ const Layout = ({ children, theme }) => {
     dispatch(sourceActions.addTempSourceItem(sourceItem));
   }
 
+  const updateStream = ({ stream, sourcePost }) => {
+    console.log('|------------------------------------ updateStream --------------------------|');
+    console.dir(stream);
+    dispatch(postActions.updatePostStream(stream));
+    dispatch(sourceActions.setLatestSource(sourcePost));
+  }
+
   useEffect(() => {
     if (!isAuth) {
-      (async () => {
-        await getDefaultSources({
-          dispatch, setAllReceivedSourcesNumber, setCurrentAlreadySetSourcesNumber,
-          addTempPostArr, setAddTempSourceItem, getSubscribedPath: `${apiHost}${userApi.SUBSCRIBED}`
-        })
-      })()
+      // (async () => {
+      //   await getDefaultSources({
+      //     dispatch, setAllReceivedSourcesNumber, setCurrentAlreadySetSourcesNumber,
+      //     addTempPostArr, setAddTempSourceItem, getSubscribedPath: `${apiHost}${userApi.SUBSCRIBED}`
+      //   })
+      // })()
+      (async ()=> {
+        try {
+          const { data } = await axios.get(`${apiHost}${userApi.SUBSCRIBED}`);
+
+          getStreamPage({ 
+            subscribedSources: data, 
+            blacklistedSourcesByAddress: {}, 
+            afterPost: {},
+            limit: 10,
+            callback: updateStream 
+          });
+        } catch (e) {
+          console.warn("[Layout][useEffect-52-line]", e);
+        }
+      })();
     }
     else {
-      (async () => {
-        await getSourcesIndex({
-          sources: [...subscribed, userSource], setAllReceivedSourcesNumber,
-          setCurrentAlreadySetSourcesNumber, addTempPostArr, setAddTempSourceItem,
-        })
-      })()
+      getStreamPage({ 
+        subscribedSources: [...subscribed, userSource], 
+        blacklistedSourcesByAddress: {}, 
+        afterPost: {},
+        limit: 10,
+        callback: updateStream 
+      });
+      // (async () => {
+      //   await getSourcesIndex({
+      //     sources: [...subscribed, userSource], setAllReceivedSourcesNumber,
+      //     setCurrentAlreadySetSourcesNumber, addTempPostArr, setAddTempSourceItem,
+      //   })
+      // })()
     }
   }, [isAuth]);
 
