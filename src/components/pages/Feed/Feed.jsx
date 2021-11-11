@@ -130,7 +130,7 @@ const Feed = ({ toggleTheme }) => {
         {currentAlreadySetNumber} of  {allReceivedNumber}
       </div>
       {posts && <div onClick={(e) => handleMenuClose(e)}>{renderPosts}</div>}
-      <button onClick={() => handleNextPage()}>NEXT PAGE</button>
+      <button className={styles.nextPageButton} onClick={() => handleNextPage()}>NEXT PAGE</button>
     </>
   );
 };
