@@ -26,8 +26,11 @@ const buildStream = ({
   });
 
   rootPosts = rootPosts.sort(
-    (a, b) => new Date(b.createAt) - new Date(a.createAt)
+    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
   );
+
+  console.log("buildStream sorted rootPosts");
+  console.dir(rootPosts);
 
   if (afterPost && Object.keys(afterPost).length > 0) {
     let foundIndexOfAfterPost = rootPosts.findIndex(
@@ -38,7 +41,7 @@ const buildStream = ({
 
     if (!foundIndexOfAfterPost && foundIndexOfAfterPost !== 0) {
       foundIndexOfAfterPost = rootPosts.findIndex(
-        (rootPost) => rootPost.createAt === afterPost.createAt
+        (rootPost) => rootPost.createdAt === afterPost.createdAt
       );
 
       if (foundIndexOfAfterPost) {

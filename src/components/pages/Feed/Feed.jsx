@@ -51,7 +51,7 @@ const Feed = ({ toggleTheme }) => {
   };
 
   const updateStream = ({ stream, sourcePost }) => {
-    console.log('|------------------------------------ updateStream --------------------------|');
+    console.log('|---------- updateStream -----------|');
     console.dir(stream);
     dispatch(postActions.updatePostStream(stream));
     dispatch(sourceActions.setLatestSource(sourcePost));

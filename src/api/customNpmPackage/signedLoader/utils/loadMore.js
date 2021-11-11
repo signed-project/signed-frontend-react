@@ -11,7 +11,7 @@ const loadMore = ({
   // После скачки и обработки каждого индекса вызываем callback
   loadIndexes({ internalStore, subscribedSourcesByAddress, callback });
 
-  let unixtime = Math.floor(Date.now() / 1000);
+  let unixtime = Math.floor(Date.now());
   let maxDepth = -1;
 
   if (stream.length > 0) {
@@ -23,7 +23,7 @@ const loadMore = ({
   // mb it need fix
   if (
     internalStore.archiveDepth === 0 ||
-    maxDepth < internalStore.archiveDepth
+    new Date(maxDepth) < new Date(internalStore.archiveDepth)
   ) {
     internalStore.archiveDepth = maxDepth;
   }

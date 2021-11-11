@@ -19,7 +19,9 @@ const getReplies = ({
     blacklistedSourcesByAddress,
   });
 
-  replies = replies.sort((a, b) => new Date(a.createAt) - new Date(b.createAt));
+  replies = replies.sort(
+    (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+  );
 
   replies.forEach((reply) => {
     postWithReplies.push(reply);

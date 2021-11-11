@@ -27,10 +27,8 @@ const loadArchives = ({
     archives.map((archive) => {
       subscribedSourcesByAddress[address].hosts.map(async (host) => {
         if (
-          internalStore.archiveDepth >=
-            new Date(archive.startDate).getTime() / 1000 &&
-          internalStore.archiveDepth <=
-            new Date(archive.endDate).getTime() / 1000
+          new Date(internalStore.archiveDepth) >= new Date(archive.startDate) &&
+          new Date(internalStore.archiveDepth) <= new Date(archive.endDate)
         ) {
           if (!(archive.hash in internalStore.archivesByHash)) {
             internalStore.archivesByHash[archive.hash] = true;
