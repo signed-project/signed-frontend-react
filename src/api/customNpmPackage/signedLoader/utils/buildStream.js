@@ -32,6 +32,9 @@ const buildStream = ({
   console.log("buildStream sorted rootPosts");
   console.dir(rootPosts);
 
+  console.log("afterPOST in buildStream");
+  console.dir(afterPost);
+
   if (afterPost && Object.keys(afterPost).length > 0) {
     let foundIndexOfAfterPost = rootPosts.findIndex(
       (rootPost) =>
@@ -39,16 +42,25 @@ const buildStream = ({
         rootPost.id === afterPost.id
     );
 
+    console.log("foundIndexOfAfterPost");
+    console.dir(foundIndexOfAfterPost);
+
     if (!foundIndexOfAfterPost && foundIndexOfAfterPost !== 0) {
       foundIndexOfAfterPost = rootPosts.findIndex(
         (rootPost) => rootPost.createdAt === afterPost.createdAt
       );
 
       if (foundIndexOfAfterPost) {
-        actualRootPosts = rootPosts.slice(foundIndexOfAfterPost, limit);
+        actualRootPosts = rootPosts.slice(
+          foundIndexOfAfterPost,
+          limit + foundIndexOfAfterPost
+        );
       }
     } else {
-      actualRootPosts = rootPosts.slice(foundIndexOfAfterPost, limit);
+      actualRootPosts = rootPosts.slice(
+        foundIndexOfAfterPost,
+        limit + foundIndexOfAfterPost
+      );
     }
   } else {
     actualRootPosts = rootPosts.slice(0, limit);

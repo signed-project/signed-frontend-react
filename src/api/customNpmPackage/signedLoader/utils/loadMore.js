@@ -15,10 +15,18 @@ const loadMore = ({
   let maxDepth = -1;
 
   if (stream.length > 0) {
+    console.log("WE HERE & stream length is bigger then 0");
     maxDepth = stream.at(-1).rootPost.createdAt - 24 * 3600; // Один день от последнего поста в текущей ленте
   } else {
     maxDepth = unixtime - 24 * 3600;
   }
+
+  console.log("stream");
+  console.dir(stream);
+  console.log("maxDepth");
+  console.dir(maxDepth);
+  console.log("internalStore.archiveDepth");
+  console.dir(internalStore.archiveDepth);
 
   // mb it need fix
   if (

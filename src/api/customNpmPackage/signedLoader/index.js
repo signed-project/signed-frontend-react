@@ -99,6 +99,9 @@ const getStreamPage = ({
     limit,
   });
 
+  console.log("INDEX STREAM");
+  console.dir(stream);
+
   const onLoadMore = () => {
     outputInternalStore(internalStore);
 
@@ -130,6 +133,8 @@ const getStreamPage = ({
     subscribedSourcesByAddress,
     callback: onLoadMore,
   });
+
+  return stream;
 };
 
 module.exports = {

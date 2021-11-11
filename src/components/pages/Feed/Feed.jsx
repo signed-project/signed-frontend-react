@@ -54,7 +54,9 @@ const Feed = ({ toggleTheme }) => {
     console.log('|---------- updateStream -----------|');
     console.dir(stream);
     dispatch(postActions.updatePostStream(stream));
-    dispatch(sourceActions.setLatestSource(sourcePost));
+    if (sourcePost) {
+      dispatch(sourceActions.setLatestSource(sourcePost));
+    }
   }
 
   const handleNextPage = () => {
@@ -68,24 +70,38 @@ const Feed = ({ toggleTheme }) => {
         try {
           const { data } = await axios.get(`${apiHost}${userApi.SUBSCRIBED}`);
 
-          getStreamPage({ 
+          const stream = getStreamPage({ 
             subscribedSources: data, 
             blacklistedSourcesByAddress: {}, 
             afterPost,
             limit: 10,
             callback: updateStream 
           });
+
+          updateStream({ stream });
+
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+          });
         } catch (e) {
           console.warn("[Layout][useEffect-52-line]", e);
         }
       })();
     } else {
-      getStreamPage({ 
+      const stream = getStreamPage({ 
         subscribedSources: [...subscribed, userSource], 
         blacklistedSourcesByAddress: {}, 
         afterPost,
         limit: 10,
         callback: updateStream 
+      });
+
+      updateStream({ stream });
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
       });
     }
   }
