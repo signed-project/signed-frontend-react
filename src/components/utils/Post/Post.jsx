@@ -74,28 +74,36 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
     };
   }
 
-  const renderComments = post.replies.map((c, i) => {
-    if (i === 3) {
-      return (
-        <div key={i} className={styles.gap}>
-          <div className={styles.gapBlockLine}></div>
-          <span className={styles.gapTitle}>Show this thread</span>
-        </div>
-      );
+  const renderComments = () => {
+    const comments = [];
+
+    for (let index = 0; index < post.replies.length; index++) {
+      console.log('currIndex', index);
+      if (index === 3) {
+        comments.push((
+<div key={index} className={styles.gap}>
+            <div className={styles.gapBlockLine}></div>
+            <span className={styles.gapTitle}>Show this thread</span>
+          </div>
+        ));
+
+        break;
+      }
+
+      comments.push((
+        <CommentBlock
+          key={index}
+          post={post.replies[index]}
+          renderKey={index}
+          removeLastLine={index + 1 === post.replies.length}
+          dotsLine={true}
+          showReactionBlock={true}
+        />
+      ));
     }
 
-    // if (subscribed.includes(c.source.address) && i !== 3) {
-    return (
-      <CommentBlock
-        key={i}
-        post={c}
-        renderKey={i}
-        removeLastLine={i + 1 === post.replies.length}
-        dotsLine={true}
-        showReactionBlock={true}
-      />
-    );
-  });
+    return comments;
+  };
 
   const reactionBlock = () => {
     return (
@@ -255,7 +263,7 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
             </>
           )}
           {post.replies && (
-            <div className={styles.commentsWrapper}>{renderComments}</div>
+            <div className={styles.commentsWrapper}>{renderComments()}</div>
           )}
         </div>
       )}

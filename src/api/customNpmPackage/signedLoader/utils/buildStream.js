@@ -66,6 +66,8 @@ const buildStream = ({
     actualRootPosts = rootPosts.slice(0, limit);
   }
 
+  console.log("actualRootPosts ", actualRootPosts.length);
+
   actualRootPosts.forEach((actualRootPost) => {
     const replies = getReplies({
       internalStore,
@@ -73,6 +75,13 @@ const buildStream = ({
       subscribedSourcesByAddress,
       blacklistedSourcesByAddress,
     });
+
+    console.log("for ", actualRootPost.hash);
+    console.dir(actualRootPost);
+
+    console.log("replies ", replies.length);
+    console.dir(replies);
+
     stream.push({
       rootPost: actualRootPost,
       replies,
