@@ -1,27 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
-import { BrowserRouter } from 'react-router-dom';
-import LayoutProvider from '../layout/LayoutProvider';
-import MainRouts from './MainRoutes';
-import { layoutType } from '../layout/LayoutProvider.jsx';
+import { BrowserRouter } from "react-router-dom";
+import LayoutProvider from "../layout/LayoutProvider";
+import MainRouts from "./MainRoutes";
+import { layoutType } from "../layout/LayoutProvider.jsx";
 
 const App = () => {
   const [themeVal, setThemeVal] = useState(layoutType.showLayout);
-  useEffect(() => {
-
-  }, [])
 
   const state = {
     theme: themeVal,
-    toggleTheme: (val) => setThemeVal(val)
+    toggleTheme: (val) => setThemeVal(val),
   };
 
   return (
-    <BrowserRouter basename={'/'} >
+    <BrowserRouter basename={"/"}>
       <LayoutProvider.Provider value={state}>
         <MainRouts />
       </LayoutProvider.Provider>
-    </BrowserRouter >
+    </BrowserRouter>
   );
 };
 

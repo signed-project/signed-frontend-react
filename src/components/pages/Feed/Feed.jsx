@@ -68,6 +68,7 @@ const Feed = ({ toggleTheme }) => {
     if (!isAuth) {
       (async ()=> {
         try {
+          // FIX: Download JSON once or get data once by endpoint and save to store or to another safe place!
           const { data } = await axios.get(`${apiHost}${userApi.SUBSCRIBED}`);
 
           const stream = getStreamPage({ 
@@ -110,6 +111,26 @@ const Feed = ({ toggleTheme }) => {
     history.push(`${routes.newPost}?edit=${hash}`);
   };
 
+  const serviceWorkerRegister = () => {
+    const swPath = "./../../../sw.js";
+  
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker
+        .register(swPath)
+        .then(() => {
+          console.log("HELLO WORKER!!!");
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+    }
+  };
+
+  const handleAddHome = (e) => {
+    e.preventDefault();
+    serviceWorkerRegister();
+  };
+
   const renderPosts = posts.map((p, i) => {
     return (
       <Post
@@ -129,6 +150,7 @@ const Feed = ({ toggleTheme }) => {
       <div className={styles.louder}>
         {currentAlreadySetNumber} of  {allReceivedNumber}
       </div>
+      <button onClick={(e) => handleAddHome(e)}>Add to Home screen</button>
       {posts && <div onClick={(e) => handleMenuClose(e)}>{renderPosts}</div>}
       <button className={styles.nextPageButton} onClick={() => handleNextPage()}>NEXT PAGE</button>
     </>

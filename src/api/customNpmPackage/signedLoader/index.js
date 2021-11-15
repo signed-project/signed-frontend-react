@@ -19,7 +19,7 @@ const internalStore = {
   archivesByHash: {},
 
   // actual time range
-  archiveDepth: 0, // 1628888400000 (14 aug 2021) - for test loading of archives
+  archiveDepth: 1620162000000, // 1628888400000 (14 aug 2021) - for test loading of archives
 
   // source.hosts.index => { index }
   indexesByAddress: {},

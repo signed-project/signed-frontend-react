@@ -7,7 +7,7 @@ import Navigation from './Navigation/Navigation';
 import WelcomeSing from './WelcomeSign/WelcomeSign';
 import router from '../../config/routes.config';
 import styles from './layout.module.scss';
-import { getDefaultSources, getSourcesIndex } from '../../api/customNpmPackage/loadIndexes';
+// import { getDefaultSources, getSourcesIndex } from '../../api/customNpmPackage/loadIndexes';
 import { inboxActions } from '../../api/storage/inbox';
 import { sourceActions } from '../../api/storage/source';
 import { postActions } from '../../api/storage/post';
@@ -37,13 +37,13 @@ const Layout = ({ children, theme }) => {
     dispatch(sourceActions.setCurrentAlreadySetNumber(number));
   }
 
-  const addTempPostArr = (postsArr) => {
-    dispatch(postActions.addTempPost(postsArr));
-  }
+  // const addTempPostArr = (postsArr) => {
+  //   dispatch(postActions.addTempPost(postsArr));
+  // }
 
-  const setAddTempSourceItem = (sourceItem) => {
-    dispatch(sourceActions.addTempSourceItem(sourceItem));
-  }
+  // const setAddTempSourceItem = (sourceItem) => {
+  //   dispatch(sourceActions.addTempSourceItem(sourceItem));
+  // }
 
   const updateStream = ({ stream, sourcePost }) => {
     console.log('|------------------------------------ updateStream --------------------------|');
