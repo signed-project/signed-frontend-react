@@ -17,12 +17,21 @@ import Avatar from "../../utils/Avatar/Avatar";
 import InfoAuthor from "../../utils/InfoAuthor/InfoAuthor";
 import Slider from "../../utils/Slider/Slider";
 import routes from "../../../config/routes.config";
+import { hostApi, userApi } from "./../../../config/http.config.js";
+
+import { getPostByHash } from "./../../../api/customNpmPackage/signedLoader";
+import axios from "axios";
+
+const apiHost = hostApi.API_HOST;
 
 // TODO: refactor this component to use module Post if it possible
 const PostPage = ({ toggleTheme }) => {
-  const postMapState = useSelector((state) => state.post.hashed);
-  const hashedTargetPostStore = useSelector((state) => state.post.hashedTargetPost);
+  // const postMapState = useSelector((state) => state.post.hashed);
+  // const hashedTargetPostStore = useSelector((state) => state.post.hashedTargetPost);
+  // FIX: storage sources in Internal Store and provide from it method for get them
   const sourceStateLatest = useSelector(state => state.source.latest);
+  const subscribedSources = useSelector((state) => state.source.subscribed);
+  const { isAuth, subscribed, source: userSource } = useSelector(state => state.user);
   const location = useLocation();
   const { slider } = queryString.parse(location.search);
 
@@ -38,38 +47,44 @@ const PostPage = ({ toggleTheme }) => {
   const [currentPost, setCurrentPost] = useState("");
   const [source, setSource] = useState("");
 
-  // console.log('currentPost', currentPost);
-  // console.log('source[currentPost]', source);
-  // console.log('source[currentPost.source.address]', currentPost.source.address);
-  // const source = useSourcePost(currentPost.source.address);
-
   useEffect(() => {
-    const post = postMapState[hash];
-    setCurrentPost(post);
-  }, [hash, postMapState])
+    let post = {};
+
+    if (!isAuth) {
+      post = getPostByHash({ hash, subscribedSources: subscribedSources });
+
+      console.log('POST-POST');
+      console.dir(post);
+      setCurrentPost(post);
+    } else {
+      post = getPostByHash({ hash, subscribedSources: [...subscribed, userSource] });
+
+      setCurrentPost(post);
+    }
+  }, [hash])
 
   useEffect(() => {
     toggleTheme(false);
   }, [toggleTheme]);
 
   useEffect(() => {
-    setPost(currentPost);
-    if (currentPost?.source?.address) {
-      const sourceData = sourceStateLatest[currentPost.source.address];
-      setSource(sourceData);
+    if (currentPost) {
+      console.log("currentPost-currentPost-currentPost");
+      console.dir(currentPost);
+      setPost(currentPost.rootPost);
+      if (currentPost.rootPost.source?.address) {
+        const sourceData = sourceStateLatest[currentPost.rootPost.source.address];
+        setSource(sourceData);
+      }
     }
   }, [currentPost, sourceStateLatest]);
 
   useEffect(() => {
-    const commentsTrees = getCommentTrees({
-      targetHashMap: hashedTargetPostStore,
-      currentPostHash: hash,
-    });
-    setComments(commentsTrees);
-  }, [hashedTargetPostStore, hash]);
+    setComments(currentPost.replies);
+  }, [currentPost]);
 
   useEffect(() => {
-    if (post?.attachments?.length) {
+    if (post.attachments?.length) {
       const imgSourceArr = getImgSources(post.attachments);
       setImgPreview(imgSourceArr);
     }
@@ -86,7 +101,7 @@ const PostPage = ({ toggleTheme }) => {
   console.log('post[source]', source);
 
   const renderComments = comments
-    .slice()
+    ?.slice()
     .map((post, i) => (
       <CommentBlock
         post={post}
@@ -153,13 +168,13 @@ const PostPage = ({ toggleTheme }) => {
                   hosts={source.hosts}
                   text={post.text}
                   type={post.type}
-                  address={currentPost.source.address}
+                  address={currentPost.rootPost.source.address}
                 />
                 <Preview
                   uploadImgArr={imgPreview}
                   handleFullSlider={handleFullSlider}
                 />
-                {post?.type === "repost" && (
+                {post.rootPost?.type === "repost" && (
                   <div className={styles.repostBlockWrapper}>
                     <RepostBlock postHash={post.target.postHash} />
                   </div>

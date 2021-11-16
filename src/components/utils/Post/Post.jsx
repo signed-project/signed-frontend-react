@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import InfoAuthor from "../InfoAuthor/InfoAuthor";
 import Avatar from "../Avatar/Avatar";
@@ -13,13 +12,14 @@ import { getReadFormat } from "../../../libs/date.js";
 import styles from "./post.module.scss";
 import useReaction from "../../customHooks/useReaction";
 import useTargetPost from "../../customHooks/useTargetPost";
-import getCommentTrees from "../../customHooks/getCommentTrees";
 import useSourcePost from "../../customHooks/useSourcePost";
 import Preview from "../Preview/Preview";
 import getImgArr from "../../customHooks/getImgSources";
 import MenuPost from "../MenuPost/MenuPost";
 
 const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
+  console.log("POST");
+  console.dir(post);
   const {
     type,
     text,
@@ -30,7 +30,7 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
     createdAt,
     source: { address, publicName, avatar },
     target: { postHash },
-  } = post.rootPost;
+  } = post.rootPost ? post.rootPost : post;
 
   let sourcePost = useSourcePost(address);
   let targetPost = useTargetPost(postHash);
@@ -38,22 +38,7 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
   let sourceTargetPost = useSourcePost(targetPost?.source?.address);
   const reaction = useReaction();
 
-  // const [targetPostHashMap, setTargetPostHashMap] = useState({});
-  // const [comments, setComments] = useState([]);
   const [imgPreview, setImgPreview] = useState([]);
-  // const hashedTargetPostStore = useSelector((state) => state.post.hashedTargetPost);
-
-  // useEffect(() => {
-  //   setTargetPostHashMap(hashedTargetPostStore);
-  // }, [hashedTargetPostStore]);
-
-  // useEffect(() => {
-  //   const commentsTrees = getCommentTrees({
-  //     targetHashMap: targetPostHashMap,
-  //     currentPostHash: hash,
-  //   });
-  //   setComments(commentsTrees);
-  // }, [targetPostHashMap, hash]);
 
   useEffect(() => {
     const imgSources = getImgArr(attachments);

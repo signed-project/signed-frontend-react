@@ -1,6 +1,7 @@
 import { buildStream } from "./utils/buildStream.js";
 import { loadArchives } from "./utils/loadArchives.js";
 import { loadMore } from "./utils/loadMore.js";
+import { getReplies } from "./utils/getReplies.js";
 
 const internalStore = {
   // all posts includes postsById
@@ -19,7 +20,7 @@ const internalStore = {
   archivesByHash: {},
 
   // actual time range
-  archiveDepth: 1620162000000, // 1628888400000 (14 aug 2021) - for test loading of archives
+  archiveDepth: 0, // 1628888400000 (14 aug 2021) - for test loading of archives
 
   // source.hosts.index => { index }
   indexesByAddress: {},
@@ -135,4 +136,25 @@ export const getStreamPage = ({
   });
 
   return stream;
+};
+
+export const getPostByHash = ({ hash, subscribedSources }) => {
+  const subscribedSourcesByAddress = {};
+
+  subscribedSources.forEach((source) => {
+    subscribedSourcesByAddress[source.address] = source;
+  });
+
+  const currPost = internalStore.postsByHash[hash];
+  const replies = getReplies({
+    internalStore,
+    post: currPost,
+    subscribedSourcesByAddress,
+    blacklistedSourcesByAddress: {},
+  });
+
+  return {
+    rootPost: currPost,
+    replies,
+  };
 };

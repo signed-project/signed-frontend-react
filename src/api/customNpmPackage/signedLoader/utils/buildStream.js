@@ -30,21 +30,12 @@ export const buildStream = ({
     (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
   );
 
-  console.log("buildStream sorted rootPosts");
-  console.dir(rootPosts);
-
-  console.log("afterPOST in buildStream");
-  console.dir(afterPost);
-
   if (afterPost && Object.keys(afterPost).length > 0) {
     let foundIndexOfAfterPost = rootPosts.findIndex(
       (rootPost) =>
         rootPost.source.address === afterPost.source.address &&
         rootPost.id === afterPost.id
     );
-
-    console.log("foundIndexOfAfterPost");
-    console.dir(foundIndexOfAfterPost);
 
     if (!foundIndexOfAfterPost && foundIndexOfAfterPost !== 0) {
       foundIndexOfAfterPost = rootPosts.findIndex(
@@ -67,8 +58,6 @@ export const buildStream = ({
     actualRootPosts = rootPosts.slice(0, limit);
   }
 
-  console.log("actualRootPosts ", actualRootPosts.length);
-
   actualRootPosts.forEach((actualRootPost) => {
     const replies = getReplies({
       internalStore,
@@ -76,12 +65,6 @@ export const buildStream = ({
       subscribedSourcesByAddress,
       blacklistedSourcesByAddress,
     });
-
-    console.log("for ", actualRootPost.hash);
-    console.dir(actualRootPost);
-
-    console.log("replies ", replies.length);
-    console.dir(replies);
 
     stream.push({
       rootPost: actualRootPost,

@@ -19,6 +19,7 @@ const Feed = ({ toggleTheme }) => {
 
   const dispatch = useDispatch();
   const stream = useSelector((state) => state.post.stream);
+  const subscribedSources = useSelector((state) => state.source.subscribed);
   const { isAuth, subscribed, source: userSource } = useSelector(state => state.user);
   const { allReceivedNumber, currentAlreadySetNumber } = useSelector((state) => state.source);
 
@@ -70,29 +71,20 @@ const Feed = ({ toggleTheme }) => {
     const afterPost = posts.at(-1).rootPost;
 
     if (!isAuth) {
-      (async ()=> {
-        try {
-          // FIX: Download JSON once or get data once by endpoint and save to store or to another safe place!
-          const { data } = await axios.get(`${apiHost}${userApi.SUBSCRIBED}`);
+      const stream = getStreamPage({ 
+        subscribedSources: subscribedSources, 
+        blacklistedSourcesByAddress: {}, 
+        afterPost,
+        limit: 10,
+        callback: updateStream 
+      });
 
-          const stream = getStreamPage({ 
-            subscribedSources: data, 
-            blacklistedSourcesByAddress: {}, 
-            afterPost,
-            limit: 10,
-            callback: updateStream 
-          });
+      updateStream({ stream });
 
-          updateStream({ stream });
-
-          window.scrollTo({
-            top: 0,
-            behavior: "smooth",
-          });
-        } catch (e) {
-          console.warn("[Layout][useEffect-52-line]", e);
-        }
-      })();
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
     } else {
       const stream = getStreamPage({ 
         subscribedSources: [...subscribed, userSource], 

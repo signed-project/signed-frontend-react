@@ -64,6 +64,8 @@ const Layout = ({ children, theme }) => {
         try {
           const { data } = await axios.get(`${apiHost}${userApi.SUBSCRIBED}`);
 
+          dispatch(sourceActions.setSubscribedSources(data));
+
           getStreamPage({ 
             subscribedSources: data, 
             blacklistedSourcesByAddress: {}, 

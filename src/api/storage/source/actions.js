@@ -20,6 +20,11 @@ export const setLatestSource = (payload) => ({
   payload,
 });
 
+export const setSubscribedSources = (payload) => ({
+  type: ACTIONS.SET_SUBSCRIBED_SOURCES,
+  payload,
+});
+
 export const setAllReceivedNumber = (payload) => ({
   type: ACTIONS.ALL_RECEIVED_SOURCE_NUMBER,
   payload,

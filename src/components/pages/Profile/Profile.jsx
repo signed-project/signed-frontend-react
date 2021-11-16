@@ -6,7 +6,7 @@ import ProfilePosts from './sub/ProfilePosts';
 import ProfileInfo from './sub/ProfileInfo';
 
 const Profile = ({ toggleTheme }) => {
-
+  console.log("|_____------------------ PROFILE PAGE!");
   useEffect(() => {
     toggleTheme(true);
   }, [toggleTheme]);
@@ -22,7 +22,9 @@ const Profile = ({ toggleTheme }) => {
 
   useEffect(() => {
     if (Array.isArray(stream)) {
-      const userPost = stream.filter(post => post.source.address === source.address)
+      const userPost = stream.filter(post => post.rootPost.source.address === source.address)
+      console.log("userPost---userPost");
+      console.dir(userPost);
       setOwnPost(userPost);
     }
   }, [stream]);
@@ -47,7 +49,7 @@ const Profile = ({ toggleTheme }) => {
         <span className={`${styles.tabsItem} ${isActiveTab(tabList.info)}`} onClick={() => goToTab(tabList.info)}>Info</span>
         <span className={styles.tabsItem}>Users</span>
       </div>
-      {tab === tabList.posts && < ProfilePosts ownPost={ownPost} />}
+      {tab === tabList.posts && <ProfilePosts ownPost={ownPost} />}
       {tab === tabList.info && <ProfileInfo />}
     </>
   );

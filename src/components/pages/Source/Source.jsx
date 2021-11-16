@@ -15,6 +15,7 @@ import { postActions } from '../../../api/storage/post';
 
 // TODO: refactor this component to use module Post if it possible
 const Source = ({ toggleTheme }) => {
+    console.log("|------------------------- SOurCE page!");
     const tabList = {
         posts: 'posts',
         info: 'info'
@@ -45,7 +46,11 @@ const Source = ({ toggleTheme }) => {
 
     useEffect(() => {
         if (Array.isArray(stream)) {
-            const userPost = stream.filter(post => post.source.address === address)
+            console.log('address');
+            console.dir(address);
+            const userPost = stream.filter(post => post.rootPost.source.address === address)
+            console.log('userPost');
+            console.dir(userPost);
             setOwnPost(userPost);
         }
     }, [stream]);
@@ -69,7 +74,7 @@ const Source = ({ toggleTheme }) => {
             if (data === 'Ok') {
                 setIsAlreadyFollow(action);
                 if (action === false) {
-                    const newStream = stream.filter(post => post.source.address !== address);
+                    const newStream = stream.filter(post => post.rootPost.source.address !== address);
                     dispatch(postActions.updatePostStream(newStream));
                 }
             }
@@ -100,7 +105,7 @@ const Source = ({ toggleTheme }) => {
 
             </>
             }
-            {tab === tabList.posts && < SourcePosts ownPost={ownPost} />}
+            {tab === tabList.posts && <SourcePosts ownPost={ownPost} />}
             {tab === tabList.info && <SourceInfo source={source} />}
         </>
     );

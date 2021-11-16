@@ -8,6 +8,7 @@ export const ACTIONS = {
   ALL_RECEIVED_SOURCE_NUMBER: "SOURCE::ALL_RECEIVED_SOURCE_NUMBER",
   CURRENT_ALREADY_SET_SOURCE_NUMBER:
     "SOURCE::CURRENT_ALREADY_SET_SOURCE_NUMBER",
+  SET_SUBSCRIBED_SOURCES: "SOURCE::SET_SUBSCRIBED_SOURCES",
 };
 
 const initialState = {
@@ -16,6 +17,7 @@ const initialState = {
   temp: [],
   allReceivedNumber: "",
   currentAlreadySetNumber: "",
+  subscribed: [],
 };
 
 const sourceReducer = (state = initialState, action) => {
@@ -25,6 +27,12 @@ const sourceReducer = (state = initialState, action) => {
         ...state,
         hashed: action.payload,
       };
+    case ACTIONS.SET_SUBSCRIBED_SOURCES: {
+      return {
+        ...state,
+        subscribed: [...action.payload],
+      };
+    }
     case ACTIONS.SET_SOURCE_LATEST:
       return {
         ...state,
