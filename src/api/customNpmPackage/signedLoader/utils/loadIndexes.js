@@ -1,8 +1,8 @@
-const axios = require("axios");
-const { addPost } = require("./addPost.js");
-const { addSource } = require("./addSource.js");
+import axios from "axios";
+import { addPost } from "./addPost.js";
+import { addSource } from "./addSource.js";
 
-const loadIndexes = ({
+export const loadIndexes = ({
   internalStore,
   subscribedSourcesByAddress,
   callback,
@@ -33,8 +33,4 @@ const loadIndexes = ({
       });
     }
   });
-};
-
-module.exports = {
-  loadIndexes,
 };

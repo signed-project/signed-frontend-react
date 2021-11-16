@@ -1,6 +1,6 @@
-const { buildStream } = require("./utils/buildStream.js");
-const { loadArchives } = require("./utils/loadArchives.js");
-const { loadMore } = require("./utils/loadMore.js");
+import { buildStream } from "./utils/buildStream.js";
+import { loadArchives } from "./utils/loadArchives.js";
+import { loadMore } from "./utils/loadMore.js";
 
 const internalStore = {
   // all posts includes postsById
@@ -76,7 +76,7 @@ function outputInternalStore(internalStore) {
  * Границы страницы определяются возвращенным первыи и последним постами
  * callback({stream}) -  на вход коллбеку отправляем страницу ленты собранную из постов, загруженных в настоящее время
 */
-const getStreamPage = ({
+export const getStreamPage = ({
   subscribedSources,
   blacklistedSourcesByAddress,
   afterPost,
@@ -135,8 +135,4 @@ const getStreamPage = ({
   });
 
   return stream;
-};
-
-module.exports = {
-  getStreamPage,
 };

@@ -1,8 +1,8 @@
-const { validatePost } = require("./validation");
+import { validatePost } from "./validation";
 
 // Добавляем пост в internalStore
 // Этот метод вызывается методами loadIndexes и loadArchives для каждого загруженного поста
-const addPost = ({ internalStore, post }) => {
+export const addPost = ({ internalStore, post }) => {
   // Проверим подписи и наличие необходимых полей в объекте + исключаем дубли постов по хэшу
   if (!(post.hash in internalStore.postsByHash) && validatePost({ post })) {
     internalStore.postsByHash[post.hash] = post;
@@ -38,8 +38,4 @@ const addPost = ({ internalStore, post }) => {
   }
 
   return false;
-};
-
-module.exports = {
-  addPost,
 };

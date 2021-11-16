@@ -10,9 +10,13 @@ import { postActions } from "./../../../api/storage/post";
 import { sourceActions } from "./../../../api/storage/source";
 import { hostApi, userApi } from "./../../../config/http.config.js";
 
+import { useAddToHomescreenPrompt } from "./../../customHooks/useAddToHomescreenPrompt.js";
+
 const apiHost = hostApi.API_HOST;
 
 const Feed = ({ toggleTheme }) => {
+  const [prompt, promptToInstall] = useAddToHomescreenPrompt();
+
   const dispatch = useDispatch();
   const stream = useSelector((state) => state.post.stream);
   const { isAuth, subscribed, source: userSource } = useSelector(state => state.user);
@@ -111,26 +115,6 @@ const Feed = ({ toggleTheme }) => {
     history.push(`${routes.newPost}?edit=${hash}`);
   };
 
-  const serviceWorkerRegister = () => {
-    const swPath = "./../../../sw.js";
-  
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker
-        .register(swPath)
-        .then(() => {
-          console.log("HELLO WORKER!!!");
-        })
-        .catch((err) => {
-          console.log(err.message);
-        });
-    }
-  };
-
-  const handleAddHome = (e) => {
-    e.preventDefault();
-    serviceWorkerRegister();
-  };
-
   const renderPosts = posts.map((p, i) => {
     return (
       <Post
@@ -150,7 +134,7 @@ const Feed = ({ toggleTheme }) => {
       <div className={styles.louder}>
         {currentAlreadySetNumber} of  {allReceivedNumber}
       </div>
-      <button onClick={(e) => handleAddHome(e)}>Add to Home screen</button>
+      <button onClick={promptToInstall}>Add to Home screen</button>
       {posts && <div onClick={(e) => handleMenuClose(e)}>{renderPosts}</div>}
       <button className={styles.nextPageButton} onClick={() => handleNextPage()}>NEXT PAGE</button>
     </>

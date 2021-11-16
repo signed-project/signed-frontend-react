@@ -1,5 +1,5 @@
-const axios = require("axios");
-const { addPost } = require("./addPost");
+import axios from "axios";
+import { addPost } from "./addPost";
 
 const sliceHash = (hash) => {
   return (
@@ -7,7 +7,7 @@ const sliceHash = (hash) => {
   );
 };
 
-const loadArchives = ({
+export const loadArchives = ({
   internalStore,
   subscribedSourcesByAddress,
   callback,
@@ -53,8 +53,4 @@ const loadArchives = ({
       });
     });
   });
-};
-
-module.exports = {
-  loadArchives,
 };

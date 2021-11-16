@@ -7,10 +7,11 @@
   Корневой пост, который не является ответом ни к какому другому посту. 
 */
 
-const { getReplies } = require("./getReplies");
-const { filterPostsBySources } = require("./helpers/filterPostsBySources");
+import { getReplies } from "./getReplies";
 
-const buildStream = ({
+import { filterPostsBySources } from "./helpers/filterPostsBySources";
+
+export const buildStream = ({
   internalStore,
   subscribedSourcesByAddress,
   blacklistedSourcesByAddress,
@@ -89,8 +90,4 @@ const buildStream = ({
   });
 
   return stream;
-};
-
-module.exports = {
-  buildStream,
 };

@@ -1,7 +1,7 @@
-const { loadIndexes } = require("./loadIndexes");
+import { loadIndexes } from "./loadIndexes";
 
 // Скачивалка индексов и архивов
-const loadMore = ({
+export const loadMore = ({
   internalStore,
   stream,
   subscribedSourcesByAddress,
@@ -35,8 +35,4 @@ const loadMore = ({
   ) {
     internalStore.archiveDepth = maxDepth;
   }
-};
-
-module.exports = {
-  loadMore,
 };

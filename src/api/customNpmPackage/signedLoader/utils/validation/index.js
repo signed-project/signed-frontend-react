@@ -1,7 +1,7 @@
-const { getHash, isSignatureValid } = require("./signature");
-const { isValidPostFields, isValidSourceFields } = require("./schemas");
+import { getHash, isSignatureValid } from "./signature";
+import { isValidPostFields, isValidSourceFields } from "./schemas";
 
-const validatePost = ({ post }) => {
+export const validatePost = ({ post }) => {
   if (!isValidPostFields(post) && post.type !== "reply") {
     console.warn("isValidPostFields.errors", isValidPostFields.errors);
     return false;
@@ -23,7 +23,7 @@ const validatePost = ({ post }) => {
   return true;
 };
 
-const validateSource = ({ source }) => {
+export const validateSource = ({ source }) => {
   if (!isValidSourceFields(source)) {
     console.warn("isValidSourceFields.errors", isValidSourceFields.errors);
     return false;
@@ -40,9 +40,4 @@ const validateSource = ({ source }) => {
   }
 
   return true;
-};
-
-module.exports = {
-  validateSource,
-  validatePost,
 };

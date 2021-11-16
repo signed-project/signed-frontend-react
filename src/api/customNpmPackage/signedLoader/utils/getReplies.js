@@ -1,6 +1,6 @@
-const { filterPostsBySources } = require("./helpers/filterPostsBySources");
+import { filterPostsBySources } from "./helpers/filterPostsBySources";
 
-const getReplies = ({
+export const getReplies = ({
   internalStore,
   post,
   subscribedSourcesByAddress,
@@ -36,8 +36,4 @@ const getReplies = ({
   });
 
   return postWithReplies;
-};
-
-module.exports = {
-  getReplies,
 };

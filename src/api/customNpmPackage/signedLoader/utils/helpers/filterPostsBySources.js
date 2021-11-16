@@ -1,4 +1,4 @@
-const filterPostsBySources = ({
+export const filterPostsBySources = ({
   posts,
   subscribedSourcesByAddress,
   blacklistedSourcesByAddress,
@@ -10,8 +10,4 @@ const filterPostsBySources = ({
         (signature) => signature.address in subscribedSourcesByAddress
       )
   );
-};
-
-module.exports = {
-  filterPostsBySources,
 };
