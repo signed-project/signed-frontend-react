@@ -2,6 +2,7 @@ import { filterPostsBySources } from "./helpers/filterPostsBySources";
 
 export const getReplies = ({
   internalStore,
+  postsSource,
   post,
   subscribedSourcesByAddress,
   blacklistedSourcesByAddress,
@@ -13,11 +14,13 @@ export const getReplies = ({
     return [];
   }
 
-  replies = filterPostsBySources({
-    posts: replies,
-    subscribedSourcesByAddress,
-    blacklistedSourcesByAddress,
-  });
+  if (!postsSource) {
+    replies = filterPostsBySources({
+      posts: replies,
+      subscribedSourcesByAddress,
+      blacklistedSourcesByAddress,
+    });
+  }
 
   replies = replies.sort(
     (a, b) => new Date(a.createdAt) - new Date(b.createdAt)

@@ -6,13 +6,14 @@ import routes from "../../../../config/routes.config";
 
 
 
-const ProfilePosts = ({ ownPost }) => {
- 
+const ProfilePosts = ({ ownPost, handleNextPage }) => {
     let history = useHistory();
     const handleShowMenu = (hash) => {
         setOpenMenuHash(hash);
     };
+
     const [openMenuHash, setOpenMenuHash] = useState(null);
+
     const isShowMenu = (hash) => {
         return hash === openMenuHash ? true : false;
     };
@@ -53,12 +54,12 @@ const ProfilePosts = ({ ownPost }) => {
         );
     });
 
-
     return (
         <>
             {/* <div onClick={(e) => handleMenuClose(e)}> */}
             <div>
                 {ownPost.length > 0 && renderPosts}
+                <button className={styles.nextPageButton} onClick={handleNextPage}>NEXT PAGE</button>
             </div>
         </>
     );

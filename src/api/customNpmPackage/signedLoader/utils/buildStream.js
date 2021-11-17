@@ -13,6 +13,7 @@ import { filterPostsBySources } from "./helpers/filterPostsBySources";
 
 export const buildStream = ({
   internalStore,
+  postsSource,
   subscribedSourcesByAddress,
   blacklistedSourcesByAddress,
   afterPost,
@@ -20,11 +21,19 @@ export const buildStream = ({
 }) => {
   const stream = [];
   let actualRootPosts = [];
-  let rootPosts = filterPostsBySources({
-    posts: internalStore.rootPosts,
-    subscribedSourcesByAddress,
-    blacklistedSourcesByAddress,
-  });
+  let rootPosts = [];
+
+  if (postsSource) {
+    rootPosts = internalStore.rootPosts.filter(
+      (rootPost) => rootPost.source.address === postsSource
+    );
+  } else {
+    rootPosts = filterPostsBySources({
+      posts: internalStore.rootPosts,
+      subscribedSourcesByAddress,
+      blacklistedSourcesByAddress,
+    });
+  }
 
   rootPosts = rootPosts.sort(
     (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
@@ -60,6 +69,7 @@ export const buildStream = ({
 
   actualRootPosts.forEach((actualRootPost) => {
     const replies = getReplies({
+      postsSource,
       internalStore,
       post: actualRootPost,
       subscribedSourcesByAddress,

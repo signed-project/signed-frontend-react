@@ -23,8 +23,6 @@ const Feed = ({ toggleTheme }) => {
   const { isAuth, subscribed, source: userSource } = useSelector(state => state.user);
   const { allReceivedNumber, currentAlreadySetNumber } = useSelector((state) => state.source);
 
-  console.log('currentAlreadySetNumber', currentAlreadySetNumber);
-
   const [openMenuHash, setOpenMenuHash] = useState(null);
 
   const [posts, setPosts] = useState([]);
@@ -56,8 +54,6 @@ const Feed = ({ toggleTheme }) => {
   };
 
   const updateStream = ({ stream, sourcePost }) => {
-    console.log('|---------- updateStream -----------|');
-    console.dir(stream);
     dispatch(postActions.updatePostStream(stream));
     if (sourcePost) {
       dispatch(sourceActions.setLatestSource(sourcePost));
@@ -65,13 +61,11 @@ const Feed = ({ toggleTheme }) => {
   }
 
   const handleNextPage = () => {
-    console.log('AFTER POST');
-    console.dir(posts.at(-1).rootPost);
-
     const afterPost = posts.at(-1).rootPost;
 
     if (!isAuth) {
-      const stream = getStreamPage({ 
+      const stream = getStreamPage({
+        postsSource: '',
         subscribedSources: subscribedSources, 
         blacklistedSourcesByAddress: {}, 
         afterPost,
@@ -86,7 +80,8 @@ const Feed = ({ toggleTheme }) => {
         behavior: "smooth",
       });
     } else {
-      const stream = getStreamPage({ 
+      const stream = getStreamPage({
+        postsSource: '',
         subscribedSources: [...subscribed, userSource], 
         blacklistedSourcesByAddress: {}, 
         afterPost,

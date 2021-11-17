@@ -12,6 +12,7 @@ import SourceInfo from './sub/SourceInfo';
 import Button from "../../utils/Button/Button";
 import { userApi } from '../../../config/http.config';
 import { postActions } from '../../../api/storage/post';
+import { getStreamPage } from '../../../api/customNpmPackage/signedLoader';
 
 // TODO: refactor this component to use module Post if it possible
 const Source = ({ toggleTheme }) => {
@@ -45,19 +46,41 @@ const Source = ({ toggleTheme }) => {
     }, [user, address]);
 
     useEffect(() => {
-        if (Array.isArray(stream)) {
-            console.log('address');
-            console.dir(address);
-            const userPost = stream.filter(post => post.rootPost.source.address === address)
-            console.log('userPost');
-            console.dir(userPost);
-            setOwnPost(userPost);
-        }
-    }, [stream]);
+        const userPost = getStreamPage({
+            postsSource: address, 
+            subscribedSources: [], 
+            blacklistedSourcesByAddress: {}, 
+            afterPost: {}, 
+            limit: 10, 
+            callback: () => {} 
+        });
+
+        setOwnPost(userPost);
+    }, [address]);
 
     const goToTab = (tab) => {
         setTab(tab);
     }
+
+    const handleNextPage = () => {
+        const afterPost = ownPost.at(-1).rootPost;
+
+        const userPost = getStreamPage({
+            postsSource: address,
+            subscribedSources: [], 
+            blacklistedSourcesByAddress: {}, 
+            afterPost,
+            limit: 10,
+            callback: () => {} 
+        });
+
+        setOwnPost(userPost);
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+        });
+    };
 
     const isActiveTab = (currentTab) => {
         return tab === currentTab && styles.activeTab
@@ -105,7 +128,7 @@ const Source = ({ toggleTheme }) => {
 
             </>
             }
-            {tab === tabList.posts && <SourcePosts ownPost={ownPost} />}
+            {tab === tabList.posts && <SourcePosts ownPost={ownPost} handleNextPage={handleNextPage} />}
             {tab === tabList.info && <SourceInfo source={source} />}
         </>
     );

@@ -16,9 +16,10 @@ import { getStreamPage } from "./../../api/customNpmPackage/signedLoader";
 import axios from 'axios';
 
 const apiHost = hostApi.API_HOST;
+let isInit = false;
 
 const Layout = ({ children, theme }) => {
-  const [isAuthPage, setISAuthPage] = useState(false)
+  const [isAuthPage, setISAuthPage] = useState(false);
   const { isAuth, subscribed, source: userSource } = useSelector(state => state.user);
   const location = useLocation();
   const dispatch = useDispatch();
@@ -46,8 +47,6 @@ const Layout = ({ children, theme }) => {
   // }
 
   const updateStream = ({ stream, sourcePost }) => {
-    console.log('|------------------------------------ updateStream --------------------------|');
-    console.dir(stream);
     dispatch(postActions.updatePostStream(stream));
     dispatch(sourceActions.setLatestSource(sourcePost));
   }
@@ -66,7 +65,8 @@ const Layout = ({ children, theme }) => {
 
           dispatch(sourceActions.setSubscribedSources(data));
 
-          getStreamPage({ 
+          getStreamPage({
+            postsSource: '',
             subscribedSources: data, 
             blacklistedSourcesByAddress: {}, 
             afterPost: {},
@@ -80,6 +80,7 @@ const Layout = ({ children, theme }) => {
     }
     else {
       getStreamPage({ 
+        postsSource: '',
         subscribedSources: [...subscribed, userSource], 
         blacklistedSourcesByAddress: {}, 
         afterPost: {},

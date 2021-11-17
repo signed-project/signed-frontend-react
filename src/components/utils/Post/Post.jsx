@@ -18,8 +18,6 @@ import getImgArr from "../../customHooks/getImgSources";
 import MenuPost from "../MenuPost/MenuPost";
 
 const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
-  console.log("POST");
-  console.dir(post);
   const {
     type,
     text,
@@ -63,7 +61,6 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
     const comments = [];
 
     for (let index = 0; index < post.replies.length; index++) {
-      console.log('currIndex', index);
       if (index === 3) {
         comments.push((
 <div key={index} className={styles.gap}>

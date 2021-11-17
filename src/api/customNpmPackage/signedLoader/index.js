@@ -20,7 +20,7 @@ const internalStore = {
   archivesByHash: {},
 
   // actual time range
-  archiveDepth: 0, // 1628888400000 (14 aug 2021) - for test loading of archives
+  archiveDepth: 0, // 1628888400000 (14 aug 2021) / 1620162000000 (05.05.2021) - for test loading of archives
 
   // source.hosts.index => { index }
   indexesByAddress: {},
@@ -30,36 +30,6 @@ const internalStore = {
 
   blacklistedSourcesByAddress: {},
 };
-
-function outputInternalStore(internalStore) {
-  console.log("onLoadMore");
-  console.log("internalStore.archiveDepth ", internalStore.archiveDepth);
-  console.log(
-    "internalStore.archivesByHash ",
-    Object.keys(internalStore.archivesByHash).length
-  );
-  console.log(
-    "internalStore.postsByHash ",
-    Object.keys(internalStore.postsByHash).length
-  );
-  console.log(
-    "internalStore.postsById ",
-    Object.keys(internalStore.postsById).length
-  );
-  console.log(
-    "internalStore.postsByTargetHash ",
-    Object.keys(internalStore.postsByTargetHash).length
-  );
-  console.log("internalStore.rootPosts ", internalStore.rootPosts.length);
-  console.log(
-    "internalStore.indexesByAddress ",
-    Object.keys(internalStore.indexesByAddress).length
-  );
-  console.log(
-    "internalStore.sourcesByAddress ",
-    Object.keys(internalStore.sourcesByAddress).length
-  );
-}
 
 /*
  * Лента это массив тредов. Тред это объект содержащий корневой пост и массив ответов к нему. 
@@ -78,6 +48,7 @@ function outputInternalStore(internalStore) {
  * callback({stream}) -  на вход коллбеку отправляем страницу ленты собранную из постов, загруженных в настоящее время
 */
 export const getStreamPage = ({
+  postsSource,
   subscribedSources,
   blacklistedSourcesByAddress,
   afterPost,
@@ -94,20 +65,17 @@ export const getStreamPage = ({
   // Cтроим ленту из тех данных, которые есть в internalStore
   let stream = buildStream({
     internalStore,
+    postsSource,
     subscribedSourcesByAddress,
     blacklistedSourcesByAddress,
     afterPost,
     limit,
   });
 
-  console.log("INDEX STREAM");
-  console.dir(stream);
-
   const onLoadMore = () => {
-    outputInternalStore(internalStore);
-
     stream = buildStream({
       internalStore,
+      postsSource,
       subscribedSourcesByAddress,
       blacklistedSourcesByAddress,
       afterPost,
