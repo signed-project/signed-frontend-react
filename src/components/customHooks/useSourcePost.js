@@ -1,14 +1,16 @@
 import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { getAllSources } from "./../../api/customNpmPackage/signedLoader";
 
 const useSourcePost = (address) => {
-  const sourceStateLatest = useSelector((state) => state.source.latest);
+  const latestSources = getAllSources();
   const [sourceLatest, setSourceLatest] = useState();
+
   useEffect(() => {
     if (address) {
-      setSourceLatest(sourceStateLatest[address]);
+      setSourceLatest(latestSources[address]);
     }
-  }, [sourceStateLatest, address]);
+  }, [latestSources, address]);
+
   return sourceLatest;
 };
 export default useSourcePost;

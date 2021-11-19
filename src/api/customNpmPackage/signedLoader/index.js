@@ -2,6 +2,7 @@ import { buildStream } from "./utils/buildStream.js";
 import { loadArchives } from "./utils/loadArchives.js";
 import { loadMore } from "./utils/loadMore.js";
 import { getReplies } from "./utils/getReplies.js";
+import { getParentPosts } from "./utils/getParentPosts.js";
 
 const internalStore = {
   // all posts includes postsById
@@ -52,6 +53,7 @@ export const getStreamPage = ({
   subscribedSources,
   blacklistedSourcesByAddress,
   afterPost,
+  endPost,
   limit,
   callback,
 }) => {
@@ -69,6 +71,7 @@ export const getStreamPage = ({
     subscribedSourcesByAddress,
     blacklistedSourcesByAddress,
     afterPost,
+    endPost,
     limit,
   });
 
@@ -79,10 +82,11 @@ export const getStreamPage = ({
       subscribedSourcesByAddress,
       blacklistedSourcesByAddress,
       afterPost,
+      endPost,
       limit,
     });
 
-    callback({ stream, sourcePost: internalStore.sourcesByAddress });
+    callback({ stream });
 
     // Запускаем скачивание любого архива у которого dateStart > archiveDepth
     // После скачки и обработки каждого архива вызываем callback
@@ -107,6 +111,9 @@ export const getStreamPage = ({
 };
 
 export const getPostByHash = ({ hash, subscribedSources }) => {
+  const returnObject = {};
+  let parentPosts = [];
+  let replies = [];
   const subscribedSourcesByAddress = {};
 
   subscribedSources.forEach((source) => {
@@ -114,15 +121,48 @@ export const getPostByHash = ({ hash, subscribedSources }) => {
   });
 
   const currPost = internalStore.postsByHash[hash];
-  const replies = getReplies({
-    internalStore,
-    post: currPost,
-    subscribedSourcesByAddress,
-    blacklistedSourcesByAddress: {},
-  });
 
-  return {
-    rootPost: currPost,
-    replies,
-  };
+  if (currPost.type === "reply") {
+    parentPosts = getParentPosts({
+      internalStore,
+      post: currPost,
+      subscribedSourcesByAddress,
+      blacklistedSourcesByAddress: {},
+    });
+
+    replies = getReplies({
+      internalStore,
+      post: currPost,
+      subscribedSourcesByAddress,
+      blacklistedSourcesByAddress: {},
+    });
+
+    const rootPost = parentPosts.splice(-1, 1)[0];
+    replies.unshift(...parentPosts, currPost);
+
+    returnObject.clickedPost = currPost;
+    returnObject.rootPost = rootPost;
+    returnObject.replies = replies;
+  } else {
+    replies = getReplies({
+      internalStore,
+      post: currPost,
+      subscribedSourcesByAddress,
+      blacklistedSourcesByAddress: {},
+    });
+
+    returnObject.clickedPost = currPost;
+    returnObject.rootPost = currPost;
+    returnObject.replies = replies;
+  }
+
+  return returnObject;
+};
+
+export const getAllSources = () => {
+  return internalStore.sourcesByAddress;
+};
+
+export const getSourceByAddress = (address) => {
+  return internalStore.sourcesByAddress[address];
 };

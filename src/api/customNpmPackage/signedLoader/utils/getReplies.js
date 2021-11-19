@@ -1,4 +1,4 @@
-import { filterPostsBySources } from "./helpers/filterPostsBySources";
+import { filterPostsBySources } from "./helpers";
 
 export const getReplies = ({
   internalStore,

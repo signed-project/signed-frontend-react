@@ -4,19 +4,10 @@ import { useHistory } from "react-router-dom";
 import Post from "../../utils/Post/Post";
 import routes from "../../../config/routes.config";
 import styles from './feed.module.scss';
-import { getStreamPage } from './../../../api/customNpmPackage/signedLoader';
-import axios from "axios";
 import { postActions } from "./../../../api/storage/post";
-import { sourceActions } from "./../../../api/storage/source";
-import { hostApi, userApi } from "./../../../config/http.config.js";
+import { handleSwitchPages } from "./../../helpers";
 
-import { useAddToHomescreenPrompt } from "./../../customHooks/useAddToHomescreenPrompt.js";
-
-const apiHost = hostApi.API_HOST;
-
-const Feed = ({ toggleTheme }) => {
-  const [prompt, promptToInstall] = useAddToHomescreenPrompt();
-
+const Feed = ({ toggleTheme, promptToInstall }) => {
   const dispatch = useDispatch();
   const stream = useSelector((state) => state.post.stream);
   const subscribedSources = useSelector((state) => state.source.subscribed);
@@ -46,6 +37,7 @@ const Feed = ({ toggleTheme }) => {
 
   const handleMenuClose = (e) => {
     const dataHash = e.target.getAttribute("data-hash");
+    
     if (dataHash) {
       return;
     } else {
@@ -53,49 +45,38 @@ const Feed = ({ toggleTheme }) => {
     }
   };
 
-  const updateStream = ({ stream, sourcePost }) => {
+  const updateStream = ({ stream }) => {
     dispatch(postActions.updatePostStream(stream));
-    if (sourcePost) {
-      dispatch(sourceActions.setLatestSource(sourcePost));
-    }
   }
 
+  const handlePreviousPage = () => {
+    handleSwitchPages({
+      postsStream: posts,
+      next: false,
+      isAuth,
+      postsSource: '',
+      subscribedSources,
+      subscribed,
+      userSource,
+      blacklistedSourcesByAddress: {},
+      limit: 10,
+      callback: updateStream
+    });
+  };
+
   const handleNextPage = () => {
-    const afterPost = posts.at(-1).rootPost;
-
-    if (!isAuth) {
-      const stream = getStreamPage({
-        postsSource: '',
-        subscribedSources: subscribedSources, 
-        blacklistedSourcesByAddress: {}, 
-        afterPost,
-        limit: 10,
-        callback: updateStream 
-      });
-
-      updateStream({ stream });
-
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
-    } else {
-      const stream = getStreamPage({
-        postsSource: '',
-        subscribedSources: [...subscribed, userSource], 
-        blacklistedSourcesByAddress: {}, 
-        afterPost,
-        limit: 10,
-        callback: updateStream 
-      });
-
-      updateStream({ stream });
-
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
-    }
+    handleSwitchPages({
+      postsStream: posts,
+      next: true,
+      isAuth,
+      postsSource: '',
+      subscribedSources,
+      subscribed,
+      userSource,
+      blacklistedSourcesByAddress: {},
+      limit: 10,
+      callback: updateStream
+    });
   }
 
   const handleEditPost = (hash) => {
@@ -122,6 +103,7 @@ const Feed = ({ toggleTheme }) => {
         {currentAlreadySetNumber} of  {allReceivedNumber}
       </div>
       <button onClick={promptToInstall}>Add to Home screen</button>
+      <button className={styles.nextPageButton} onClick={() => handlePreviousPage()}>PREVIOUS PAGE</button>
       {posts && <div onClick={(e) => handleMenuClose(e)}>{renderPosts}</div>}
       <button className={styles.nextPageButton} onClick={() => handleNextPage()}>NEXT PAGE</button>
     </>

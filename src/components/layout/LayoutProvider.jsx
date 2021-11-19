@@ -6,6 +6,8 @@ export const layoutType = {
 
 const ThemeContext = React.createContext({
     theme: layoutType.showLayout,
-    toggleTheme: () => { }
+    toggleTheme: () => {},
+    promptToInstall: () => {},
 });
+
 export default ThemeContext;

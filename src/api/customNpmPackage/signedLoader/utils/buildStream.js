@@ -9,7 +9,7 @@
 
 import { getReplies } from "./getReplies";
 
-import { filterPostsBySources } from "./helpers/filterPostsBySources";
+import { filterPostsBySources, findIndexOfPost } from "./helpers";
 
 export const buildStream = ({
   internalStore,
@@ -17,6 +17,7 @@ export const buildStream = ({
   subscribedSourcesByAddress,
   blacklistedSourcesByAddress,
   afterPost,
+  endPost,
   limit,
 }) => {
   const stream = [];
@@ -40,30 +41,38 @@ export const buildStream = ({
   );
 
   if (afterPost && Object.keys(afterPost).length > 0) {
-    let foundIndexOfAfterPost = rootPosts.findIndex(
-      (rootPost) =>
-        rootPost.source.address === afterPost.source.address &&
-        rootPost.id === afterPost.id
-    );
+    const foundIndexOfAfterPost = findIndexOfPost({
+      rootPosts,
+      post: afterPost,
+    });
 
-    if (!foundIndexOfAfterPost && foundIndexOfAfterPost !== 0) {
-      foundIndexOfAfterPost = rootPosts.findIndex(
-        (rootPost) => rootPost.createdAt === afterPost.createdAt
-      );
-
-      if (foundIndexOfAfterPost) {
-        actualRootPosts = rootPosts.slice(
-          foundIndexOfAfterPost,
-          limit + foundIndexOfAfterPost
-        );
-      }
-    } else {
+    if (foundIndexOfAfterPost === rootPosts.length - 1) {
+      actualRootPosts = rootPosts.slice(0, limit);
+    } else if (foundIndexOfAfterPost > -1) {
       actualRootPosts = rootPosts.slice(
         foundIndexOfAfterPost,
         limit + foundIndexOfAfterPost
       );
     }
+  } else if (endPost && Object.keys(endPost).length > 0) {
+    const foundIndexOfEndPost = findIndexOfPost({
+      rootPosts,
+      post: endPost,
+    });
+
+    if (foundIndexOfEndPost === 0) {
+      actualRootPosts = rootPosts.slice(
+        rootPosts.length - limit,
+        rootPosts.length
+      );
+    } else if (foundIndexOfEndPost > -1) {
+      actualRootPosts = rootPosts.slice(
+        foundIndexOfEndPost < limit ? 0 : foundIndexOfEndPost + 1 - limit,
+        foundIndexOfEndPost + 1
+      );
+    }
   } else {
+    // INIT-START
     actualRootPosts = rootPosts.slice(0, limit);
   }
 

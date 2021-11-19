@@ -10,7 +10,6 @@ import { getReadFormat } from "../../../libs/date.js";
 import Reaction from "../../utils/Reaction/Reaction";
 import PostContent from "../../utils/PostContent/PostContent";
 import useReaction from "../../customHooks/useReaction";
-import getCommentTrees from "../../customHooks/getCommentTrees";
 import getImgSources from "../../customHooks/getImgSources";
 import Preview from "../../utils/Preview/Preview";
 import Avatar from "../../utils/Avatar/Avatar";
@@ -19,7 +18,7 @@ import Slider from "../../utils/Slider/Slider";
 import routes from "../../../config/routes.config";
 import { hostApi, userApi } from "./../../../config/http.config.js";
 
-import { getPostByHash } from "./../../../api/customNpmPackage/signedLoader";
+import { getPostByHash, getSourceByAddress } from "./../../../api/customNpmPackage/signedLoader";
 import axios from "axios";
 
 const apiHost = hostApi.API_HOST;
@@ -28,8 +27,6 @@ const apiHost = hostApi.API_HOST;
 const PostPage = ({ toggleTheme }) => {
   // const postMapState = useSelector((state) => state.post.hashed);
   // const hashedTargetPostStore = useSelector((state) => state.post.hashedTargetPost);
-  // FIX: storage sources in Internal Store and provide from it method for get them
-  const sourceStateLatest = useSelector(state => state.source.latest);
   const subscribedSources = useSelector((state) => state.source.subscribed);
   const { isAuth, subscribed, source: userSource } = useSelector(state => state.user);
   const location = useLocation();
@@ -53,15 +50,13 @@ const PostPage = ({ toggleTheme }) => {
     if (!isAuth) {
       post = getPostByHash({ hash, subscribedSources: subscribedSources });
 
-      console.log('POST-POST');
-      console.dir(post);
       setCurrentPost(post);
     } else {
       post = getPostByHash({ hash, subscribedSources: [...subscribed, userSource] });
 
       setCurrentPost(post);
     }
-  }, [hash])
+  }, [hash, subscribedSources])
 
   useEffect(() => {
     toggleTheme(false);
@@ -69,15 +64,13 @@ const PostPage = ({ toggleTheme }) => {
 
   useEffect(() => {
     if (currentPost) {
-      console.log("currentPost-currentPost-currentPost");
-      console.dir(currentPost);
       setPost(currentPost.rootPost);
       if (currentPost.rootPost.source?.address) {
-        const sourceData = sourceStateLatest[currentPost.rootPost.source.address];
+        const sourceData = getSourceByAddress(currentPost.rootPost.source.address);
         setSource(sourceData);
       }
     }
-  }, [currentPost, sourceStateLatest]);
+  }, [currentPost]);
 
   useEffect(() => {
     setComments(currentPost.replies);
@@ -96,9 +89,6 @@ const PostPage = ({ toggleTheme }) => {
       setShowSlider(true);
     }
   }, [slider]);
-
-  console.log('post[post]', post);
-  console.log('post[source]', source);
 
   const renderComments = comments
     ?.slice()

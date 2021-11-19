@@ -13,10 +13,10 @@ import Button from "../../utils/Button/Button";
 import { userApi } from '../../../config/http.config';
 import { postActions } from '../../../api/storage/post';
 import { getStreamPage } from '../../../api/customNpmPackage/signedLoader';
+import { handleSwitchPages } from "./../../helpers";
 
 // TODO: refactor this component to use module Post if it possible
 const Source = ({ toggleTheme }) => {
-    console.log("|------------------------- SOurCE page!");
     const tabList = {
         posts: 'posts',
         info: 'info'
@@ -62,23 +62,31 @@ const Source = ({ toggleTheme }) => {
         setTab(tab);
     }
 
+    const updatePosts = ({ stream }) => {
+        setOwnPost(stream);
+    }
+
     const handleNextPage = () => {
-        const afterPost = ownPost.at(-1).rootPost;
-
-        const userPost = getStreamPage({
-            postsSource: address,
-            subscribedSources: [], 
-            blacklistedSourcesByAddress: {}, 
-            afterPost,
+        handleSwitchPages({
+            postsStream: ownPost,
+            callback: updatePosts,
             limit: 10,
-            callback: () => {} 
+            next: true,
+            blacklistedSourcesByAddress: {},
+            subscribedSources: [],
+            postsSource: address,
         });
+    };
 
-        setOwnPost(userPost);
-
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth",
+    const handlePreviousPage = () => {
+        handleSwitchPages({
+            postsStream: ownPost,
+            callback: updatePosts,
+            limit: 10,
+            next: false,
+            blacklistedSourcesByAddress: {},
+            subscribedSources: [],
+            postsSource: address,
         });
     };
 
@@ -128,7 +136,7 @@ const Source = ({ toggleTheme }) => {
 
             </>
             }
-            {tab === tabList.posts && <SourcePosts ownPost={ownPost} handleNextPage={handleNextPage} />}
+            {tab === tabList.posts && <SourcePosts ownPost={ownPost} handlePreviousPage={handlePreviousPage} handleNextPage={handleNextPage} />}
             {tab === tabList.info && <SourceInfo source={source} />}
         </>
     );
