@@ -2,36 +2,35 @@ import axios from "axios";
 import { addPost } from "./addPost.js";
 import { addSource } from "./addSource.js";
 
-export const loadIndexes = ({ internalStore, sources, callback }) => {
-  sources.map(async (source) => {
-    const currentSourceAddress = source.address;
+export const loadIndexes = ({
+  internalStore,
+  subscribedSourcesByAddress,
+  callback,
+}) => {
+  const keysFromSubscribedSources = Object.keys(subscribedSourcesByAddress);
 
-    if (!(currentSourceAddress in internalStore.indexesByAddress)) {
-      try {
-        await Promise.allSettled(
-          source.hosts.map(async (host) => {
-            let res = await axios.get(`${host.index}`);
+  keysFromSubscribedSources.map((sourceAddress) => {
+    if (!(sourceAddress in internalStore.indexesByAddress)) {
+      subscribedSourcesByAddress[sourceAddress].hosts.map(async (host) => {
+        try {
+          let res = await axios.get(`${host.index}`);
 
-            internalStore.indexesByAddress[currentSourceAddress] =
-              res.data.index;
+          internalStore.indexesByAddress[sourceAddress] = res.data.index;
 
-            addSource({ internalStore, source: res.data.source });
+          addSource({ internalStore, source: res.data.source });
 
-            res.data.index.recentPosts.map((post) => {
-              addPost({ internalStore, post });
-              return;
-            });
+          res.data.index.recentPosts.map((post) => {
+            addPost({ internalStore, post });
+          });
 
-            callback();
-
-            return;
-          })
-        );
-      } catch (e) {
-        console.warn("[loadIndexes][Promise.allSettled]", e);
-      }
+          callback();
+        } catch (e) {
+          console.warn(
+            "[loadIndexes][subscribedSourcesByAddress[sourceAddress].hosts.map]",
+            e
+          );
+        }
+      });
     }
-
-    return;
   });
 };

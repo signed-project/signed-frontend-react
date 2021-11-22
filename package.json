@@ -13,6 +13,7 @@
     "bitcoinjs-lib": "^5.2.0",
     "bitcoinjs-message": "^2.2.0",
     "bs58": "^4.0.1",
+    "core-js": "^3.19.1",
     "crypto-js": "^4.0.0",
     "customize-cra": "^1.0.0",
     "date-fns": "^2.19.0",
@@ -21,7 +22,7 @@
     "linkifyjs": "^3.0.0-beta.3",
     "mime": "^2.5.2",
     "nanoid": "^3.1.22",
-    "node-sass": "^5.0.0",
+    "node-sass": "^6.0.1",
     "parse-json": "^5.2.0",
     "prop-types": "^15.7.2",
     "query-string": "^7.0.0",
@@ -40,9 +41,22 @@
     "redux-state-sync": "^3.1.2",
     "secure-remote-password": "^0.3.1",
     "sort-keys": "^4.2.0",
+    "svgo": "^2.8.0",
     "swiper": "^6.5.9",
     "web-vitals": "^1.1.1",
-    "wif": "^2.0.6"
+    "wif": "^2.0.6",
+    "workbox-background-sync": "^6.4.1",
+    "workbox-broadcast-update": "^6.4.1",
+    "workbox-cacheable-response": "^6.4.1",
+    "workbox-core": "^6.4.1",
+    "workbox-expiration": "^6.4.1",
+    "workbox-google-analytics": "^6.4.1",
+    "workbox-navigation-preload": "^6.4.1",
+    "workbox-precaching": "^6.4.1",
+    "workbox-range-requests": "^6.4.1",
+    "workbox-routing": "^6.4.1",
+    "workbox-strategies": "^6.4.1",
+    "workbox-streams": "^6.4.1"
   },
   "scripts": {
     "start": "set HTTPS=true&&react-scripts start",
@@ -50,7 +64,8 @@
     "test": "node ./test/index.js",
     "eject": "react-scripts eject",
     "start_craco": "craco start",
-    "build_craco": "craco build"
+    "build_craco": "craco build",
+    "testSignedLoader": "node testSignedLoader.js"
   },
   "homepage": "/",
   "eslintConfig": {

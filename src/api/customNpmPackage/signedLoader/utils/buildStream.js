@@ -7,43 +7,89 @@
   Корневой пост, который не является ответом ни к какому другому посту. 
 */
 
+import { getReplies } from "./getReplies";
+
+import { filterPostsBySources, findIndexOfPost } from "./helpers";
+
 export const buildStream = ({
   internalStore,
-  sources,
-  blacklistedSources,
+  postsSource,
+  subscribedSourcesByAddress,
+  blacklistedSourcesByAddress,
   afterPost,
+  endPost,
   limit,
 }) => {
-  let rootPosts = internalStore.rootPosts.slice();
+  const stream = [];
+  let actualRootPosts = [];
+  let rootPosts = [];
 
-  sources.map((source) => {
-    rootPosts = rootPosts.filter((rootPost) => {
-      let ok = false;
-
-      rootPost.signatures.map((signature) => {
-        if (
-          signature.address === source.address &&
-          !(signature.address in blacklistedSources)
-        ) {
-          ok = true;
-        }
-
-        return;
-      });
-
-      return ok;
+  if (postsSource) {
+    rootPosts = internalStore.rootPosts.filter(
+      (rootPost) => rootPost.source.address === postsSource
+    );
+  } else {
+    rootPosts = filterPostsBySources({
+      posts: internalStore.rootPosts,
+      subscribedSourcesByAddress,
+      blacklistedSourcesByAddress,
     });
-
-    return;
-  });
+  }
 
   rootPosts = rootPosts.sort(
-    (a, b) => new Date(b.createAt) - new Date(a.createAt)
+    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
   );
-  // get rootPosts
-  // filter rootPosts === from sources and !== blacklisted sources
-  // sort posts by date <<
-  // slice posts from afterPost to limit
-  // if afterPost did not find in posts then get it createdAt property
-  // for every post apply getReplies method
+
+  if (afterPost && Object.keys(afterPost).length > 0) {
+    const foundIndexOfAfterPost = findIndexOfPost({
+      rootPosts,
+      post: afterPost,
+    });
+
+    if (foundIndexOfAfterPost === rootPosts.length - 1) {
+      actualRootPosts = rootPosts.slice(0, limit);
+    } else if (foundIndexOfAfterPost > -1) {
+      actualRootPosts = rootPosts.slice(
+        foundIndexOfAfterPost,
+        limit + foundIndexOfAfterPost
+      );
+    }
+  } else if (endPost && Object.keys(endPost).length > 0) {
+    const foundIndexOfEndPost = findIndexOfPost({
+      rootPosts,
+      post: endPost,
+    });
+
+    if (foundIndexOfEndPost === 0) {
+      actualRootPosts = rootPosts.slice(
+        rootPosts.length - limit,
+        rootPosts.length
+      );
+    } else if (foundIndexOfEndPost > -1) {
+      actualRootPosts = rootPosts.slice(
+        foundIndexOfEndPost < limit ? 0 : foundIndexOfEndPost + 1 - limit,
+        foundIndexOfEndPost + 1
+      );
+    }
+  } else {
+    // INIT-START
+    actualRootPosts = rootPosts.slice(0, limit);
+  }
+
+  actualRootPosts.forEach((actualRootPost) => {
+    const replies = getReplies({
+      postsSource,
+      internalStore,
+      post: actualRootPost,
+      subscribedSourcesByAddress,
+      blacklistedSourcesByAddress,
+    });
+
+    stream.push({
+      rootPost: actualRootPost,
+      replies,
+    });
+  });
+
+  return stream;
 };

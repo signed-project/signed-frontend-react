@@ -12,6 +12,8 @@ import SourceInfo from './sub/SourceInfo';
 import Button from "../../utils/Button/Button";
 import { userApi } from '../../../config/http.config';
 import { postActions } from '../../../api/storage/post';
+import { getStreamPage } from '../../../api/customNpmPackage/signedLoader';
+import { handleSwitchPages } from "./../../helpers";
 
 // TODO: refactor this component to use module Post if it possible
 const Source = ({ toggleTheme }) => {
@@ -44,15 +46,49 @@ const Source = ({ toggleTheme }) => {
     }, [user, address]);
 
     useEffect(() => {
-        if (Array.isArray(stream)) {
-            const userPost = stream.filter(post => post.source.address === address)
-            setOwnPost(userPost);
-        }
-    }, [stream]);
+        const userPost = getStreamPage({
+            postsSource: address, 
+            subscribedSources: [], 
+            blacklistedSourcesByAddress: {}, 
+            afterPost: {}, 
+            limit: 10, 
+            callback: () => {} 
+        });
+
+        setOwnPost(userPost);
+    }, [address]);
 
     const goToTab = (tab) => {
         setTab(tab);
     }
+
+    const updatePosts = ({ stream }) => {
+        setOwnPost(stream);
+    }
+
+    const handleNextPage = () => {
+        handleSwitchPages({
+            postsStream: ownPost,
+            callback: updatePosts,
+            limit: 10,
+            next: true,
+            blacklistedSourcesByAddress: {},
+            subscribedSources: [],
+            postsSource: address,
+        });
+    };
+
+    const handlePreviousPage = () => {
+        handleSwitchPages({
+            postsStream: ownPost,
+            callback: updatePosts,
+            limit: 10,
+            next: false,
+            blacklistedSourcesByAddress: {},
+            subscribedSources: [],
+            postsSource: address,
+        });
+    };
 
     const isActiveTab = (currentTab) => {
         return tab === currentTab && styles.activeTab
@@ -69,7 +105,7 @@ const Source = ({ toggleTheme }) => {
             if (data === 'Ok') {
                 setIsAlreadyFollow(action);
                 if (action === false) {
-                    const newStream = stream.filter(post => post.source.address !== address);
+                    const newStream = stream.filter(post => post.rootPost.source.address !== address);
                     dispatch(postActions.updatePostStream(newStream));
                 }
             }
@@ -100,7 +136,7 @@ const Source = ({ toggleTheme }) => {
 
             </>
             }
-            {tab === tabList.posts && < SourcePosts ownPost={ownPost} />}
+            {tab === tabList.posts && <SourcePosts ownPost={ownPost} handlePreviousPage={handlePreviousPage} handleNextPage={handleNextPage} />}
             {tab === tabList.info && <SourceInfo source={source} />}
         </>
     );

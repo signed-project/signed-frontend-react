@@ -26,12 +26,12 @@ const MainRouts = () => {
     return (
         <>
             <LayoutProvider.Consumer >
-                {({ theme, toggleTheme }) => {
+                {({ theme, toggleTheme, promptToInstall }) => {
                     return (
                         <Layout theme={theme}>
                             <Switch>
                                 <Route path={routes.feed} exact
-                                    component={() => <Feed theme={theme} toggleTheme={toggleTheme} />}
+                                    component={() => <Feed theme={theme} promptToInstall={promptToInstall} toggleTheme={toggleTheme} />}
                                 />
                                 <Route path={routes.search} exact
                                     component={() => <Search theme={theme} toggleTheme={toggleTheme} />}

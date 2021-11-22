@@ -10,19 +10,25 @@ import { getReadFormat } from "../../../libs/date.js";
 import Reaction from "../../utils/Reaction/Reaction";
 import PostContent from "../../utils/PostContent/PostContent";
 import useReaction from "../../customHooks/useReaction";
-import getCommentTrees from "../../customHooks/getCommentTrees";
 import getImgSources from "../../customHooks/getImgSources";
 import Preview from "../../utils/Preview/Preview";
 import Avatar from "../../utils/Avatar/Avatar";
 import InfoAuthor from "../../utils/InfoAuthor/InfoAuthor";
 import Slider from "../../utils/Slider/Slider";
 import routes from "../../../config/routes.config";
+import { hostApi, userApi } from "./../../../config/http.config.js";
+
+import { getPostByHash, getSourceByAddress } from "./../../../api/customNpmPackage/signedLoader";
+import axios from "axios";
+
+const apiHost = hostApi.API_HOST;
 
 // TODO: refactor this component to use module Post if it possible
 const PostPage = ({ toggleTheme }) => {
-  const postMapState = useSelector((state) => state.post.hashed);
-  const hashedTargetPostStore = useSelector((state) => state.post.hashedTargetPost);
-  const sourceStateLatest = useSelector(state => state.source.latest);
+  // const postMapState = useSelector((state) => state.post.hashed);
+  // const hashedTargetPostStore = useSelector((state) => state.post.hashedTargetPost);
+  const subscribedSources = useSelector((state) => state.source.subscribed);
+  const { isAuth, subscribed, source: userSource } = useSelector(state => state.user);
   const location = useLocation();
   const { slider } = queryString.parse(location.search);
 
@@ -38,38 +44,40 @@ const PostPage = ({ toggleTheme }) => {
   const [currentPost, setCurrentPost] = useState("");
   const [source, setSource] = useState("");
 
-  // console.log('currentPost', currentPost);
-  // console.log('source[currentPost]', source);
-  // console.log('source[currentPost.source.address]', currentPost.source.address);
-  // const source = useSourcePost(currentPost.source.address);
-
   useEffect(() => {
-    const post = postMapState[hash];
-    setCurrentPost(post);
-  }, [hash, postMapState])
+    let post = {};
+
+    if (!isAuth) {
+      post = getPostByHash({ hash, subscribedSources: subscribedSources });
+
+      setCurrentPost(post);
+    } else {
+      post = getPostByHash({ hash, subscribedSources: [...subscribed, userSource] });
+
+      setCurrentPost(post);
+    }
+  }, [hash, subscribedSources])
 
   useEffect(() => {
     toggleTheme(false);
   }, [toggleTheme]);
 
   useEffect(() => {
-    setPost(currentPost);
-    if (currentPost?.source?.address) {
-      const sourceData = sourceStateLatest[currentPost.source.address];
-      setSource(sourceData);
+    if (currentPost) {
+      setPost(currentPost.rootPost);
+      if (currentPost.rootPost.source?.address) {
+        const sourceData = getSourceByAddress(currentPost.rootPost.source.address);
+        setSource(sourceData);
+      }
     }
-  }, [currentPost, sourceStateLatest]);
+  }, [currentPost]);
 
   useEffect(() => {
-    const commentsTrees = getCommentTrees({
-      targetHashMap: hashedTargetPostStore,
-      currentPostHash: hash,
-    });
-    setComments(commentsTrees);
-  }, [hashedTargetPostStore, hash]);
+    setComments(currentPost.replies);
+  }, [currentPost]);
 
   useEffect(() => {
-    if (post?.attachments?.length) {
+    if (post.attachments?.length) {
       const imgSourceArr = getImgSources(post.attachments);
       setImgPreview(imgSourceArr);
     }
@@ -82,11 +90,8 @@ const PostPage = ({ toggleTheme }) => {
     }
   }, [slider]);
 
-  console.log('post[post]', post);
-  console.log('post[source]', source);
-
   const renderComments = comments
-    .slice()
+    ?.slice()
     .map((post, i) => (
       <CommentBlock
         post={post}
@@ -153,13 +158,13 @@ const PostPage = ({ toggleTheme }) => {
                   hosts={source.hosts}
                   text={post.text}
                   type={post.type}
-                  address={currentPost.source.address}
+                  address={currentPost.rootPost.source.address}
                 />
                 <Preview
                   uploadImgArr={imgPreview}
                   handleFullSlider={handleFullSlider}
                 />
-                {post?.type === "repost" && (
+                {post.rootPost?.type === "repost" && (
                   <div className={styles.repostBlockWrapper}>
                     <RepostBlock postHash={post.target.postHash} />
                   </div>

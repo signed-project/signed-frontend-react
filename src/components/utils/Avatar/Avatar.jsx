@@ -14,13 +14,18 @@ const Avatar = ({ imgSmall = false, imgBig = false, isDirect = true, avatar, src
   // const [src, setSrc] = useState(userPlaceHolder);
 
   useEffect(() => {
+    let isMounted = true;
 
     const urlRobotHashImg = robotHash({ hash: address })
     const image = new Image();
     image.src = urlRobotHashImg;
     image.onload = function () {
-      setSrc(urlRobotHashImg);
+      if (isMounted) {
+        setSrc(urlRobotHashImg);
+      }
     };
+
+    return () => {isMounted = false}
   }, [address])
 
   useEffect(() => {

@@ -1,5 +1,10 @@
 @import "/src/assets/css/index.scss";
 
+.close {
+  text-align: right;
+  cursor: pointer;
+}
+
 .bar {
   width: 90%;
   position: fixed;

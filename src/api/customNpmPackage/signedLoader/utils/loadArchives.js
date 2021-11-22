@@ -7,52 +7,50 @@ const sliceHash = (hash) => {
   );
 };
 
-export const loadArchives = ({ internalStore, sources, callback }) => {
-  const archivesByIndexes = [];
+export const loadArchives = ({
+  internalStore,
+  subscribedSourcesByAddress,
+  callback,
+}) => {
+  const keysFromSubscribedSources = Object.keys(subscribedSourcesByAddress);
+  const archives = [];
 
-  for (const index in internalStore.indexesByAddress) {
-    if (index.archives?.length > 0) {
-      archivesByIndexes.push(...index.archives);
+  keysFromSubscribedSources.map((address) => {
+    const currIndex = internalStore.indexesByAddress[address];
+
+    if (currIndex && currIndex.archives.length > 0) {
+      archives.push(...currIndex.archives);
     }
-  }
+  });
 
-  archivesByIndexes.map((archive) => {
-    sources.map((source) => {
-      source.hosts.map(async (host) => {
+  keysFromSubscribedSources.map((address) => {
+    archives.map((archive) => {
+      subscribedSourcesByAddress[address].hosts.map(async (host) => {
         if (
-          internalStore.archiveDepth >= archive.startDate &&
-          internalStore.archiveDepth <= archive.endDate &&
-          !(archive.hash in internalStore.archivesByHash)
+          new Date(internalStore.archiveDepth) >= new Date(archive.startDate) &&
+          new Date(internalStore.archiveDepth) <= new Date(archive.endDate)
         ) {
-          try {
-            const res = await axios.get(
-              `${host.assets}/${sliceHash(archive.hash)}.json`
-            );
+          if (!(archive.hash in internalStore.archivesByHash)) {
+            internalStore.archivesByHash[archive.hash] = true;
 
-            console.log("res-res-[loadArchives][res-archive.json]");
-            console.dir(res);
+            try {
+              const response = await axios.get(
+                `${host.assets}/${sliceHash(archive.hash)}.json`
+              );
 
-            const archiveJSON = await JSON.parse(res.data);
+              internalStore.archivesByHash[archive.hash] = response.data;
 
-            internalStore.archivesByHash[archive.hash] = archiveJSON;
+              response.data.posts.map((post) => {
+                addPost({ internalStore, post });
+              });
 
-            archiveJSON.posts.map((post) => {
-              addPost({ post });
-              return;
-            });
-
-            callback();
-          } catch (e) {
-            console.warn("[loadArchives][download JSON file]", e);
+              callback();
+            } catch (e) {
+              console.warn("[loadArchives][download JSON file]", e);
+            }
           }
         }
-
-        return;
       });
-
-      return;
     });
-
-    return;
   });
 };

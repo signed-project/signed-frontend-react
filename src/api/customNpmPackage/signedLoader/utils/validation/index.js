@@ -1,5 +1,5 @@
-import { isValidPostFields, isValidSourceFields } from "./schemas";
 import { getHash, isSignatureValid } from "./signature";
+import { isValidPostFields, isValidSourceFields } from "./schemas";
 
 export const validatePost = ({ post }) => {
   if (!isValidPostFields(post) && post.type !== "reply") {

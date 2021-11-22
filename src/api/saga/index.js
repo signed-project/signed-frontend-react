@@ -11,7 +11,7 @@ import watchSendMentionedPermission from "./inbox/sendMentionedPermissionSaga";
 export default function* rootSaga() {
     yield all([
         watchPublishPost(),
-        watchGetIndex(),
+        // watchGetIndex(),
         watchGetUserData(),
         watchRegister(),
         watchLogin(),

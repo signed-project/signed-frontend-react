@@ -9,7 +9,6 @@ export const addSource = ({ internalStore, source }) => {
 
     if (source.address in internalStore.sourcesByAddress) {
       const existingSource = internalStore.sourcesByAddress[source.address];
-
       if (existingSource.updatedAt < source.updatedAt) {
         returnSource = existingSource;
         internalStore.sourcesByAddress[existingSource.address] = source; // Заменяем источник более новым

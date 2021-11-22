@@ -5,8 +5,8 @@ import CryptoJS from "crypto-js";
 import bs58 from "bs58";
 import wif from "wif";
 import bip38 from "bip38";
-import * as bitcoin from "bitcoinjs-lib";
-import * as bitcoinMessage from "bitcoinjs-message";
+import bitcoin from "bitcoinjs-lib";
+import bitcoinMessage from "bitcoinjs-message";
 
 /**
  * @tutorial way to get wif and atc 
