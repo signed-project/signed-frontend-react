@@ -8,6 +8,8 @@ import { postActions } from "./../../../api/storage/post";
 import { handleSwitchPages } from "./../../helpers";
 import { useLocation } from "react-router-dom";
 
+let isInit = true;
+
 const Feed = ({ toggleTheme, promptToInstall }) => {
   const dispatch = useDispatch();
   const stream = useSelector((state) => state.post.stream);
@@ -24,6 +26,7 @@ const Feed = ({ toggleTheme, promptToInstall }) => {
   const [openMenuHash, setOpenMenuHash] = useState(null);
 
   const [posts, setPosts] = useState([]);
+  const [switchPage, setSwitchPage] = useState(false);
   const [isUserIdle, setIsUserIdle] = useState(true);
   const postsBlock = useRef(null);
   let history = useHistory();
@@ -65,13 +68,18 @@ const Feed = ({ toggleTheme, promptToInstall }) => {
     return () => {
       if (postsBlock.current) {
         postsBlock.current.removeEventListener("scroll", callback);
-        postsBlock.current = null;
       }
     };
   }, []);
 
   useEffect(() => {
-    if (posts.length !== 10) {
+    if (isInit || switchPage) {
+      console.log("UPDATE SET POSTS");
+      setSwitchPage(false);
+      if (isInit && stream.length === 10) {
+        isInit = false;
+      }
+
       setPosts([...stream]);
     }
 
@@ -122,7 +130,9 @@ const Feed = ({ toggleTheme, promptToInstall }) => {
   };
 
   const handlePreviousPage = () => {
+    setSwitchPage(true);
     handleSwitchPages({
+      element: postsBlock.current,
       postsStream: posts,
       next: false,
       isAuth,
@@ -137,7 +147,9 @@ const Feed = ({ toggleTheme, promptToInstall }) => {
   };
 
   const handleNextPage = () => {
+    setSwitchPage(true);
     handleSwitchPages({
+      element: postsBlock.current,
       postsStream: posts,
       next: true,
       isAuth,

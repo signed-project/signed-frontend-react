@@ -1,6 +1,7 @@
 import { getStreamPage } from "./../../api/customNpmPackage/signedLoader";
 
 export const handleSwitchPages = ({
+  element,
   postsStream,
   next,
   isAuth,
@@ -22,9 +23,6 @@ export const handleSwitchPages = ({
 
   const post = postsStream[next ? postsStream.length - 1 : 0].rootPost;
 
-  console.log("next ? ", next);
-  console.dir(post);
-
   const stream = getStreamPage({
     postsSource,
     subscribedSources: sources,
@@ -38,6 +36,10 @@ export const handleSwitchPages = ({
   callback({ stream });
 
   if (next) {
+    element.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
     window.scrollTo({
       top: 0,
       behavior: "smooth",

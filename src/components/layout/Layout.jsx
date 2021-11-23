@@ -89,6 +89,7 @@ const Layout = ({ children, theme }) => {
       });
 
       every1minute = setInterval(() => {
+        console.log("EVERY 60 seconds ");
         getStreamPage({
           postsSource: "",
           subscribedSources: [...subscribed, userSource],
