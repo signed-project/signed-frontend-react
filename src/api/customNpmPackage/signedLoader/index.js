@@ -136,10 +136,16 @@ export const getParentPostsForComment = ({
       blacklistedSourcesByAddress: {},
     });
 
-    const rootPost = parentPosts.splice(-1, 1)[0];
+    const indexOfRootPost = parentPosts.findIndex(
+      (parentPost) =>
+        !parentPost.target || (parentPost.target && !parentPost.target.postHash)
+    );
 
-    returnObject.rootPost = rootPost ?? {};
-    returnObject.replies = [...parentPosts, currPost];
+    if (indexOfRootPost > -1) {
+      returnObject.rootPost = parentPosts.splice(indexOfRootPost, 1)[0];
+      parentPosts = parentPosts.reverse();
+      returnObject.replies = [...parentPosts, currPost];
+    }
   } else {
     returnObject.rootPost = currPost;
     returnObject.replies = [];
@@ -199,6 +205,7 @@ export const getPostByHash = ({ hash, subscribedSources }) => {
     });
 
     const rootPost = parentPosts.splice(-1, 1)[0];
+    parentPosts = parentPosts.reverse();
     replies.unshift(...parentPosts, currPost);
 
     returnObject.clickedPost = currPost;
