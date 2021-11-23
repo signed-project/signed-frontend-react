@@ -12,7 +12,11 @@ const internalStore = {
   postsById: {},
 
   // post.target?.postHash : posts[] with the same hash as post.target.postHash
-  postsByTargetHash: {},
+  postsByTargetHash: {
+    reply: {},
+    like: {},
+    repost: {},
+  },
 
   // posts with type such as like, repost, post but not reply
   rootPosts: [],
@@ -108,6 +112,63 @@ export const getStreamPage = ({
   });
 
   return stream;
+};
+
+export const getParentPostsForComment = ({
+  postHashToComment,
+  subscribedSources,
+}) => {
+  const returnObject = {};
+  let parentPosts = [];
+  const subscribedSourcesByAddress = {};
+
+  subscribedSources.forEach((source) => {
+    subscribedSourcesByAddress[source.address] = source;
+  });
+
+  const currPost = internalStore.postsByHash[postHashToComment];
+
+  if (currPost.type === "reply") {
+    parentPosts = getParentPosts({
+      internalStore,
+      post: currPost,
+      subscribedSourcesByAddress,
+      blacklistedSourcesByAddress: {},
+    });
+
+    const rootPost = parentPosts.splice(-1, 1)[0];
+
+    returnObject.rootPost = rootPost ?? {};
+    returnObject.replies = [...parentPosts, currPost];
+  } else {
+    returnObject.rootPost = currPost;
+    returnObject.replies = [];
+  }
+
+  return returnObject;
+};
+
+export const getReplyPostsForComment = ({
+  postHashToComment,
+  subscribedSources,
+}) => {
+  let replies = [];
+  const subscribedSourcesByAddress = {};
+
+  subscribedSources.forEach((source) => {
+    subscribedSourcesByAddress[source.address] = source;
+  });
+
+  const currPost = internalStore.postsByHash[postHashToComment];
+
+  replies = getReplies({
+    internalStore,
+    post: currPost,
+    subscribedSourcesByAddress,
+    blacklistedSourcesByAddress: {},
+  });
+
+  return replies;
 };
 
 export const getPostByHash = ({ hash, subscribedSources }) => {

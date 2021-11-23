@@ -2,14 +2,14 @@ export const getParentPosts = ({ internalStore, post }) => {
   let parentPosts = [];
 
   if (post.target) {
-    const currPost = internalStore.postsByHash[post.target.postHash];
-    parentPosts.push(currPost);
+    parentPosts.push(internalStore.postsByHash[post.target.postHash]);
 
-    if (currPost.target) {
-      getParentPosts({
-        post: currPost,
-        internalStore,
-      });
+    while (parentPosts[parentPosts.length - 1].target) {
+      parentPosts.push(
+        internalStore.postsByHash[
+          parentPosts[parentPosts.length - 1].target.postHash
+        ]
+      );
     }
   }
 

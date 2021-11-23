@@ -7,7 +7,7 @@ export const getReplies = ({
   subscribedSourcesByAddress,
   blacklistedSourcesByAddress,
 }) => {
-  let replies = internalStore.postsByTargetHash[post.hash];
+  let replies = internalStore.postsByTargetHash.reply[post.hash];
   const postWithReplies = [];
 
   if (!replies) {

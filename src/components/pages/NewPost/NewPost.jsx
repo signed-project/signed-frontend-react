@@ -22,19 +22,18 @@ import useFiles from "../../customHooks/useFiles";
 import Preview from "../../utils/Preview/Preview";
 import Slider from "../../utils/Slider/Slider";
 import getImgArr from "../../customHooks/getImgSources";
+import Post from "./../../utils/Post/Post";
+
+import {
+  getPostByHash,
+  getReplyPostsForComment,
+  getParentPostsForComment,
+} from "./../../../api/customNpmPackage/signedLoader";
 
 // TOTO: this component too mach long need to split up it!
-/**
- * @tutorial function getCommentStoryKnots(params) {} compute comments story, get only one branch, only Knots, doesn't get all comments
- * for @example user A publish post - 'aaa', user B send comment for this post, and user C send comment for post  'aaa',
- * then user D send comment for user B comment - as conclusion function get only post user A, comment user B, and! doesn't get
- * comment user C
- *  */
-
 const NewPost = ({ toggleTheme }) => {
   const user = useSelector((state) => state.user);
-  const hashedPost = useSelector((state) => state.post.hashed);
-  const hashedTargetPostStore = useSelector((state) => state.post.hashedTargetPost);
+  const subscribedSources = useSelector((state) => state.source.subscribed);
 
   const location = useLocation();
   const {
@@ -87,42 +86,14 @@ const NewPost = ({ toggleTheme }) => {
     }));
   }, [hash, source, type]);
 
-  const getCommentStoryKnots = (hashMapComments, postHash) => {
-    let commentWay = [];
-
-    const foundCommentsByPostHash = hashMapComments[postHash];
-
-    if (foundCommentsByPostHash) {
-      commentWay = foundCommentsByPostHash.slice();
-    }
-
-    // const recursion = (hash, level) => {
-    //   if (!level) return;
-    //   const filterComment = Object.values(objHashed).find(
-    //     (p) => p.hash === hash
-    //   );
-    //   if (
-    //     filterComment?.type === "reply" &&
-    //     !commentWay.find((p) => p.hash === filterComment.hash)
-    //   ) {
-    //     commentWay.push(filterComment);
-    //     recursion(filterComment.target.postHash, level - 1);
-    //   } else {
-    //     commentWay.push(filterComment);
-    //     return;
-    //   }
-    // };
-
-    // recursion(postHash, 30);
-
-    return commentWay;
-  };
-
   useEffect(() => {
-    const postHash = post?.target?.postHash; 
+    const postHash = post?.target?.postHash;
 
-    if (postHash && hashedTargetPostStore) {
-      const commentsKnitFlow = getCommentStoryKnots(hashedTargetPostStore, postHash);
+    if (postHash) {
+      const commentsKnitFlow = getReplyPostsForComment({
+        postHashToComment: postHash,
+        subscribedSources,
+      });
 
       const commentsCheckbox = commentsKnitFlow.map((comment) => {
         if (comment) {
@@ -133,11 +104,11 @@ const NewPost = ({ toggleTheme }) => {
 
       setComments(commentsCheckbox);
     }
-  }, [post, hashedTargetPostStore]);
+  }, [post, subscribedSources]);
 
   useEffect(() => {
-    if (edit && hashedPost) {
-      const editedPost = hashedPost[edit];
+    if (edit) {
+      const editedPost = getPostByHash({ hash: edit, subscribedSources });
       if (editedPost?.attachments) {
         const imgSours = getImgArr(editedPost?.attachments);
         setUploadedImg(imgSours);
@@ -148,7 +119,7 @@ const NewPost = ({ toggleTheme }) => {
         ...editedPost,
       }));
     }
-  }, [edit, hashedPost]);
+  }, [edit, subscribedSources]);
 
   /**
    *    /*   let reader = new FileReader();
@@ -189,8 +160,6 @@ const NewPost = ({ toggleTheme }) => {
     const value = e.target.value;
     e.target.style.height = 0;
     e.target.style.height = `${e.target.scrollHeight}px`;
-    // scroll.scrollToBottom();
-    // console.log('getTags(value)', getTags(value));
     setMessage(value);
   };
 
@@ -206,8 +175,6 @@ const NewPost = ({ toggleTheme }) => {
   };
 
   const handlePublicPost = () => {
-    console.log('comments');
-    console.dir(comments);
     if (isLoading) {
       return;
     }
@@ -260,7 +227,7 @@ const NewPost = ({ toggleTheme }) => {
 
       const newPost = postInstance.newPost;
 
-      console.log('newPost[newPost]', newPost);
+      console.log("newPost[newPost]", newPost);
 
       setMessage("");
       setUploadedImg([]);
@@ -268,21 +235,6 @@ const NewPost = ({ toggleTheme }) => {
       history.push(routes.feed);
     })();
   };
-
-  const renderComments = comments
-    .slice()
-    .reverse()
-    .map((post, i) => (
-      <CommentBlock
-        key={i}
-        type={post.type}
-        img={post?.source?.avatar?.hash}
-        name={post.source?.publicName}
-        text={post.text}
-        createdAt={post.createdAt}
-        post={post}
-      />
-    ));
 
   const handleOthersMention = (e) => {
     const isChecked = e.target.checked;
@@ -363,6 +315,24 @@ const NewPost = ({ toggleTheme }) => {
     }
   };
 
+  const renderParentPosts = () => {
+    const parentPosts = getParentPostsForComment({
+      postHashToComment: hash,
+      subscribedSources,
+    });
+
+    return (
+      <div>
+        <Post
+          post={parentPosts}
+          handleShowMenu={() => {}}
+          isShowMenu={() => {}}
+          handleEditPost={() => {}}
+        />
+      </div>
+    );
+  };
+
   return isFullImgPrev ? (
     <Slider
       uploadImgArr={uploadedImg}
@@ -417,7 +387,8 @@ const NewPost = ({ toggleTheme }) => {
           </div>
         ) : (
           <div className={style.newPostPage}>
-            {post.type === "reply" && comments && <div>{renderComments}</div>}
+            {post?.type === "reply" && renderParentPosts()}
+
             <div className={style.messageBlock}>
               <Avatar avatar={user.source.avatar} />
               <textarea

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import Post from "../../utils/Post/Post";
 import routes from "../../../config/routes.config";
-import styles from './feed.module.scss';
+import styles from "./feed.module.scss";
 import { postActions } from "./../../../api/storage/post";
 import { handleSwitchPages } from "./../../helpers";
 
@@ -11,8 +11,14 @@ const Feed = ({ toggleTheme, promptToInstall }) => {
   const dispatch = useDispatch();
   const stream = useSelector((state) => state.post.stream);
   const subscribedSources = useSelector((state) => state.source.subscribed);
-  const { isAuth, subscribed, source: userSource } = useSelector(state => state.user);
-  const { allReceivedNumber, currentAlreadySetNumber } = useSelector((state) => state.source);
+  const {
+    isAuth,
+    subscribed,
+    source: userSource,
+  } = useSelector((state) => state.user);
+  const { allReceivedNumber, currentAlreadySetNumber } = useSelector(
+    (state) => state.source
+  );
 
   const [openMenuHash, setOpenMenuHash] = useState(null);
 
@@ -37,7 +43,7 @@ const Feed = ({ toggleTheme, promptToInstall }) => {
 
   const handleMenuClose = (e) => {
     const dataHash = e.target.getAttribute("data-hash");
-    
+
     if (dataHash) {
       return;
     } else {
@@ -47,20 +53,20 @@ const Feed = ({ toggleTheme, promptToInstall }) => {
 
   const updateStream = ({ stream }) => {
     dispatch(postActions.updatePostStream(stream));
-  }
+  };
 
   const handlePreviousPage = () => {
     handleSwitchPages({
       postsStream: posts,
       next: false,
       isAuth,
-      postsSource: '',
+      postsSource: "",
       subscribedSources,
       subscribed,
       userSource,
       blacklistedSourcesByAddress: {},
       limit: 10,
-      callback: updateStream
+      callback: updateStream,
     });
   };
 
@@ -69,15 +75,15 @@ const Feed = ({ toggleTheme, promptToInstall }) => {
       postsStream: posts,
       next: true,
       isAuth,
-      postsSource: '',
+      postsSource: "",
       subscribedSources,
       subscribed,
       userSource,
       blacklistedSourcesByAddress: {},
       limit: 10,
-      callback: updateStream
+      callback: updateStream,
     });
-  }
+  };
 
   const handleEditPost = (hash) => {
     history.push(`${routes.newPost}?edit=${hash}`);
@@ -96,16 +102,25 @@ const Feed = ({ toggleTheme, promptToInstall }) => {
     );
   });
 
-
   return (
     <>
       <div className={styles.louder}>
-        {currentAlreadySetNumber} of  {allReceivedNumber}
+        {currentAlreadySetNumber} of {allReceivedNumber}
       </div>
       <button onClick={promptToInstall}>Add to Home screen</button>
-      <button className={styles.nextPageButton} onClick={() => handlePreviousPage()}>PREVIOUS PAGE</button>
+      <button
+        className={styles.PreviousPageButton}
+        onClick={() => handlePreviousPage()}
+      >
+        PREVIOUS PAGE
+      </button>
       {posts && <div onClick={(e) => handleMenuClose(e)}>{renderPosts}</div>}
-      <button className={styles.nextPageButton} onClick={() => handleNextPage()}>NEXT PAGE</button>
+      <button
+        className={styles.nextPageButton}
+        onClick={() => handleNextPage()}
+      >
+        NEXT PAGE
+      </button>
     </>
   );
 };

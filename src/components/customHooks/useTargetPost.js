@@ -1,15 +1,18 @@
-import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { getPostByHash } from "./../../api/customNpmPackage/signedLoader";
 
 const useTargetPost = (postHash) => {
-    const hashedPostState = useSelector(state => state.post.hashed);
-    const [targetPost, setTargetPost] = useState('');
-    useEffect(() => {
-        if (postHash) {
-            setTargetPost(hashedPostState[postHash])
-        }
-    }, [hashedPostState, postHash]);
+  const subscribedSources = useSelector((state) => state.source.subscribed);
+  const [targetPost, setTargetPost] = useState({});
 
-    return targetPost
+  useEffect(() => {
+    if (postHash) {
+      setTargetPost(getPostByHash({ hash: postHash, subscribedSources }));
+    }
+  }, [subscribedSources, postHash]);
+
+  return targetPost;
 };
+
 export default useTargetPost;

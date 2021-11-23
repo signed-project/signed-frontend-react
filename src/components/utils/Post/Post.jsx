@@ -31,7 +31,7 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
   } = post.rootPost ? post.rootPost : post;
 
   let sourcePost = useSourcePost(address);
-  let targetPost = useTargetPost(postHash);
+  let { rootPost: targetPost } = useTargetPost(postHash);
 
   let sourceTargetPost = useSourcePost(targetPost?.source?.address);
   const reaction = useReaction();
@@ -60,28 +60,28 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
   const renderComments = () => {
     const comments = [];
 
-    for (let index = 0; index < post.replies.length; index++) {
+    for (let index = 0; index < post.replies?.length; index++) {
       if (index === 3) {
-        comments.push((
-<div key={index} className={styles.gap}>
+        comments.push(
+          <div key={index} className={styles.gap}>
             <div className={styles.gapBlockLine}></div>
             <span className={styles.gapTitle}>Show this thread</span>
           </div>
-        ));
+        );
 
         break;
       }
 
-      comments.push((
+      comments.push(
         <CommentBlock
           key={index}
           post={post.replies[index]}
           renderKey={index}
-          removeLastLine={index + 1 === post.replies.length}
+          removeLastLine={index + 1 === post.replies?.length}
           dotsLine={true}
           showReactionBlock={true}
         />
-      ));
+      );
     }
 
     return comments;
@@ -92,14 +92,12 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
       <Reaction
         likesCount={targetPost?.likesCount}
         repostsCount={targetPost?.repostsCount}
-        handleLike={() => reaction.handleLike(post)}
-        handleRepost={() => reaction.handleRepost(post)}
-        handleReply={() => reaction.handleReply(post)}
+        handleLike={() => reaction.handleLike({ rootPost: post.rootPost })}
+        handleRepost={() => reaction.handleRepost({ rootPost: post.rootPost })}
+        handleReply={() => reaction.handleReply({ rootPost: post.rootPost })}
       />
     );
   };
-
-  const isHideLine = post.replies.length < 1;
 
   return (
     <>
@@ -111,8 +109,9 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
                 <div className={styles.avatarBlock}>
                   <Avatar avatar={sourcePost.avatar} address={address} />
                   <div
-                    className={`${styles.verticalLine}  ${post.replies.length === 0 && styles.verticalLineRemove
-                      }`}
+                    className={`${styles.verticalLine}  ${
+                      post.replies?.length === 0 && styles.verticalLineRemove
+                    }`}
                   ></div>
                 </div>
                 <div className={styles.postMain}>
@@ -150,7 +149,7 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
                       postHash={hash}
                       text={text}
                       address={address}
-                    // imgHostArr={imgPreview}
+                      // imgHostArr={imgPreview}
                     />
                     <Preview uploadImgArr={imgPreview} postHash={hash} />
                   </div>
@@ -175,8 +174,9 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
                       address={address}
                     />
                     <div
-                      className={`${styles.verticalLine}    ${type === "like" && styles.verticalLineRemove
-                        }`}
+                      className={`${styles.verticalLine}    ${
+                        type === "like" && styles.verticalLineRemove
+                      }`}
                     ></div>
                   </div>
                   <div className={styles.postBody}>
@@ -206,14 +206,16 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
               </div>
             </>
           )}
+
           {type === "repost" && targetPost && (
             <>
               <div className={styles.typePost}>
                 <div className={styles.avatarBlock}>
                   <Avatar avatar={sourcePost.avatar} address={address} />
                   <div
-                    className={`${styles.verticalLine}  ${post.replies.length === 0 && styles.verticalLineRemove
-                      }`}
+                    className={`${styles.verticalLine}  ${
+                      post.replies?.length === 0 && styles.verticalLineRemove
+                    }`}
                   ></div>
                 </div>
                 <div className={styles.postMain}>
@@ -244,6 +246,7 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
               </div>
             </>
           )}
+
           {post.replies && (
             <div className={styles.commentsWrapper}>{renderComments()}</div>
           )}

@@ -1,4 +1,5 @@
 import { validatePost } from "./validation";
+import { postsDistribution } from "./helpers";
 
 // Добавляем пост в internalStore
 // Этот метод вызывается методами loadIndexes и loadArchives для каждого загруженного поста
@@ -8,21 +9,7 @@ export const addPost = ({ internalStore, post }) => {
     internalStore.postsByHash[post.hash] = post;
     const id = post.source.address + post.id;
 
-    if (!post.target) {
-      internalStore.rootPosts.push(post);
-    } else {
-      const postHash = post.target.postHash;
-
-      if (postHash in internalStore.postsByTargetHash) {
-        const replyPosts = internalStore.postsByTargetHash[postHash].slice();
-
-        replyPosts.push(post);
-
-        internalStore.postsByTargetHash[postHash] = replyPosts;
-      } else {
-        internalStore.postsByTargetHash[postHash] = [post];
-      }
-    }
+    postsDistribution({ internalStore, post });
 
     if (id in internalStore.postsById) {
       const existing = internalStore.postsById[id];

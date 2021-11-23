@@ -20,7 +20,7 @@ export const handleSwitchPages = ({
     sources = [...subscribed, userSource];
   }
 
-  const post = postsStream.at(next ? -1 : 0).rootPost;
+  const post = postsStream[next ? postsStream.length - 1 : 0].rootPost;
 
   const stream = getStreamPage({
     postsSource,
@@ -34,8 +34,10 @@ export const handleSwitchPages = ({
 
   callback({ stream });
 
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth",
-  });
+  if (next) {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }
 };

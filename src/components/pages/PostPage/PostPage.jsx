@@ -18,7 +18,10 @@ import Slider from "../../utils/Slider/Slider";
 import routes from "../../../config/routes.config";
 import { hostApi, userApi } from "./../../../config/http.config.js";
 
-import { getPostByHash, getSourceByAddress } from "./../../../api/customNpmPackage/signedLoader";
+import {
+  getPostByHash,
+  getSourceByAddress,
+} from "./../../../api/customNpmPackage/signedLoader";
 import axios from "axios";
 
 const apiHost = hostApi.API_HOST;
@@ -28,7 +31,11 @@ const PostPage = ({ toggleTheme }) => {
   // const postMapState = useSelector((state) => state.post.hashed);
   // const hashedTargetPostStore = useSelector((state) => state.post.hashedTargetPost);
   const subscribedSources = useSelector((state) => state.source.subscribed);
-  const { isAuth, subscribed, source: userSource } = useSelector(state => state.user);
+  const {
+    isAuth,
+    subscribed,
+    source: userSource,
+  } = useSelector((state) => state.user);
   const location = useLocation();
   const { slider } = queryString.parse(location.search);
 
@@ -52,11 +59,14 @@ const PostPage = ({ toggleTheme }) => {
 
       setCurrentPost(post);
     } else {
-      post = getPostByHash({ hash, subscribedSources: [...subscribed, userSource] });
+      post = getPostByHash({
+        hash,
+        subscribedSources: [...subscribed, userSource],
+      });
 
       setCurrentPost(post);
     }
-  }, [hash, subscribedSources])
+  }, [hash, subscribedSources]);
 
   useEffect(() => {
     toggleTheme(false);
@@ -66,7 +76,9 @@ const PostPage = ({ toggleTheme }) => {
     if (currentPost) {
       setPost(currentPost.rootPost);
       if (currentPost.rootPost.source?.address) {
-        const sourceData = getSourceByAddress(currentPost.rootPost.source.address);
+        const sourceData = getSourceByAddress(
+          currentPost.rootPost.source.address
+        );
         setSource(sourceData);
       }
     }
@@ -131,12 +143,12 @@ const PostPage = ({ toggleTheme }) => {
           <div className={styles.typePost}>
             <div className={styles.avatarBlock}>
               <Avatar avatar={post.source.avatar} address={source.address} />
-              {/*  ${styles.verticalLineRemove} */}
               <div
                 className={`${styles.verticalLine} 
-                             ${comments.length === 0 &&
-                  styles.verticalLineRemove
-                  }`}
+                             ${
+                               comments.length === 0 &&
+                               styles.verticalLineRemove
+                             }`}
               ></div>
             </div>
             <div className={styles.postMain}>
@@ -173,9 +185,9 @@ const PostPage = ({ toggleTheme }) => {
               <Reaction
                 likesCount={post.likesCount}
                 repostsCount={post.repostsCount}
-                handleLike={() => reaction.handleLike(post)}
-                handleRepost={() => reaction.handleRepost(post)}
-                handleReply={() => reaction.handleReply(post)}
+                handleLike={() => reaction.handleLike({ rootPost: post })}
+                handleRepost={() => reaction.handleRepost({ rootPost: post })}
+                handleReply={() => reaction.handleReply({ rootPost: post })}
               />
             </div>
           </div>
