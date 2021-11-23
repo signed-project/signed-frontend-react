@@ -90,7 +90,10 @@ export const getStreamPage = ({
       limit,
     });
 
-    callback({ stream });
+    callback({
+      stream,
+      numberLength: Object.keys(internalStore.postsByHash).length,
+    });
 
     // Запускаем скачивание любого архива у которого dateStart > archiveDepth
     // После скачки и обработки каждого архива вызываем callback

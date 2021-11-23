@@ -22,6 +22,9 @@ export const handleSwitchPages = ({
 
   const post = postsStream[next ? postsStream.length - 1 : 0].rootPost;
 
+  console.log("next ? ", next);
+  console.dir(post);
+
   const stream = getStreamPage({
     postsSource,
     subscribedSources: sources,

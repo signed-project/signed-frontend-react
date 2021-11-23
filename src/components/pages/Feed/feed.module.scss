@@ -1,5 +1,5 @@
 .louder {
-  padding:10px;
+  padding: 10px;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -12,6 +12,16 @@
   background-color: snow;
   padding-bottom: 15%;
   cursor: pointer;
+}
+
+.postsWindow {
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.postsWindow::-webkit-scrollbar {
+  display: none;
 }
 
 .PreviousPageButton {

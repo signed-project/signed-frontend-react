@@ -57,6 +57,7 @@ const NewPost = ({ toggleTheme }) => {
   const [isFullImgPrev, setIsFullImgPrev] = useState(false);
   const [firstSlide, setFirstSlide] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [openMenuHash, setOpenMenuHash] = useState(null);
 
   const [post, setPost] = useState({
     type: "post",
@@ -315,22 +316,50 @@ const NewPost = ({ toggleTheme }) => {
     }
   };
 
+  const handleMenuClose = (e) => {
+    const dataHash = e.target.getAttribute("data-hash");
+
+    if (dataHash) {
+      return;
+    } else {
+      setOpenMenuHash(null);
+    }
+  };
+
+  const handleShowMenu = (hash) => {
+    setOpenMenuHash(hash);
+  };
+
+  const isShowMenu = (hash) => {
+    return hash === openMenuHash ? true : false;
+  };
+
+  const handleEditPost = (hash) => {
+    history.push(`${routes.newPost}?edit=${hash}`);
+  };
+
   const renderParentPosts = () => {
     const parentPosts = getParentPostsForComment({
       postHashToComment: hash,
       subscribedSources,
     });
-
     return (
-      <div>
+      <div onClick={(e) => handleMenuClose(e)}>
         <Post
           post={parentPosts}
-          handleShowMenu={() => {}}
-          isShowMenu={() => {}}
-          handleEditPost={() => {}}
+          handleShowMenu={handleShowMenu}
+          isShowMenu={isShowMenu}
+          handleEditPost={handleEditPost}
         />
       </div>
     );
+  };
+
+  const handleBackArrowClick = () => {
+    history.push({
+      pathname: routes.feed,
+      state: location.state,
+    });
   };
 
   return isFullImgPrev ? (
@@ -355,7 +384,7 @@ const NewPost = ({ toggleTheme }) => {
         ) : (
           <img
             src={icon.arrowBack}
-            onClick={() => history.push(routes.feed)}
+            onClick={handleBackArrowClick}
             alt="arrow back icon"
           />
         )}

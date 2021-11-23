@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import Post from "../../utils/Post/Post";
@@ -6,6 +6,7 @@ import routes from "../../../config/routes.config";
 import styles from "./feed.module.scss";
 import { postActions } from "./../../../api/storage/post";
 import { handleSwitchPages } from "./../../helpers";
+import { useLocation } from "react-router-dom";
 
 const Feed = ({ toggleTheme, promptToInstall }) => {
   const dispatch = useDispatch();
@@ -16,22 +17,87 @@ const Feed = ({ toggleTheme, promptToInstall }) => {
     subscribed,
     source: userSource,
   } = useSelector((state) => state.user);
-  const { allReceivedNumber, currentAlreadySetNumber } = useSelector(
-    (state) => state.source
-  );
+  const { currentAlreadySetNumber } = useSelector((state) => state.source);
+
+  const location = useLocation();
 
   const [openMenuHash, setOpenMenuHash] = useState(null);
 
   const [posts, setPosts] = useState([]);
+  const [isUserIdle, setIsUserIdle] = useState(true);
+  const postsBlock = useRef(null);
   let history = useHistory();
 
   useEffect(() => {
     toggleTheme(true);
   }, [toggleTheme]);
 
+  // useEffect(() => {
+  //   if (postsBlock.current) {
+  //     postsBlock.current.style.maxHeight = window.outerHeight + "px";
+  //   }
+
+  //   if (location.state.currentScrollTop && postsBlock.current) {
+  //     console.log("location.state.currentScrollTop");
+  //     console.dir(location.state.currentScrollTop);
+
+  //     postsBlock.current.scrollTo({
+  //       top: location.state.currentScrollTop,
+  //       behavior: "smooth",
+  //     });
+  //   }
+
+  //   return () => {
+  //     postsBlock.current = null;
+  //   };
+  // }, []);
+
   useEffect(() => {
-    setPosts([...stream]);
-  }, [stream]);
+    const callback = () => {
+      setIsUserIdle(false);
+    };
+
+    if (postsBlock.current) {
+      postsBlock.current.style.maxHeight = window.outerHeight + "px";
+      postsBlock.current.addEventListener("scroll", callback);
+    }
+
+    return () => {
+      if (postsBlock.current) {
+        postsBlock.current.removeEventListener("scroll", callback);
+        postsBlock.current = null;
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (posts.length !== 10) {
+      setPosts([...stream]);
+    }
+
+    const every5sec = setInterval(() => {
+      console.log("EVERY 5 seconds ", isUserIdle);
+      if (isUserIdle) {
+        setPosts([...stream]);
+      } else {
+        clearInterval(every5sec);
+      }
+    }, 5000);
+
+    // if (location.state.currentScrollTop && postsBlock.current) {
+    //   console.log("location.state.currentScrollTop");
+    //   console.dir(location.state.currentScrollTop);
+
+    //   postsBlock.current.scrollTo({
+    //     top: location.state.currentScrollTop,
+    //     behavior: "smooth",
+    //   });
+    // }
+
+    return () => {
+      clearInterval(every5sec);
+    };
+  }, [stream, isUserIdle]);
 
   const handleShowMenu = (hash) => {
     setOpenMenuHash(hash);
@@ -86,7 +152,14 @@ const Feed = ({ toggleTheme, promptToInstall }) => {
   };
 
   const handleEditPost = (hash) => {
-    history.push(`${routes.newPost}?edit=${hash}`);
+    // history.push(`${routes.newPost}?edit=${hash}`);
+    history.push({
+      pathname: routes.newPost,
+      search: `?edit=${hash}`,
+      state: {
+        currentScrollTop: postsBlock.current.scrollTop,
+      },
+    });
   };
 
   const renderPosts = posts.map((p, i) => {
@@ -104,9 +177,7 @@ const Feed = ({ toggleTheme, promptToInstall }) => {
 
   return (
     <>
-      <div className={styles.louder}>
-        {currentAlreadySetNumber} of {allReceivedNumber}
-      </div>
+      <div className={styles.louder}>{currentAlreadySetNumber}</div>
       <button onClick={promptToInstall}>Add to Home screen</button>
       <button
         className={styles.PreviousPageButton}
@@ -114,7 +185,15 @@ const Feed = ({ toggleTheme, promptToInstall }) => {
       >
         PREVIOUS PAGE
       </button>
-      {posts && <div onClick={(e) => handleMenuClose(e)}>{renderPosts}</div>}
+      {posts && (
+        <div
+          ref={postsBlock}
+          className={styles.postsWindow}
+          onClick={(e) => handleMenuClose(e)}
+        >
+          {renderPosts}
+        </div>
+      )}
       <button
         className={styles.nextPageButton}
         onClick={() => handleNextPage()}
