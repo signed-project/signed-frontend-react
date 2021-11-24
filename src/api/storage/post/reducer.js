@@ -12,6 +12,8 @@ export const ACTIONS = {
   ADD_HASHED_TARGET_POST: "POST::ADD_HASHED_TARGET_POST",
   GET_INDEX: "POST::GET_INDEX",
   ADD_TEMP_POST_ITEM: "POST::ADD_TEMP_POST_ITEM",
+  SET_ALREADY_LOADED_POSTS: "POST::SET_ALREADY_LOADED_POSTS",
+  SET_LOADED_POSTS: "POST::SET_LOADED_POSTS",
 };
 
 const initialState = {
@@ -20,10 +22,22 @@ const initialState = {
   hashed: {},
   hashedTargetPost: {},
   temp: [],
+  alreadyLoadedPosts: 0,
+  loadedPosts: 0,
 };
 
 const postReducer = (state = initialState, action) => {
   switch (action.type) {
+    case ACTIONS.SET_ALREADY_LOADED_POSTS:
+      return {
+        ...state,
+        alreadyLoadedPosts: action.payload,
+      };
+    case ACTIONS.SET_LOADED_POSTS:
+      return {
+        ...state,
+        loadedPosts: action.payload,
+      };
     case ACTIONS.SET_POST_STREAM:
       return {
         ...state,

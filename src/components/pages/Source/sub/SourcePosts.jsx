@@ -6,7 +6,7 @@ import routes from "../../../../config/routes.config";
 
 
 
-const ProfilePosts = ({ ownPost, handleNextPage, handlePreviousPage }) => {
+const ProfilePosts = ({ ownPost, handleNextPage }) => {
     let history = useHistory();
     const handleShowMenu = (hash) => {
         setOpenMenuHash(hash);
@@ -58,7 +58,6 @@ const ProfilePosts = ({ ownPost, handleNextPage, handlePreviousPage }) => {
         <>
             {/* <div onClick={(e) => handleMenuClose(e)}> */}
             <div>
-                <button className={styles.nextPageButton} onClick={handlePreviousPage}>PREVIOUS PAGE</button>
                 {ownPost.length > 0 && renderPosts}
                 <button className={styles.nextPageButton} onClick={handleNextPage}>NEXT PAGE</button>
             </div>

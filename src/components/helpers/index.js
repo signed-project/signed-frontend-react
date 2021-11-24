@@ -3,7 +3,6 @@ import { getStreamPage } from "./../../api/customNpmPackage/signedLoader";
 export const handleSwitchPages = ({
   element,
   postsStream,
-  next,
   isAuth,
   postsSource,
   subscribedSources,
@@ -11,38 +10,39 @@ export const handleSwitchPages = ({
   userSource,
   blacklistedSourcesByAddress,
   limit,
-  callback,
+  callbackForUpdateStream,
+  callbackForUpdatePostsNumber,
 }) => {
   let sources = [];
 
-  if (!isAuth) {
-    sources = subscribedSources.slice();
-  } else {
-    sources = [...subscribed, userSource];
+  if (!postsSource) {
+    if (!isAuth) {
+      sources = subscribedSources.slice();
+    } else {
+      sources = [...subscribed, userSource];
+    }
   }
 
-  const post = postsStream[next ? postsStream.length - 1 : 0].rootPost;
+  const post = postsStream[postsStream.length - 1].rootPost;
 
   const stream = getStreamPage({
     postsSource,
     subscribedSources: sources,
     blacklistedSourcesByAddress,
-    afterPost: next ? post : {},
-    endPost: !next ? post : {},
+    afterPost: post,
     limit,
-    callback: callback,
+    callbackForUpdateStream,
+    callbackForUpdatePostsNumber,
   });
 
-  callback({ stream });
+  callbackForUpdateStream({ stream });
 
-  if (next) {
-    element.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  }
+  element?.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
 };

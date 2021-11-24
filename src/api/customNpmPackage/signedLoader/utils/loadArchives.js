@@ -11,6 +11,8 @@ export const loadArchives = ({
   internalStore,
   subscribedSourcesByAddress,
   callback,
+  userStatuses,
+  userInfo,
 }) => {
   const keysFromSubscribedSources = Object.keys(subscribedSourcesByAddress);
   const archives = [];
@@ -41,7 +43,7 @@ export const loadArchives = ({
               internalStore.archivesByHash[archive.hash] = response.data;
 
               response.data.posts.map((post) => {
-                addPost({ internalStore, post });
+                addPost({ internalStore, userInfo, userStatuses, post });
               });
 
               callback();

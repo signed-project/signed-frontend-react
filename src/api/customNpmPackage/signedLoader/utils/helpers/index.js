@@ -13,21 +13,31 @@ export const filterPostsBySources = ({
 };
 
 export const findIndexOfPost = ({ post, rootPosts }) => {
-  let foundIndexOfPost = rootPosts.findIndex(
-    (rootPost) =>
-      rootPost.source.address === post.source.address && rootPost.id === post.id
-  );
-
-  if (foundIndexOfPost <= -1) {
-    foundIndexOfPost = rootPosts.findIndex(
-      (rootPost) => rootPost.createdAt === post.createdAt
+  if (Object.keys(post).length > 0) {
+    let foundIndexOfPost = rootPosts.findIndex(
+      (rootPost) =>
+        rootPost.source.address === post.source.address &&
+        rootPost.id === post.id
     );
+
+    if (foundIndexOfPost <= -1) {
+      foundIndexOfPost = rootPosts.findIndex(
+        (rootPost) => rootPost.createdAt === post.createdAt
+      );
+    }
+
+    return foundIndexOfPost;
   }
 
-  return foundIndexOfPost;
+  return -1;
 };
 
-export const postsDistribution = ({ internalStore, post }) => {
+export const postsDistribution = ({
+  internalStore,
+  userInfo,
+  userStatuses,
+  post,
+}) => {
   const postHash = post.target.postHash;
 
   switch (post.type) {
@@ -72,6 +82,15 @@ export const postsDistribution = ({ internalStore, post }) => {
     }
     default: {
       internalStore.rootPosts.push(post);
+
+      internalStore.rootPosts = internalStore.rootPosts.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+
+      if (userInfo.status === userStatuses.IDLE) {
+        userInfo.lengthOfLoadedRootPosts = internalStore.rootPosts.length;
+        userInfo.loadedRootPosts = internalStore.rootPosts.slice();
+      }
     }
   }
 };

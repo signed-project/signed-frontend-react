@@ -6,6 +6,8 @@ export const loadIndexes = ({
   internalStore,
   subscribedSourcesByAddress,
   callback,
+  userInfo,
+  userStatuses,
 }) => {
   const keysFromSubscribedSources = Object.keys(subscribedSourcesByAddress);
 
@@ -20,7 +22,7 @@ export const loadIndexes = ({
           addSource({ internalStore, source: res.data.source });
 
           res.data.index.recentPosts.map((post) => {
-            addPost({ internalStore, post });
+            addPost({ internalStore, userInfo, userStatuses, post });
           });
 
           callback();

@@ -13,11 +13,11 @@ import { filterPostsBySources, findIndexOfPost } from "./helpers";
 
 export const buildStream = ({
   internalStore,
+  userInfo,
   postsSource,
   subscribedSourcesByAddress,
   blacklistedSourcesByAddress,
   afterPost,
-  endPost,
   limit,
 }) => {
   const stream = [];
@@ -25,12 +25,12 @@ export const buildStream = ({
   let rootPosts = [];
 
   if (postsSource) {
-    rootPosts = internalStore.rootPosts.filter(
+    rootPosts = userInfo.loadedRootPosts.filter(
       (rootPost) => rootPost.source.address === postsSource
     );
   } else {
     rootPosts = filterPostsBySources({
-      posts: internalStore.rootPosts,
+      posts: userInfo.loadedRootPosts,
       subscribedSourcesByAddress,
       blacklistedSourcesByAddress,
     });
@@ -46,29 +46,10 @@ export const buildStream = ({
       post: afterPost,
     });
 
-    if (foundIndexOfAfterPost === rootPosts.length - 1) {
-      actualRootPosts = rootPosts.slice(0, limit);
-    } else if (foundIndexOfAfterPost > -1) {
+    if (foundIndexOfAfterPost > -1) {
       actualRootPosts = rootPosts.slice(
         foundIndexOfAfterPost,
         limit + foundIndexOfAfterPost
-      );
-    }
-  } else if (endPost && Object.keys(endPost).length > 0) {
-    const foundIndexOfEndPost = findIndexOfPost({
-      rootPosts,
-      post: endPost,
-    });
-
-    if (foundIndexOfEndPost === 0) {
-      actualRootPosts = rootPosts.slice(
-        rootPosts.length - limit,
-        rootPosts.length
-      );
-    } else if (foundIndexOfEndPost > -1) {
-      actualRootPosts = rootPosts.slice(
-        foundIndexOfEndPost < limit ? 0 : foundIndexOfEndPost + 1 - limit,
-        foundIndexOfEndPost + 1
       );
     }
   } else {

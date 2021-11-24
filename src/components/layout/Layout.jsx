@@ -33,14 +33,16 @@ const Layout = ({ children, theme }) => {
     }
   }, [isAuth]);
 
-  const updateStream = ({ stream, numberLength }) => {
-    dispatch(sourceActions.setCurrentAlreadySetNumber(numberLength));
+  const updateStream = ({ stream }) => {
     dispatch(postActions.updatePostStream(stream));
   };
 
-  useEffect(() => {
-    let every1minute = 0;
+  const updateNumberOfLoadedPosts = ({ lengthOfInternalRootPosts, lengthOfUserRootPosts }) => {
+    dispatch(postActions.setAlreadyLoadedPosts(lengthOfUserRootPosts));
+    dispatch(postActions.setLoadedPosts(lengthOfInternalRootPosts));
+  }
 
+  useEffect(() => {
     if (!isAuth) {
       (async () => {
         try {
@@ -55,23 +57,9 @@ const Layout = ({ children, theme }) => {
             afterPost: {},
             endPost: {},
             limit: 10,
-            callback: ({ stream, numberLength }) =>
-              updateStream({ stream, numberLength }),
+            callbackForUpdateStream: updateStream,
+            callbackForUpdatePostsNumber: updateNumberOfLoadedPosts,
           });
-
-          every1minute = setInterval(() => {
-            console.log("EVERY 60 seconds ");
-            getStreamPage({
-              postsSource: "",
-              subscribedSources: data,
-              blacklistedSourcesByAddress: {},
-              afterPost: {},
-              endPost: {},
-              limit: 10,
-              callback: ({ stream, numberLength }) =>
-                updateStream({ stream, numberLength }),
-            });
-          }, 1000 * 60);
         } catch (e) {
           console.warn("[Layout][useEffect-52-line]", e);
         }
@@ -84,28 +72,10 @@ const Layout = ({ children, theme }) => {
         afterPost: {},
         endPost: {},
         limit: 10,
-        callback: ({ stream, numberLength }) =>
-          updateStream({ stream, numberLength }),
+        callbackForUpdateStream: updateStream,
+        callbackForUpdatePostsNumber: updateNumberOfLoadedPosts,
       });
-
-      every1minute = setInterval(() => {
-        console.log("EVERY 60 seconds ");
-        getStreamPage({
-          postsSource: "",
-          subscribedSources: [...subscribed, userSource],
-          blacklistedSourcesByAddress: {},
-          afterPost: {},
-          endPost: {},
-          limit: 10,
-          callback: ({ stream, numberLength }) =>
-            updateStream({ stream, numberLength }),
-        });
-      }, 1000 * 60);
     }
-
-    return () => {
-      clearInterval(every1minute);
-    };
   }, [isAuth]);
 
   useEffect(() => {

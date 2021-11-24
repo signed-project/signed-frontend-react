@@ -4,6 +4,13 @@ import { loadMore } from "./utils/loadMore.js";
 import { getReplies } from "./utils/getReplies.js";
 import { getParentPosts } from "./utils/getParentPosts.js";
 
+let init = true;
+
+export const userStatuses = {
+  ACTIVE: "ACTIVE",
+  IDLE: "IDLE",
+};
+
 const internalStore = {
   // all posts includes postsById
   postsByHash: {},
@@ -36,6 +43,13 @@ const internalStore = {
   blacklistedSourcesByAddress: {},
 };
 
+const userInfo = {
+  status: userStatuses.IDLE,
+  streamForUpdate: [],
+  lengthOfLoadedRootPosts: 0,
+  loadedRootPosts: [],
+};
+
 /*
  * Лента это массив тредов. Тред это объект содержащий корневой пост и массив ответов к нему. 
  * Thread = {
@@ -57,42 +71,77 @@ export const getStreamPage = ({
   subscribedSources,
   blacklistedSourcesByAddress,
   afterPost,
-  endPost,
   limit,
-  callback,
+  callbackForUpdateStream,
+  callbackForUpdatePostsNumber,
+  showLoadedPosts,
 }) => {
   // FIXME: We decided use only hashmaps for convenience
   const subscribedSourcesByAddress = {};
+  let intervalForEvery_Five_Seconds = 0;
+  let intervalForEvery_One_Minute = 0;
 
   subscribedSources.forEach((source) => {
     subscribedSourcesByAddress[source.address] = source;
   });
 
+  if (showLoadedPosts) {
+    userInfo.lengthOfLoadedRootPosts = internalStore.rootPosts.length;
+    userInfo.loadedRootPosts = internalStore.rootPosts.slice();
+
+    callbackForUpdatePostsNumber({
+      lengthOfInternalRootPosts: internalStore.rootPosts.length,
+      lengthOfUserRootPosts: userInfo.lengthOfLoadedRootPosts,
+    });
+  }
+
   // Cтроим ленту из тех данных, которые есть в internalStore
   let stream = buildStream({
     internalStore,
+    userInfo,
     postsSource,
     subscribedSourcesByAddress,
     blacklistedSourcesByAddress,
     afterPost,
-    endPost,
     limit,
   });
+
+  const updateUserStreamIfIdle = () => {
+    if (userInfo.status === userStatuses.IDLE) {
+      callbackForUpdateStream({
+        stream: userInfo.streamForUpdate,
+      });
+    } else {
+      clearInterval(intervalForEvery_Five_Seconds);
+    }
+  };
+
+  if (init) {
+    intervalForEvery_Five_Seconds = setInterval(() => {
+      updateUserStreamIfIdle();
+    }, 1000 * 5);
+  }
 
   const onLoadMore = () => {
     stream = buildStream({
       internalStore,
+      userInfo,
       postsSource,
       subscribedSourcesByAddress,
       blacklistedSourcesByAddress,
       afterPost,
-      endPost,
       limit,
     });
 
-    callback({
-      stream,
-      numberLength: Object.keys(internalStore.postsByHash).length,
+    if (init) {
+      userInfo.streamForUpdate = stream;
+
+      updateUserStreamIfIdle();
+    }
+
+    callbackForUpdatePostsNumber({
+      lengthOfInternalRootPosts: internalStore.rootPosts.length,
+      lengthOfUserRootPosts: userInfo.lengthOfLoadedRootPosts,
     });
 
     // Запускаем скачивание любого архива у которого dateStart > archiveDepth
@@ -101,6 +150,8 @@ export const getStreamPage = ({
       internalStore,
       subscribedSourcesByAddress,
       callback: onLoadMore,
+      userInfo,
+      userStatuses,
     });
   };
 
@@ -112,9 +163,32 @@ export const getStreamPage = ({
     stream,
     subscribedSourcesByAddress,
     callback: onLoadMore,
+    userInfo,
+    userStatuses,
   });
 
+  if (init) {
+    intervalForEvery_One_Minute = setInterval(() => {
+      loadMore({
+        internalStore,
+        stream,
+        subscribedSourcesByAddress,
+        callback: onLoadMore,
+        userInfo,
+        userStatuses,
+      });
+    }, 1000 * 60);
+  }
+
   return stream;
+};
+
+export const setStatusUser = (status) => {
+  init = false;
+
+  if (status in userStatuses) {
+    userInfo.status = status;
+  }
 };
 
 export const getParentPostsForComment = ({

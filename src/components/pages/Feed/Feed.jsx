@@ -8,7 +8,7 @@ import { postActions } from "./../../../api/storage/post";
 import { handleSwitchPages } from "./../../helpers";
 import { useLocation } from "react-router-dom";
 
-let isInit = true;
+import { getStreamPage, setStatusUser, userStatuses } from "./../../../api/customNpmPackage/signedLoader";
 
 const Feed = ({ toggleTheme, promptToInstall }) => {
   const dispatch = useDispatch();
@@ -19,15 +19,13 @@ const Feed = ({ toggleTheme, promptToInstall }) => {
     subscribed,
     source: userSource,
   } = useSelector((state) => state.user);
-  const { currentAlreadySetNumber } = useSelector((state) => state.source);
+  const { alreadyLoadedPosts, loadedPosts } = useSelector((state) => state.post);
 
   const location = useLocation();
 
   const [openMenuHash, setOpenMenuHash] = useState(null);
 
   const [posts, setPosts] = useState([]);
-  const [switchPage, setSwitchPage] = useState(false);
-  const [isUserIdle, setIsUserIdle] = useState(true);
   const postsBlock = useRef(null);
   let history = useHistory();
 
@@ -57,40 +55,19 @@ const Feed = ({ toggleTheme, promptToInstall }) => {
 
   useEffect(() => {
     const callback = () => {
-      setIsUserIdle(false);
+      setStatusUser(userStatuses.ACTIVE);
     };
 
     if (postsBlock.current) {
       postsBlock.current.style.maxHeight = window.outerHeight + "px";
-      postsBlock.current.addEventListener("scroll", callback);
+      postsBlock.current.addEventListener("scroll", callback, { once: true });
     }
 
-    return () => {
-      if (postsBlock.current) {
-        postsBlock.current.removeEventListener("scroll", callback);
-      }
-    };
+    window.addEventListener("scroll", callback, { once: true });
   }, []);
 
   useEffect(() => {
-    if (isInit || switchPage) {
-      console.log("UPDATE SET POSTS");
-      setSwitchPage(false);
-      if (isInit && stream.length === 10) {
-        isInit = false;
-      }
-
-      setPosts([...stream]);
-    }
-
-    const every5sec = setInterval(() => {
-      console.log("EVERY 5 seconds ", isUserIdle);
-      if (isUserIdle) {
-        setPosts([...stream]);
-      } else {
-        clearInterval(every5sec);
-      }
-    }, 5000);
+    setPosts([...stream]);
 
     // if (location.state.currentScrollTop && postsBlock.current) {
     //   console.log("location.state.currentScrollTop");
@@ -101,11 +78,7 @@ const Feed = ({ toggleTheme, promptToInstall }) => {
     //     behavior: "smooth",
     //   });
     // }
-
-    return () => {
-      clearInterval(every5sec);
-    };
-  }, [stream, isUserIdle]);
+  }, [stream]);
 
   const handleShowMenu = (hash) => {
     setOpenMenuHash(hash);
@@ -129,25 +102,36 @@ const Feed = ({ toggleTheme, promptToInstall }) => {
     dispatch(postActions.updatePostStream(stream));
   };
 
-  const handlePreviousPage = () => {
-    setSwitchPage(true);
-    handleSwitchPages({
-      element: postsBlock.current,
-      postsStream: posts,
-      next: false,
-      isAuth,
+  const updateNumberOfLoadedPosts = ({ lengthOfInternalRootPosts, lengthOfUserRootPosts }) => {
+    dispatch(postActions.setAlreadyLoadedPosts(lengthOfUserRootPosts));
+    dispatch(postActions.setLoadedPosts(lengthOfInternalRootPosts));
+  }
+
+  const handleShowLoadedPosts = () => {
+    let sources = [];
+
+    if (isAuth) {
+      sources = [...subscribed, ...userSource];
+    } else {
+      sources = subscribedSources;
+    }
+
+    const stream = getStreamPage({
       postsSource: "",
-      subscribedSources,
-      subscribed,
-      userSource,
+      subscribedSources: sources,
       blacklistedSourcesByAddress: {},
+      afterPost: {},
+      endPost: {},
       limit: 10,
-      callback: updateStream,
+      callbackForUpdateStream: updateStream,
+      callbackForUpdatePostsNumber: updateNumberOfLoadedPosts,
+      showLoadedPosts: true,
     });
+
+    updateStream({ stream });
   };
 
   const handleNextPage = () => {
-    setSwitchPage(true);
     handleSwitchPages({
       element: postsBlock.current,
       postsStream: posts,
@@ -159,7 +143,8 @@ const Feed = ({ toggleTheme, promptToInstall }) => {
       userSource,
       blacklistedSourcesByAddress: {},
       limit: 10,
-      callback: updateStream,
+      callbackForUpdateStream: updateStream,
+      callbackForUpdatePostsNumber: updateNumberOfLoadedPosts,
     });
   };
 
@@ -189,14 +174,16 @@ const Feed = ({ toggleTheme, promptToInstall }) => {
 
   return (
     <>
-      <div className={styles.louder}>{currentAlreadySetNumber}</div>
+      <div className={styles.louder}>{alreadyLoadedPosts} of {loadedPosts}</div>
       <button onClick={promptToInstall}>Add to Home screen</button>
-      <button
-        className={styles.PreviousPageButton}
-        onClick={() => handlePreviousPage()}
-      >
-        PREVIOUS PAGE
-      </button>
+      {loadedPosts - alreadyLoadedPosts !== 0 && (
+        <button
+          className={styles.showLoadedPostsButton}
+          onClick={handleShowLoadedPosts}
+        >
+          Show New Loaded Posts {loadedPosts - alreadyLoadedPosts}
+        </button>
+      )}
       {posts && (
         <div
           ref={postsBlock}

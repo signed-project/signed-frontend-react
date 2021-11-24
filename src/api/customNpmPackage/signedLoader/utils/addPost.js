@@ -3,13 +3,13 @@ import { postsDistribution } from "./helpers";
 
 // Добавляем пост в internalStore
 // Этот метод вызывается методами loadIndexes и loadArchives для каждого загруженного поста
-export const addPost = ({ internalStore, post }) => {
+export const addPost = ({ internalStore, userInfo, userStatuses, post }) => {
   // Проверим подписи и наличие необходимых полей в объекте + исключаем дубли постов по хэшу
   if (!(post.hash in internalStore.postsByHash) && validatePost({ post })) {
     internalStore.postsByHash[post.hash] = post;
     const id = post.source.address + post.id;
 
-    postsDistribution({ internalStore, post });
+    postsDistribution({ internalStore, userInfo, userStatuses, post });
 
     if (id in internalStore.postsById) {
       const existing = internalStore.postsById[id];
