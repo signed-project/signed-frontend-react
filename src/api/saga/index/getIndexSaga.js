@@ -106,12 +106,12 @@ function* callSelfOnTimer() {
   let { allReceivedNumber, currentAlreadySetNumber } = yield select((state) => state.source);
 
   const index = buildStream({ arrPosts: tempPosts, arrSources: tempSource });
-  yield put({ type: POST_ACTIONS.SET_POST_STREAM, payload: index.stream });
-  yield put({ type: POST_ACTIONS.SET_POST_HASH, payload: index.hashedPost });
-  yield put({ type: POST_ACTIONS.SET_POST_LATEST, payload: index.latestPost });
-  yield put({ type: POST_ACTIONS.SET_HASHED_TARGET_POST, payload: index.hashedTargetPost });
-  yield put({ type: SOURCE_ACTIONS.SET_SOURCE_LATEST, payload: index.latestSource });
-  yield put({ type: SOURCE_ACTIONS.SET_SOURCE_HASH, payload: index.latestSource });
+  // yield put({ type: POST_ACTIONS.SET_POST_STREAM, payload: index.stream });
+  // yield put({ type: POST_ACTIONS.SET_POST_HASH, payload: index.hashedPost });
+  // yield put({ type: POST_ACTIONS.SET_POST_LATEST, payload: index.latestPost });
+  // yield put({ type: POST_ACTIONS.SET_HASHED_TARGET_POST, payload: index.hashedTargetPost });
+  // yield put({ type: SOURCE_ACTIONS.SET_SOURCE_LATEST, payload: index.latestSource });
+  // yield put({ type: SOURCE_ACTIONS.SET_SOURCE_HASH, payload: index.latestSource });
 
   if (currentAlreadySetNumber !== allReceivedNumber) {
     yield delay(5000);

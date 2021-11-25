@@ -33,26 +33,6 @@ const Feed = ({ toggleTheme, promptToInstall }) => {
     toggleTheme(true);
   }, [toggleTheme]);
 
-  // useEffect(() => {
-  //   if (postsBlock.current) {
-  //     postsBlock.current.style.maxHeight = window.outerHeight + "px";
-  //   }
-
-  //   if (location.state.currentScrollTop && postsBlock.current) {
-  //     console.log("location.state.currentScrollTop");
-  //     console.dir(location.state.currentScrollTop);
-
-  //     postsBlock.current.scrollTo({
-  //       top: location.state.currentScrollTop,
-  //       behavior: "smooth",
-  //     });
-  //   }
-
-  //   return () => {
-  //     postsBlock.current = null;
-  //   };
-  // }, []);
-
   useEffect(() => {
     const callback = () => {
       setStatusUser(userStatuses.ACTIVE);
@@ -67,17 +47,9 @@ const Feed = ({ toggleTheme, promptToInstall }) => {
   }, []);
 
   useEffect(() => {
-    setPosts([...stream]);
-
-    // if (location.state.currentScrollTop && postsBlock.current) {
-    //   console.log("location.state.currentScrollTop");
-    //   console.dir(location.state.currentScrollTop);
-
-    //   postsBlock.current.scrollTo({
-    //     top: location.state.currentScrollTop,
-    //     behavior: "smooth",
-    //   });
-    // }
+    if (stream.length > 0) {
+      setPosts([...stream]);
+    }
   }, [stream]);
 
   const handleShowMenu = (hash) => {
@@ -131,6 +103,23 @@ const Feed = ({ toggleTheme, promptToInstall }) => {
     updateStream({ stream });
   };
 
+  const handlePreviousPage = () => {
+    handleSwitchPages({
+      element: postsBlock.current,
+      postsStream: posts,
+      next: false,
+      isAuth,
+      postsSource: "",
+      subscribedSources,
+      subscribed,
+      userSource,
+      blacklistedSourcesByAddress: {},
+      limit: 10,
+      callbackForUpdateStream: updateStream,
+      callbackForUpdatePostsNumber: updateNumberOfLoadedPosts,
+    });
+  };
+
   const handleNextPage = () => {
     handleSwitchPages({
       element: postsBlock.current,
@@ -148,29 +137,52 @@ const Feed = ({ toggleTheme, promptToInstall }) => {
     });
   };
 
-  const handleEditPost = (hash) => {
+  const handleEditPost = (hash, id) => {
     // history.push(`${routes.newPost}?edit=${hash}`);
     history.push({
       pathname: routes.newPost,
       search: `?edit=${hash}`,
       state: {
-        currentScrollTop: postsBlock.current.scrollTop,
+        elementId: id,
       },
     });
   };
 
-  const renderPosts = posts.map((p, i) => {
-    return (
-      <Post
-        key={i}
-        renderKey={i}
-        post={p}
-        handleShowMenu={handleShowMenu}
-        isShowMenu={isShowMenu}
-        handleEditPost={handleEditPost}
-      />
-    );
-  });
+  const scrollToLastOpenPost = () => {
+    console.log("location.state");
+    console.dir(location.state);
+    if (location.state?.elementId) {
+      console.log("FIND ", location.state?.elementId);
+      let element = document.getElementById(location.state?.elementId);
+
+      if (element) {
+        console.log("FOUND ELEMENT");
+        console.dir(element);
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  };
+
+  // useEffect(() => {
+  //   scrollToLastOpenPost();
+  // }, [posts, stream, toggleTheme, postsBlock, postsBlock.current, history, dispatch, location, alreadyLoadedPosts, loadedPosts]);
+
+  const renderPosts = () => {
+    return posts.map((p, i) => {
+      return (
+        <Post
+          key={i}
+          renderKey={i}
+          post={p}
+          id={p.rootPost.id}
+          handleShowMenu={handleShowMenu}
+          isShowMenu={isShowMenu}
+          handleEditPost={handleEditPost}
+          showMe={scrollToLastOpenPost}
+        />
+      );
+    });
+  };
 
   return (
     <>
@@ -184,13 +196,19 @@ const Feed = ({ toggleTheme, promptToInstall }) => {
           Show New Loaded Posts {loadedPosts - alreadyLoadedPosts}
         </button>
       )}
+      <button
+        className={styles.previousPage}
+        onClick={() => handlePreviousPage()}
+      >
+        PREVIOUS PAGE
+      </button>
       {posts && (
         <div
           ref={postsBlock}
           className={styles.postsWindow}
           onClick={(e) => handleMenuClose(e)}
         >
-          {renderPosts}
+          {renderPosts()}
         </div>
       )}
       <button

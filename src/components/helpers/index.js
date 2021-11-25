@@ -4,6 +4,7 @@ export const handleSwitchPages = ({
   element,
   postsStream,
   isAuth,
+  next,
   postsSource,
   subscribedSources,
   subscribed,
@@ -23,13 +24,14 @@ export const handleSwitchPages = ({
     }
   }
 
-  const post = postsStream[postsStream.length - 1].rootPost;
+  const post = postsStream[next ? postsStream.length - 1 : 0].rootPost;
 
   const stream = getStreamPage({
     postsSource,
     subscribedSources: sources,
     blacklistedSourcesByAddress,
-    afterPost: post,
+    afterPost: next ? post : {},
+    endPost: !next ? post : {},
     limit,
     callbackForUpdateStream,
     callbackForUpdatePostsNumber,

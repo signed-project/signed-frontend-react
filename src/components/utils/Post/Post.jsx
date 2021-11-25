@@ -17,7 +17,7 @@ import Preview from "../Preview/Preview";
 import getImgArr from "../../customHooks/getImgSources";
 import MenuPost from "../MenuPost/MenuPost";
 
-const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
+const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost, id, showMe }) => {
   const {
     type,
     text,
@@ -102,7 +102,7 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
   return (
     <>
       {sourcePost && (
-        <div className={styles.post}>
+        <div id={id} className={styles.post}>
           {type === "post" && sourcePost.hosts && (
             <>
               <div className={styles.typePost}>
@@ -137,6 +137,7 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
 
                     {isShowMenu(hash) && (
                       <MenuPost
+                        id={id}
                         dataHash={hash}
                         handleEditPost={handleEditPost}
                       />

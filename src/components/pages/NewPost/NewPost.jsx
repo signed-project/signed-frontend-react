@@ -228,8 +228,6 @@ const NewPost = ({ toggleTheme }) => {
 
       const newPost = postInstance.newPost;
 
-      console.log("newPost[newPost]", newPost);
-
       setMessage("");
       setUploadedImg([]);
       dispatch(postActions.sendPost({ post: newPost, tags: tagsArr }));
@@ -334,7 +332,7 @@ const NewPost = ({ toggleTheme }) => {
     return hash === openMenuHash ? true : false;
   };
 
-  const handleEditPost = (hash) => {
+  const handleEditPost = (hash, id) => {
     history.push(`${routes.newPost}?edit=${hash}`);
   };
 

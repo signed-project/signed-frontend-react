@@ -3,6 +3,7 @@ import { loadArchives } from "./utils/loadArchives.js";
 import { loadMore } from "./utils/loadMore.js";
 import { getReplies } from "./utils/getReplies.js";
 import { getParentPosts } from "./utils/getParentPosts.js";
+import { addPost } from "./utils/addPost.js";
 
 let init = true;
 
@@ -71,6 +72,7 @@ export const getStreamPage = ({
   subscribedSources,
   blacklistedSourcesByAddress,
   afterPost,
+  endPost,
   limit,
   callbackForUpdateStream,
   callbackForUpdatePostsNumber,
@@ -103,22 +105,29 @@ export const getStreamPage = ({
     subscribedSourcesByAddress,
     blacklistedSourcesByAddress,
     afterPost,
+    endPost,
     limit,
   });
 
-  const updateUserStreamIfIdle = () => {
-    if (userInfo.status === userStatuses.IDLE) {
-      callbackForUpdateStream({
-        stream: userInfo.streamForUpdate,
-      });
-    } else {
-      clearInterval(intervalForEvery_Five_Seconds);
-    }
-  };
+  if (showLoadedPosts) {
+    userInfo.streamForUpdate = stream;
+  }
+
+  let updateUserStreamIfIdle = null;
 
   if (init) {
+    updateUserStreamIfIdle = () => {
+      if (userInfo.status === userStatuses.IDLE) {
+        callbackForUpdateStream({
+          stream: userInfo.streamForUpdate,
+        });
+      } else {
+        clearInterval(intervalForEvery_Five_Seconds);
+      }
+    };
+
     intervalForEvery_Five_Seconds = setInterval(() => {
-      updateUserStreamIfIdle();
+      // updateUserStreamIfIdle();
     }, 1000 * 5);
   }
 
@@ -130,6 +139,7 @@ export const getStreamPage = ({
       subscribedSourcesByAddress,
       blacklistedSourcesByAddress,
       afterPost,
+      endPost,
       limit,
     });
 
@@ -189,6 +199,27 @@ export const setStatusUser = (status) => {
   if (status in userStatuses) {
     userInfo.status = status;
   }
+};
+
+export const addPostToStream = ({ post, sources }) => {
+  addPost({ internalStore, userInfo, userStatuses, post });
+
+  const stream = getStreamPage({
+    postsSource: "",
+    subscribedSources: sources,
+    blacklistedSourcesByAddress: {},
+    afterPost: {},
+    limit: 10,
+    callbackForUpdateStream: () => {},
+    callbackForUpdatePostsNumber: () => {},
+    showLoadedPosts: true,
+  });
+
+  return {
+    lengthOfUserRootPosts: userInfo.lengthOfLoadedRootPosts,
+    lengthOfInternalRootPosts: internalStore.rootPosts.length,
+    stream,
+  };
 };
 
 export const getParentPostsForComment = ({

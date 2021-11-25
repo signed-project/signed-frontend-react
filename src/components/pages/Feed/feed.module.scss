@@ -5,15 +5,6 @@
   justify-content: center;
 }
 
-.nextPageButton {
-  width: 100%;
-  color: rebeccapurple;
-  border: 0;
-  background-color: snow;
-  padding-bottom: 15%;
-  cursor: pointer;
-}
-
 .postsWindow {
   overflow-y: scroll;
   -ms-overflow-style: none;
@@ -22,6 +13,24 @@
 
 .postsWindow::-webkit-scrollbar {
   display: none;
+}
+
+.previousPage {
+  width: 100%;
+  color: rebeccapurple;
+  border: 0;
+  background-color: snow;
+  padding-bottom: 3%;
+  cursor: pointer;
+}
+
+.nextPageButton {
+  width: 100%;
+  color: rebeccapurple;
+  border: 0;
+  background-color: snow;
+  padding-bottom: 15%;
+  cursor: pointer;
 }
 
 .showLoadedPostsButton {

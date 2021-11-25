@@ -18,6 +18,7 @@ export const buildStream = ({
   subscribedSourcesByAddress,
   blacklistedSourcesByAddress,
   afterPost,
+  endPost,
   limit,
 }) => {
   const stream = [];
@@ -50,6 +51,20 @@ export const buildStream = ({
       actualRootPosts = rootPosts.slice(
         foundIndexOfAfterPost,
         limit + foundIndexOfAfterPost
+      );
+    }
+  } else if (endPost && Object.keys(endPost).length > 0) {
+    const foundIndexOfEndPost = findIndexOfPost({
+      rootPosts,
+      post: endPost,
+    });
+
+    if (foundIndexOfEndPost === 0) {
+      actualRootPosts = rootPosts.slice(foundIndexOfEndPost, limit);
+    } else if (foundIndexOfEndPost > -1) {
+      actualRootPosts = rootPosts.slice(
+        foundIndexOfEndPost < limit ? 0 : foundIndexOfEndPost + 1 - limit,
+        foundIndexOfEndPost + 1
       );
     }
   } else {

@@ -69,6 +69,18 @@ const Source = ({ toggleTheme }) => {
     const handleNextPage = () => {
         handleSwitchPages({
             postsStream: ownPost,
+            next: true,
+            callbackForUpdateStream: updatePosts,
+            limit: 10,
+            blacklistedSourcesByAddress: {},
+            postsSource: address,
+        });
+    };
+
+    const handlePreviousPage = () => {
+        handleSwitchPages({
+            postsStream: ownPost,
+            next: false,
             callbackForUpdateStream: updatePosts,
             limit: 10,
             blacklistedSourcesByAddress: {},
@@ -122,7 +134,7 @@ const Source = ({ toggleTheme }) => {
 
             </>
             }
-            {tab === tabList.posts && <SourcePosts ownPost={ownPost} handleNextPage={handleNextPage} />}
+            {tab === tabList.posts && <SourcePosts ownPost={ownPost} handlePreviousPage={handlePreviousPage} handleNextPage={handleNextPage} />}
             {tab === tabList.info && <SourceInfo source={source} />}
         </>
     );

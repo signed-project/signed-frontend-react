@@ -27,7 +27,7 @@ const ProfilePosts = ({ ownPost }) => {
         }
     };
 
-    const handleEditPost = (hash) => {
+    const handleEditPost = (hash, id) => {
         history.push(`${routes.newPost}?edit=${hash}`);
     };
 
