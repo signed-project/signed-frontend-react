@@ -1,16 +1,19 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import Post from "../../utils/Post/Post";
-import routes from "../../../config/routes.config";
+import { routes } from "../../../config/routes.config";
 import styles from "./feed.module.scss";
 import { postActions } from "./../../../api/storage/post";
 import { handleSwitchPages } from "./../../helpers";
 import { useLocation } from "react-router-dom";
 
+import { RouterContext } from "../../layout/RouterProvider";
+
 import { getStreamPage, setStatusUser, userStatuses } from "./../../../api/customNpmPackage/signedLoader";
 
 const Feed = ({ toggleTheme, promptToInstall }) => {
+  const routerContext = useContext(RouterContext);
   const dispatch = useDispatch();
   const stream = useSelector((state) => state.post.stream);
   const subscribedSources = useSelector((state) => state.source.subscribed);
@@ -51,6 +54,25 @@ const Feed = ({ toggleTheme, promptToInstall }) => {
       setPosts([...stream]);
     }
   }, [stream]);
+
+  useEffect(() => {
+    let timeout = 0;
+
+    if (routerContext.stateRouter?.elementId) {
+      timeout = setTimeout(() => {
+        let element = document.getElementById(routerContext.stateRouter?.elementId);
+
+        if (element) {
+          element.scrollIntoView({ block: "center", inline: "center" });
+          history.replace({ pathname: routes.feed, state: {} });
+        }
+      }, 0)
+    }
+
+    return () => {
+      clearTimeout(timeout);
+    }
+  }, [posts]);
 
   const handleShowMenu = (hash) => {
     setOpenMenuHash(hash);
@@ -138,7 +160,6 @@ const Feed = ({ toggleTheme, promptToInstall }) => {
   };
 
   const handleEditPost = (hash, id) => {
-    // history.push(`${routes.newPost}?edit=${hash}`);
     history.push({
       pathname: routes.newPost,
       search: `?edit=${hash}`,
@@ -147,25 +168,6 @@ const Feed = ({ toggleTheme, promptToInstall }) => {
       },
     });
   };
-
-  const scrollToLastOpenPost = () => {
-    console.log("location.state");
-    console.dir(location.state);
-    if (location.state?.elementId) {
-      console.log("FIND ", location.state?.elementId);
-      let element = document.getElementById(location.state?.elementId);
-
-      if (element) {
-        console.log("FOUND ELEMENT");
-        console.dir(element);
-        element.scrollIntoView({ behavior: "smooth" });
-      }
-    }
-  };
-
-  // useEffect(() => {
-  //   scrollToLastOpenPost();
-  // }, [posts, stream, toggleTheme, postsBlock, postsBlock.current, history, dispatch, location, alreadyLoadedPosts, loadedPosts]);
 
   const renderPosts = () => {
     return posts.map((p, i) => {
@@ -178,7 +180,6 @@ const Feed = ({ toggleTheme, promptToInstall }) => {
           handleShowMenu={handleShowMenu}
           isShowMenu={isShowMenu}
           handleEditPost={handleEditPost}
-          showMe={scrollToLastOpenPost}
         />
       );
     });

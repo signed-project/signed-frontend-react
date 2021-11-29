@@ -15,7 +15,7 @@ import queryString from "query-string";
 import { useLocation } from "react-router-dom";
 import RepostBlock from "../../utils/Post/RepostBlock";
 import CommentBlock from "../../utils/Post/CommentBlock";
-import routes from "../../../config/routes.config.js";
+import { routes } from "../../../config/routes.config.js";
 import Checkbox from "../../utils/Checkbox/Checkbox";
 import ReplyingUser from "./ReplyingUser";
 import useFiles from "../../customHooks/useFiles";
@@ -354,10 +354,7 @@ const NewPost = ({ toggleTheme }) => {
   };
 
   const handleBackArrowClick = () => {
-    history.push({
-      pathname: routes.feed,
-      state: location.state,
-    });
+    history.goBack();
   };
 
   return isFullImgPrev ? (

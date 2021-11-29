@@ -2,12 +2,11 @@ import { useEffect, useState } from "react";
 import mime from "mime";
 import { useHistory } from "react-router-dom";
 import styles from "./avatar.module.scss";
-import routs from "../../../config/routes.config";
+import { routes as routs } from "../../../config/routes.config";
 import { getFilePath } from "../../customHooks/getImgSources";
-import userPlaceHolder from "../../../assets/svg/icon/userPlaceHolder.jpg";
 import { robotHash } from '../../../config/http.config.js';
 
-const Avatar = ({ imgSmall = false, imgBig = false, isDirect = true, avatar, srcData, address }) => {
+const Avatar = ({ imgSmall = false, imgBig = false, isDirect = true, avatar, srcData, address, id }) => {
   const history = useHistory();
 
   const [src, setSrc] = useState('');
@@ -51,13 +50,12 @@ const Avatar = ({ imgSmall = false, imgBig = false, isDirect = true, avatar, src
     <div
       className={`${!imgBig && styles.imgAvatarWrapper}`}
       onClick={isDirect ? () => {
-        history.push(`${routs.source}/${address}`);
+        history.push(`${routs.source}/${address}`, { elementId: id });
       } : () => { }
       }
     >
       <img
         src={src}
-        // src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/Hary-Potter-1-.jpg"
         alt=""
         className={`${styles.imgAvatar}  ${imgSmall && styles.imgAvatarSmall}  ${imgBig && styles.imgAvatarBig}`}
       ></img>

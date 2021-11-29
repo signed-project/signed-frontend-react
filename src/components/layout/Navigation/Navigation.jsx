@@ -3,7 +3,7 @@ import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import styles from './navigation.module.scss';
 import icons from '../../../assets/svg/icon';
-import routes from '../../../config/routes.config';
+import { routes } from '../../../config/routes.config';
 
 
 const NavItem = ({ to, icon, alt, title }) => {

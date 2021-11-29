@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
 import Header from "./Header/Header";
 import Navigation from "./Navigation/Navigation";
 import WelcomeSing from "./WelcomeSign/WelcomeSign";
-import router from "../../config/routes.config";
+import { routes as router } from "../../config/routes.config";
 import styles from "./layout.module.scss";
 // import { getDefaultSources, getSourcesIndex } from '../../api/customNpmPackage/loadIndexes';
 import { inboxActions } from "../../api/storage/inbox";

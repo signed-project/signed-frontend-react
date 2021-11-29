@@ -5,7 +5,7 @@ import RegisterHeader from '../../utils/RegisterHeader/RegisterHeader';
 import styles from './register.module.scss';
 import Input from '../../utils/Input/Input';
 import Button from '../../utils/Button/Button';
-import routes from '../../../config/routes.config';
+import { routes } from '../../../config/routes.config';
 import { userApi } from '../../../config/http.config';
 import { userActions } from '../../../api/storage/user';
 import { isWifFormat } from '../../../libs/signature';

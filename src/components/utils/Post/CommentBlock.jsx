@@ -9,6 +9,7 @@ import icon from "../../../assets/svg/icon";
 import useReaction from "../../customHooks/useReaction";
 import useSourcePost from "../../customHooks/useSourcePost";
 import getImgSources from "../../customHooks/getImgSources";
+import { useSelector } from "react-redux";
 
 // TODO: signature less element ?
 const CommentBlock = ({
@@ -17,6 +18,7 @@ const CommentBlock = ({
   mention,
   removeLastLine = false,
   showReactionBlock = false,
+  id,
 }) => {
   const {
     text,
@@ -29,6 +31,7 @@ const CommentBlock = ({
   } = post;
   const [imgPreview, setImgPreview] = useState([]);
   const [source, setSource] = useState("");
+  const { isAuth } = useSelector((state) => state.user);
 
   let sourceRes = useSourcePost(address);
   useEffect(() => {
@@ -57,7 +60,7 @@ const CommentBlock = ({
       {source && (
         <div className={styles.commentBlock}>
           <div className={styles.avatarBlock}>
-            <Avatar avatar={source?.avatar} address={address} />
+            <Avatar avatar={source?.avatar} address={address} id={id} />
             <div
               className={`${styles.verticalLine} ${
                 removeLastLine && styles.verticalLineRemove
@@ -70,6 +73,7 @@ const CommentBlock = ({
                 createdAt={getReadFormat(createdAt)}
                 name={source.publicName}
                 address={post.source.address}
+                id={id}
               />
               <img
                 src={icon.menu}
@@ -86,17 +90,21 @@ const CommentBlock = ({
                   text={text}
                   type={type}
                   imgHostArr={imgPreview}
+                  id={id}
                   // imgPrevSrc={imgPreview[0]?.imagePreviewUrl}
                 />
               )}
             </div>
-            <Reaction
-              likesCount={likesCount}
-              repostsCount={repostsCount}
-              handleLike={() => reaction.handleLike({ rootPost: post })}
-              handleRepost={() => reaction.handleRepost({ rootPost: post })}
-              handleReply={() => reaction.handleReply({ rootPost: post })}
-            />
+            { isAuth && (
+                <Reaction
+                  likesCount={likesCount}
+                  repostsCount={repostsCount}
+                  handleLike={() => reaction.handleLike({ rootPost: post, elementId: id })}
+                  handleRepost={() => reaction.handleRepost({ rootPost: post, elementId: id })}
+                  handleReply={() => reaction.handleReply({ rootPost: post, elementId: id })}
+                />
+              ) 
+            }
           </div>
         </div>
       )}

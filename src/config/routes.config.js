@@ -1,4 +1,4 @@
-export default {
+export const routes = {
   feed: "/",
   search: "/search",
   newPost: "/new",

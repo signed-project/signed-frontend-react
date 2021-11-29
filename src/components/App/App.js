@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import { BrowserRouter } from "react-router-dom";
 import LayoutProvider from "../layout/LayoutProvider";
+import RouterProvider from "../layout/RouterProvider";
 import MainRouts from "./MainRoutes";
 import { layoutType } from "../layout/LayoutProvider.jsx";
 
@@ -20,12 +21,6 @@ const App = () => {
     );
   };
 
-  const state = {
-    theme: themeVal,
-    toggleTheme: (val) => setThemeVal(val),
-    promptToInstall,
-  };
-
   useEffect(() => {
     const ready = (e) => {
       e.preventDefault();
@@ -39,11 +34,19 @@ const App = () => {
     };
   }, []);
 
+  const state = {
+    theme: themeVal,
+    toggleTheme: (val) => setThemeVal(val),
+    promptToInstall,
+  };
+
   return (
     <BrowserRouter basename={"/"}>
-      <LayoutProvider.Provider value={state}>
-        <MainRouts />
-      </LayoutProvider.Provider>
+      <RouterProvider>
+        <LayoutProvider.Provider value={state}>
+          <MainRouts />
+        </LayoutProvider.Provider>
+      </RouterProvider>
     </BrowserRouter>
   );
 };

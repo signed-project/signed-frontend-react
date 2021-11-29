@@ -15,16 +15,11 @@ import Preview from "../../utils/Preview/Preview";
 import Avatar from "../../utils/Avatar/Avatar";
 import InfoAuthor from "../../utils/InfoAuthor/InfoAuthor";
 import Slider from "../../utils/Slider/Slider";
-import routes from "../../../config/routes.config";
-import { hostApi, userApi } from "./../../../config/http.config.js";
 
 import {
   getPostByHash,
   getSourceByAddress,
 } from "./../../../api/customNpmPackage/signedLoader";
-import axios from "axios";
-
-const apiHost = hostApi.API_HOST;
 
 // TODO: refactor this component to use module Post if it possible
 const PostPage = ({ toggleTheme }) => {
@@ -123,6 +118,10 @@ const PostPage = ({ toggleTheme }) => {
     setSliderNum(i);
   };
 
+  const handleArrowBackClick = () => {
+    history.goBack();
+  };
+
   return showSlider ? (
     <Slider
       uploadImgArr={imgPreview}
@@ -134,7 +133,7 @@ const PostPage = ({ toggleTheme }) => {
       <div className={styles.backBlock}>
         <img
           src={icon.arrowBack}
-          onClick={() => history.push(routes.feed)}
+          onClick={handleArrowBackClick}
           alt="arrow back icon"
         />
       </div>
@@ -182,13 +181,16 @@ const PostPage = ({ toggleTheme }) => {
                   </div>
                 )}
               </div>
-              <Reaction
-                likesCount={post.likesCount}
-                repostsCount={post.repostsCount}
-                handleLike={() => reaction.handleLike({ rootPost: post })}
-                handleRepost={() => reaction.handleRepost({ rootPost: post })}
-                handleReply={() => reaction.handleReply({ rootPost: post })}
-              />
+              { isAuth && (
+                <Reaction
+                  likesCount={post.likesCount}
+                  repostsCount={post.repostsCount}
+                  handleLike={() => reaction.handleLike({ rootPost: post, elementId: location.state.elementId })}
+                  handleRepost={() => reaction.handleRepost({ rootPost: post, elementId: location.state.elementId })}
+                  handleReply={() => reaction.handleReply({ rootPost: post, elementId: location.state.elementId })}
+                />
+              ) 
+            }
             </div>
           </div>
 

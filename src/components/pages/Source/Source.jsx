@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import icon from '../../../assets/svg/icon';
 import styles from './source.module.scss';
-import { useParams, useHistory } from "react-router-dom";
-import routes from '../../../config/routes.config';
+import { useParams, useHistory, useLocation } from "react-router-dom";
 import Avatar from '../../utils/Avatar/Avatar';
 import InfoAuthor from '../../utils/InfoAuthor/InfoAuthor';
 import useSourcePost from "../../customHooks/useSourcePost";
@@ -32,6 +31,7 @@ const Source = ({ toggleTheme }) => {
     const [isAlreadyFollow, setIsAlreadyFollow] = useState(false);
     const [ownPost, setOwnPost] = useState([]);
     const history = useHistory();
+    const location = useLocation();
 
     useEffect(() => {
         toggleTheme(false);
@@ -113,10 +113,14 @@ const Source = ({ toggleTheme }) => {
         }
     }
 
+    const handleArrowBackClick = () => {
+        history.goBack();
+    };
+
     return (
         <>
             {source && <> <div className={styles.header}>
-                <img src={icon.arrowBack} onClick={() => history.push(routes.feed)} alt="arrow back icon" className={styles.iconBack} />
+                <img src={icon.arrowBack} onClick={handleArrowBackClick} alt="arrow back icon" className={styles.iconBack} />
                 <Avatar avatar={source.avatar} address={address} />
                 <InfoAuthor name={source.publicName} address={address} />
             </div>

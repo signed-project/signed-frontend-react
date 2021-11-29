@@ -16,8 +16,9 @@ import useSourcePost from "../../customHooks/useSourcePost";
 import Preview from "../Preview/Preview";
 import getImgArr from "../../customHooks/getImgSources";
 import MenuPost from "../MenuPost/MenuPost";
+import { useSelector } from "react-redux";
 
-const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost, id, showMe }) => {
+const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost, id }) => {
   const {
     type,
     text,
@@ -32,6 +33,7 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost, id, showMe }) 
 
   let sourcePost = useSourcePost(address);
   let { rootPost: targetPost } = useTargetPost(postHash);
+  const { isAuth } = useSelector((state) => state.user);
 
   let sourceTargetPost = useSourcePost(targetPost?.source?.address);
   const reaction = useReaction();
@@ -80,6 +82,7 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost, id, showMe }) 
           removeLastLine={index + 1 === post.replies?.length}
           dotsLine={true}
           showReactionBlock={true}
+          id={id}
         />
       );
     }
@@ -92,9 +95,9 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost, id, showMe }) 
       <Reaction
         likesCount={targetPost?.likesCount}
         repostsCount={targetPost?.repostsCount}
-        handleLike={() => reaction.handleLike({ rootPost: post.rootPost })}
-        handleRepost={() => reaction.handleRepost({ rootPost: post.rootPost })}
-        handleReply={() => reaction.handleReply({ rootPost: post.rootPost })}
+        handleLike={() => reaction.handleLike({ rootPost: post.rootPost, elementId: id  })}
+        handleRepost={() => reaction.handleRepost({ rootPost: post.rootPost, elementId: id  })}
+        handleReply={() => reaction.handleReply({ rootPost: post.rootPost, elementId: id  })}
       />
     );
   };
@@ -107,7 +110,7 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost, id, showMe }) 
             <>
               <div className={styles.typePost}>
                 <div className={styles.avatarBlock}>
-                  <Avatar avatar={sourcePost.avatar} address={address} />
+                  <Avatar avatar={sourcePost.avatar} address={address} id={id} />
                   <div
                     className={`${styles.verticalLine}  ${
                       post.replies?.length === 0 && styles.verticalLineRemove
@@ -120,6 +123,7 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost, id, showMe }) 
                       createdAt={getReadFormat(createdAt)}
                       name={sourcePost.publicName}
                       address={address}
+                      id={id}
                     />
                     <div
                       className={styles.menuIconWrapper}
@@ -150,11 +154,12 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost, id, showMe }) 
                       postHash={hash}
                       text={text}
                       address={address}
+                      id={id}
                       // imgHostArr={imgPreview}
                     />
                     <Preview uploadImgArr={imgPreview} postHash={hash} />
                   </div>
-                  {reactionBlock()}
+                  { isAuth && reactionBlock() }
                 </div>
               </div>
             </>
@@ -201,7 +206,7 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost, id, showMe }) 
                         postHash={targetPost.hash}
                       />
                     </div>
-                    {reactionBlock()}
+                    { isAuth && reactionBlock() }
                   </div>
                 </div>
               </div>
@@ -242,7 +247,7 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost, id, showMe }) 
                     />
                   </div>
                   <RepostBlock postHash={targetPost.hash} />
-                  {reactionBlock()}
+                  { isAuth && reactionBlock() }
                 </div>
               </div>
             </>

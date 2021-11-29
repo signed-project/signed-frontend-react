@@ -2,14 +2,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { postActions } from "../../api/storage/post";
 import { Post as PostModel } from "../../api/models/post";
-import routes from "../../config/routes.config.js";
+import { routes } from "../../config/routes.config.js";
 
 const useReaction = () => {
   const user = useSelector((state) => state.user);
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const handleLike = ({ rootPost: p }) => {
+  const handleLike = ({ rootPost: p, elementId }) => {
     let data;
     if (p.type === "post" || p.type === "reply") {
       data = {
@@ -38,10 +38,10 @@ const useReaction = () => {
     const likePost = post.newPost;
 
     dispatch(postActions.sendPost({ post: likePost }));
-    history.push(`${routes.feed}`);
+    history.push(`${routes.feed}`, { elementId });
   };
 
-  const handleRepost = ({ rootPost: p }) => {
+  const handleRepost = ({ rootPost: p, elementId }) => {
     let sourcePost;
     let sourceAddress;
     if (p.type === "post" || p.type === "reply") {
@@ -53,11 +53,12 @@ const useReaction = () => {
     }
     const type = "repost";
     history.push(
-      `${routes.newPost}?post=${sourcePost}&user=${sourceAddress}&type=${type}`
+      `${routes.newPost}?post=${sourcePost}&user=${sourceAddress}&type=${type}`,
+      { elementId }
     );
   };
 
-  const handleReply = ({ rootPost: p }) => {
+  const handleReply = ({ rootPost: p, elementId }) => {
     let sourcePost;
     let sourceAddress;
 
@@ -72,7 +73,8 @@ const useReaction = () => {
     const type = "reply";
 
     history.push(
-      `${routes.newPost}?post=${sourcePost}&user=${sourceAddress}&type=${type}`
+      `${routes.newPost}?post=${sourcePost}&user=${sourceAddress}&type=${type}`,
+      { elementId }
     );
   };
 

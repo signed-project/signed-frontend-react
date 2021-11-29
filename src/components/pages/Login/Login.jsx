@@ -5,7 +5,7 @@ import RegisterHeader from '../../utils/RegisterHeader/RegisterHeader';
 import styles from './login.module.scss';
 import Input from '../../utils/Input/Input';
 import Button from '../../utils/Button/Button';
-import routes from '../../../config/routes.config';
+import { routes } from '../../../config/routes.config';
 import { userApi } from '../../../config/http.config';
 import srp from 'secure-remote-password/client';
 import { userActions } from '../../../api/storage/user';

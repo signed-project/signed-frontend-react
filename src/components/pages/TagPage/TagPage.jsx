@@ -4,7 +4,7 @@ import { useHistory, useParams, useLocation } from "react-router-dom";
 import queryString from "query-string";
 import styles from "./tagPage.module.scss";
 import Post from "../../utils/Post/Post";
-import routes from "../../../config/routes.config";
+import { routes } from "../../../config/routes.config";
 import icon from "../../../assets/svg/icon";
 import useSourcePost from "../../customHooks/useSourcePost.js";
 
@@ -107,7 +107,7 @@ const TagPage = ({ toggleTheme }) => {
       <div div className={styles.backBlock}>
         <img
           src={icon.arrowBack}
-          onClick={() => history.push(routes.feed)}
+          onClick={history.goBack}
           alt="arrow back icon"
         />
       </div>

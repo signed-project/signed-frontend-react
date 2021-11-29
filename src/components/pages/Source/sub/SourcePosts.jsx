@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, NavLink, useHistory } from "react-router-dom";
 import styles from '../source.module.scss';
 import Post from '../../../utils/Post/Post';
-import routes from "../../../../config/routes.config";
+import { routes } from "../../../../config/routes.config";
 
 
 

@@ -3,7 +3,7 @@ import styles from './welcomeSign.module.scss';
 import icon from '../../../assets/svg/icon';
 import Button from '../../utils/Button/Button';
 import { useHistory } from 'react-router-dom';
-import routes from '../../../config/routes.config';
+import { routes } from '../../../config/routes.config';
 import { useState } from 'react';
 
 const WelcomeSing = () => {
