@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import icon from '../../../assets/svg/icon';
 import styles from './source.module.scss';
-import { useParams, useHistory, useLocation } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import Avatar from '../../utils/Avatar/Avatar';
 import InfoAuthor from '../../utils/InfoAuthor/InfoAuthor';
 import useSourcePost from "../../customHooks/useSourcePost";
@@ -13,9 +13,12 @@ import { userApi } from '../../../config/http.config';
 import { postActions } from '../../../api/storage/post';
 import { getStreamPage } from '../../../api/customNpmPackage/signedLoader';
 import { handleSwitchPages } from "./../../helpers";
+import { LayoutContext } from '../../layout/LayoutProvider';
 
 // TODO: refactor this component to use module Post if it possible
-const Source = ({ toggleTheme }) => {
+const Source = () => {
+    const layoutContext = useContext(LayoutContext);
+
     const tabList = {
         posts: 'posts',
         info: 'info'
@@ -31,11 +34,10 @@ const Source = ({ toggleTheme }) => {
     const [isAlreadyFollow, setIsAlreadyFollow] = useState(false);
     const [ownPost, setOwnPost] = useState([]);
     const history = useHistory();
-    const location = useLocation();
 
     useEffect(() => {
-        toggleTheme(false);
-    }, [toggleTheme]);
+        layoutContext.toggleTheme(false);
+    }, [layoutContext]);
 
     useEffect(() => {
         if (user.subscribed.find(sub => sub.address === address)) {

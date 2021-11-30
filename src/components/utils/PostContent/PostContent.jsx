@@ -8,7 +8,7 @@ import hashtag from "linkifyjs/plugins/hashtag";
 
 hashtag(linkify);
 
-const PostContent = ({ text, postHash, imgHostArr, hosts, address, id }) => {
+const PostContent = ({ text, postHash, imgHostArr, hosts, address, id, updateRouterContext }) => {
   let history = useHistory();
   let options;
   const title = text ? text.slice(0, 140) : "";
@@ -16,6 +16,9 @@ const PostContent = ({ text, postHash, imgHostArr, hosts, address, id }) => {
   const handleDirect = () => {
     if (!postHash) {
       return;
+    }
+    if (updateRouterContext) {
+      updateRouterContext();
     }
     const post_url = getFilePath({ hash: postHash, fileExtension: "json" });
     const path = `${routes.post}/${postHash}?post_url=${post_url}&title=${title}&img=${img}`;
@@ -41,7 +44,7 @@ const PostContent = ({ text, postHash, imgHostArr, hosts, address, id }) => {
   return (
     <>
       <div
-        onClick={() => handleDirect()}
+        onClick={handleDirect}
         className={`${styles.postContent} ${!postHash && styles.postContentPostPage
           }`}
       >

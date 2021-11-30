@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import queryString from "query-string";
 import icon from "../../../assets/svg/icon";
@@ -20,11 +20,12 @@ import {
   getPostByHash,
   getSourceByAddress,
 } from "./../../../api/customNpmPackage/signedLoader";
+import { LayoutContext } from "../../layout/LayoutProvider";
 
 // TODO: refactor this component to use module Post if it possible
-const PostPage = ({ toggleTheme }) => {
-  // const postMapState = useSelector((state) => state.post.hashed);
-  // const hashedTargetPostStore = useSelector((state) => state.post.hashedTargetPost);
+const PostPage = () => {
+  const layoutContext = useContext(LayoutContext);
+
   const subscribedSources = useSelector((state) => state.source.subscribed);
   const {
     isAuth,
@@ -64,8 +65,8 @@ const PostPage = ({ toggleTheme }) => {
   }, [hash, subscribedSources]);
 
   useEffect(() => {
-    toggleTheme(false);
-  }, [toggleTheme]);
+    layoutContext.toggleTheme(false);
+  }, [layoutContext]);
 
   useEffect(() => {
     if (currentPost) {
@@ -185,9 +186,18 @@ const PostPage = ({ toggleTheme }) => {
                 <Reaction
                   likesCount={post.likesCount}
                   repostsCount={post.repostsCount}
-                  handleLike={() => reaction.handleLike({ rootPost: post, elementId: location.state.elementId })}
-                  handleRepost={() => reaction.handleRepost({ rootPost: post, elementId: location.state.elementId })}
-                  handleReply={() => reaction.handleReply({ rootPost: post, elementId: location.state.elementId })}
+                  handleLike={() => reaction.handleLike({ 
+                    rootPost: post, 
+                    elementId: location.state.elementId 
+                  })}
+                  handleRepost={() => reaction.handleRepost({ 
+                    rootPost: post, 
+                    elementId: location.state.elementId 
+                  })}
+                  handleReply={() => reaction.handleReply({ 
+                    rootPost: post, 
+                    elementId: location.state.elementId 
+                  })}
                 />
               ) 
             }

@@ -1,15 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './profile.module.scss';
 import icon from '../../../assets/svg/icon';
 import ProfilePosts from './sub/ProfilePosts';
 import ProfileInfo from './sub/ProfileInfo';
+import { LayoutContext } from '../../layout/LayoutProvider';
 
-const Profile = ({ toggleTheme }) => {
+const Profile = () => {
+  const layoutContext = useContext(LayoutContext);
+
   console.log("|_____------------------ PROFILE PAGE!");
   useEffect(() => {
-    toggleTheme(true);
-  }, [toggleTheme]);
+    layoutContext.toggleTheme(true);
+  }, [layoutContext]);
 
   const tabList = {
     posts: 'posts',

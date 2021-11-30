@@ -9,7 +9,7 @@ const useReaction = () => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const handleLike = ({ rootPost: p, elementId }) => {
+  const handleLike = ({ rootPost: p, elementId, updateRouterContext }) => {
     let data;
     if (p.type === "post" || p.type === "reply") {
       data = {
@@ -37,13 +37,18 @@ const useReaction = () => {
     const post = new PostModel(data);
     const likePost = post.newPost;
 
+    if (updateRouterContext) {
+      updateRouterContext();
+    }
+
     dispatch(postActions.sendPost({ post: likePost }));
     history.push(`${routes.feed}`, { elementId });
   };
 
-  const handleRepost = ({ rootPost: p, elementId }) => {
+  const handleRepost = ({ rootPost: p, elementId, updateRouterContext }) => {
     let sourcePost;
     let sourceAddress;
+
     if (p.type === "post" || p.type === "reply") {
       sourcePost = p.hash;
       sourceAddress = p.source.address;
@@ -51,14 +56,20 @@ const useReaction = () => {
       sourcePost = p.target.postHash;
       sourceAddress = p.target.sourceHash;
     }
+
+    if (updateRouterContext) {
+      updateRouterContext();
+    }
+
     const type = "repost";
+
     history.push(
       `${routes.newPost}?post=${sourcePost}&user=${sourceAddress}&type=${type}`,
       { elementId }
     );
   };
 
-  const handleReply = ({ rootPost: p, elementId }) => {
+  const handleReply = ({ rootPost: p, elementId, updateRouterContext }) => {
     let sourcePost;
     let sourceAddress;
 
@@ -68,6 +79,10 @@ const useReaction = () => {
     } else {
       sourcePost = p.target.postHash;
       sourceAddress = p.target.sourceHash;
+    }
+
+    if (updateRouterContext) {
+      updateRouterContext();
     }
 
     const type = "reply";

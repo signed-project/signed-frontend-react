@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { NavLink, useHistory } from 'react-router-dom';
 import RegisterHeader from '../../utils/RegisterHeader/RegisterHeader';
@@ -12,9 +12,12 @@ import { isWifFormat } from '../../../libs/signature';
 import ChangeUserPic from '../../utils/ChangeUserPic/ChangeUserPic';
 import userPlaceHolder from "../../../assets/svg/icon/userPlaceHolder.jpg"
 import useFiles from "../../customHooks/useFiles";
+import { LayoutContext } from '../../layout/LayoutProvider';
 
 
-const Register = ({ toggleTheme }) => {
+const Register = () => {
+  const layoutContext = useContext(LayoutContext);
+
   const typeMap = {
     createAddress: 'createAddress',
     haveAddress: 'haveAddress'
@@ -46,8 +49,8 @@ const Register = ({ toggleTheme }) => {
   const { uploadFile } = useFiles();
 
   useEffect(() => {
-    toggleTheme(false);
-  }, [toggleTheme]);
+    layoutContext.toggleTheme(false);
+  }, [layoutContext]);
 
   useEffect(() => {
     setIsLoading(isLoginProcess);

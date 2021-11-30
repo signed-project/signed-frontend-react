@@ -5,12 +5,26 @@ import { routes } from '../../../config/routes.config';
 import { useHistory } from "react-router-dom";
 import { getFilePath } from "../../customHooks/getImgSources";
 
-const InfoAuthor = ({ name, createdAt, address, isShowDate = true, typePost, targetPostText, postHash, title, img, id }) => {
+const InfoAuthor = ({ 
+    name, 
+    createdAt, 
+    address, 
+    isShowDate = true, 
+    typePost, 
+    targetPostText, postHash, 
+    title, 
+    img, 
+    id,
+    updateRouterContext
+}) => {
     const history = useHistory();
 
 
     const handleDirect = () => {
         if (!postHash) { return }
+        if (updateRouterContext) {
+            updateRouterContext();
+        }
         const post_url = getFilePath({ hash: postHash, fileExtension: 'json' });
         history.push(`${routes.post}/${postHash}?post_url=${post_url}&title=${title}&img=${img}`,{ elementId: id });
     };
@@ -52,12 +66,18 @@ const InfoAuthor = ({ name, createdAt, address, isShowDate = true, typePost, tar
                             alt="tick icon" 
                             className={styles.tickOne} 
                             onClick={() => {
+                                if (updateRouterContext) {
+                                    updateRouterContext();
+                                }
                                 history.push(`${routes.source}/${address}`, { elementId: id });
                             }} 
                         />
                         <span 
                             className={styles.name} 
                             onClick={() => {
+                                if (updateRouterContext) {
+                                    updateRouterContext();
+                                }
                                 history.push(`${routes.source}/${address}`, { elementId: id });
                             }}
                         >{name}</span>

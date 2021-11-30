@@ -19,6 +19,7 @@ const CommentBlock = ({
   removeLastLine = false,
   showReactionBlock = false,
   id,
+  updateRouterContext
 }) => {
   const {
     text,
@@ -60,7 +61,7 @@ const CommentBlock = ({
       {source && (
         <div className={styles.commentBlock}>
           <div className={styles.avatarBlock}>
-            <Avatar avatar={source?.avatar} address={address} id={id} />
+            <Avatar avatar={source?.avatar} address={address} id={id} updateRouterContext={updateRouterContext} />
             <div
               className={`${styles.verticalLine} ${
                 removeLastLine && styles.verticalLineRemove
@@ -74,6 +75,7 @@ const CommentBlock = ({
                 name={source.publicName}
                 address={post.source.address}
                 id={id}
+                updateRouterContext={updateRouterContext}
               />
               <img
                 src={icon.menu}
@@ -91,6 +93,7 @@ const CommentBlock = ({
                   type={type}
                   imgHostArr={imgPreview}
                   id={id}
+                  updateRouterContext={updateRouterContext}
                   // imgPrevSrc={imgPreview[0]?.imagePreviewUrl}
                 />
               )}
@@ -99,9 +102,21 @@ const CommentBlock = ({
                 <Reaction
                   likesCount={likesCount}
                   repostsCount={repostsCount}
-                  handleLike={() => reaction.handleLike({ rootPost: post, elementId: id })}
-                  handleRepost={() => reaction.handleRepost({ rootPost: post, elementId: id })}
-                  handleReply={() => reaction.handleReply({ rootPost: post, elementId: id })}
+                  handleLike={() => reaction.handleLike({ 
+                    rootPost: post, 
+                    elementId: id,
+                    updateRouterContext
+                  })}
+                  handleRepost={() => reaction.handleRepost({ 
+                    rootPost: post, 
+                    elementId: id,
+                    updateRouterContext
+                  })}
+                  handleReply={() => reaction.handleReply({ 
+                    rootPost: post, 
+                    elementId: id,
+                    updateRouterContext
+                  })}
                 />
               ) 
             }

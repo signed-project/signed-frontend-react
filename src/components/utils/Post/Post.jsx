@@ -18,7 +18,7 @@ import getImgArr from "../../customHooks/getImgSources";
 import MenuPost from "../MenuPost/MenuPost";
 import { useSelector } from "react-redux";
 
-const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost, id }) => {
+const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost, id, updateRouterContext }) => {
   const {
     type,
     text,
@@ -83,6 +83,7 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost, id }) => {
           dotsLine={true}
           showReactionBlock={true}
           id={id}
+          updateRouterContext={updateRouterContext}
         />
       );
     }
@@ -95,9 +96,21 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost, id }) => {
       <Reaction
         likesCount={targetPost?.likesCount}
         repostsCount={targetPost?.repostsCount}
-        handleLike={() => reaction.handleLike({ rootPost: post.rootPost, elementId: id  })}
-        handleRepost={() => reaction.handleRepost({ rootPost: post.rootPost, elementId: id  })}
-        handleReply={() => reaction.handleReply({ rootPost: post.rootPost, elementId: id  })}
+        handleLike={() => reaction.handleLike({ 
+          rootPost: post.rootPost, 
+          elementId: id,
+          updateRouterContext: updateRouterContext,
+        })}
+        handleRepost={() => reaction.handleRepost({ 
+          rootPost: post.rootPost, 
+          elementId: id, 
+          updateRouterContext: updateRouterContext,  
+        })}
+        handleReply={() => reaction.handleReply({ 
+          rootPost: post.rootPost, 
+          elementId: id,
+          updateRouterContext: updateRouterContext,
+        })}
       />
     );
   };
@@ -110,7 +123,12 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost, id }) => {
             <>
               <div className={styles.typePost}>
                 <div className={styles.avatarBlock}>
-                  <Avatar avatar={sourcePost.avatar} address={address} id={id} />
+                  <Avatar 
+                    avatar={sourcePost.avatar} 
+                    address={address} 
+                    id={id} 
+                    updateRouterContext={updateRouterContext} 
+                  />
                   <div
                     className={`${styles.verticalLine}  ${
                       post.replies?.length === 0 && styles.verticalLineRemove
@@ -124,6 +142,7 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost, id }) => {
                       name={sourcePost.publicName}
                       address={address}
                       id={id}
+                      updateRouterContext={updateRouterContext}
                     />
                     <div
                       className={styles.menuIconWrapper}
@@ -155,6 +174,7 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost, id }) => {
                       text={text}
                       address={address}
                       id={id}
+                      updateRouterContext={updateRouterContext}
                       // imgHostArr={imgPreview}
                     />
                     <Preview uploadImgArr={imgPreview} postHash={hash} />

@@ -38,7 +38,14 @@ const RouterProvider = ({children}) => {
     }))
   }, [route, stateRouter]);
   
-  return <RouterContext.Provider value={sharingState}>
+  const updateStateRouter = (stateRouter) => {
+    setStateRouter((prevState) => ({
+      ...prevState,
+      ...stateRouter,
+    }));
+  };
+
+  return <RouterContext.Provider value={{ state: sharingState, updateStateRouter, }}>
     {children}
   </RouterContext.Provider>
 };

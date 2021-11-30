@@ -6,15 +6,18 @@ import { routes } from "../../../config/routes.config";
 import styles from "./feed.module.scss";
 import { postActions } from "./../../../api/storage/post";
 import { handleSwitchPages } from "./../../helpers";
-import { useLocation } from "react-router-dom";
 
 import { RouterContext } from "../../layout/RouterProvider";
+import { LayoutContext } from "../../layout/LayoutProvider";
 
 import { getStreamPage, setStatusUser, userStatuses } from "./../../../api/customNpmPackage/signedLoader";
 
-const Feed = ({ toggleTheme, promptToInstall }) => {
+const Feed = () => {
+  const layoutContext = useContext(LayoutContext)
   const routerContext = useContext(RouterContext);
   const dispatch = useDispatch();
+  let history = useHistory();
+
   const stream = useSelector((state) => state.post.stream);
   const subscribedSources = useSelector((state) => state.source.subscribed);
   const {
@@ -24,17 +27,14 @@ const Feed = ({ toggleTheme, promptToInstall }) => {
   } = useSelector((state) => state.user);
   const { alreadyLoadedPosts, loadedPosts } = useSelector((state) => state.post);
 
-  const location = useLocation();
-
   const [openMenuHash, setOpenMenuHash] = useState(null);
-
   const [posts, setPosts] = useState([]);
+
   const postsBlock = useRef(null);
-  let history = useHistory();
 
   useEffect(() => {
-    toggleTheme(true);
-  }, [toggleTheme]);
+    layoutContext.toggleTheme(true);
+  }, [layoutContext]);
 
   useEffect(() => {
     const callback = () => {
@@ -58,13 +58,23 @@ const Feed = ({ toggleTheme, promptToInstall }) => {
   useEffect(() => {
     let timeout = 0;
 
-    if (routerContext.stateRouter?.elementId) {
+    if (
+      routerContext.state.stateRouter.elementId &&
+      (routerContext.state.stateRouter.scrollTopElement || routerContext.state.stateRouter.scrollTopElement === 0) &&
+      (routerContext.state.stateRouter.scrollTopWindow || routerContext.state.stateRouter.scrollTopWindow === 0)
+    ) {
       timeout = setTimeout(() => {
-        let element = document.getElementById(routerContext.stateRouter?.elementId);
+        let element = document.getElementById(routerContext.state.stateRouter.elementId);
 
         if (element) {
-          element.scrollIntoView({ block: "center", inline: "center" });
-          history.replace({ pathname: routes.feed, state: {} });
+          postsBlock.current.scrollTo({
+            top: routerContext.state.stateRouter.scrollTopElement
+          });
+          window.scrollTo({
+            top: routerContext.state.stateRouter.scrollTopWindow
+          });
+
+          routerContext.updateStateRouter({ elementId: "", scrollTopElement: null, scrollTopWindow: null });
         }
       }, 0)
     }
@@ -165,7 +175,16 @@ const Feed = ({ toggleTheme, promptToInstall }) => {
       search: `?edit=${hash}`,
       state: {
         elementId: id,
+        scrollTopElement: postsBlock.current.scrollTop,
+        scrollTopWindow: window.scrollY,
       },
+    });
+  };
+
+  const updateRouterContext = () => {
+    routerContext.updateStateRouter({ 
+      scrollTopElement: postsBlock.current.scrollTop, 
+      scrollTopWindow: window.scrollY 
     });
   };
 
@@ -177,6 +196,7 @@ const Feed = ({ toggleTheme, promptToInstall }) => {
           renderKey={i}
           post={p}
           id={p.rootPost.id}
+          updateRouterContext={updateRouterContext}
           handleShowMenu={handleShowMenu}
           isShowMenu={isShowMenu}
           handleEditPost={handleEditPost}
@@ -188,7 +208,7 @@ const Feed = ({ toggleTheme, promptToInstall }) => {
   return (
     <>
       <div className={styles.louder}>{alreadyLoadedPosts} of {loadedPosts}</div>
-      <button onClick={promptToInstall}>Add to Home screen</button>
+      <button onClick={layoutContext.promptToInstall}>Add to Home screen</button>
       {loadedPosts - alreadyLoadedPosts !== 0 && (
         <button
           className={styles.showLoadedPostsButton}

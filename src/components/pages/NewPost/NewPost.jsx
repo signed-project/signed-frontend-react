@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { animateScroll as scroll } from "react-scroll";
@@ -29,9 +29,12 @@ import {
   getReplyPostsForComment,
   getParentPostsForComment,
 } from "./../../../api/customNpmPackage/signedLoader";
+import { LayoutContext } from "../../layout/LayoutProvider";
 
 // TOTO: this component too mach long need to split up it!
-const NewPost = ({ toggleTheme }) => {
+const NewPost = () => {
+  const layoutContext = useContext(LayoutContext);
+
   const user = useSelector((state) => state.user);
   const subscribedSources = useSelector((state) => state.source.subscribed);
 
@@ -76,8 +79,8 @@ const NewPost = ({ toggleTheme }) => {
   }, []);
 
   useEffect(() => {
-    toggleTheme(false);
-  }, [toggleTheme]);
+    layoutContext.toggleTheme(false);
+  }, [layoutContext]);
 
   useEffect(() => {
     setPost((prev) => ({

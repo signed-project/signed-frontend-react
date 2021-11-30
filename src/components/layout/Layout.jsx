@@ -15,9 +15,13 @@ import { userApi, hostApi } from "../../config/http.config.js";
 import { getStreamPage } from "./../../api/customNpmPackage/signedLoader";
 import axios from "axios";
 
+import { LayoutContext } from "./LayoutProvider";
+
 const apiHost = hostApi.API_HOST;
 
-const Layout = ({ children, theme }) => {
+const Layout = ({ children }) => {
+  const layoutContext = useContext(LayoutContext);
+
   const [isAuthPage, setISAuthPage] = useState(false);
   const {
     isAuth,
@@ -95,9 +99,9 @@ const Layout = ({ children, theme }) => {
   // style={{ height: '100%' }}
   return (
     <div className={styles.app}>
-      {theme && <Header title="signed.移动" />}
+      {layoutContext.theme && <Header title="signed.移动" />}
       <main>{children}</main>
-      {theme && isAuth && <Navigation />}
+      {layoutContext.theme && isAuth && <Navigation />}
       {!isAuth && !isAuthPage && <WelcomeSing />}
     </div>
   );

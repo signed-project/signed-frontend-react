@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useHistory, useParams, useLocation } from "react-router-dom";
 import queryString from "query-string";
@@ -7,15 +7,16 @@ import Post from "../../utils/Post/Post";
 import { routes } from "../../../config/routes.config";
 import icon from "../../../assets/svg/icon";
 import useSourcePost from "../../customHooks/useSourcePost.js";
+import { LayoutContext } from "../../layout/LayoutProvider";
 
-const TagPage = ({ toggleTheme }) => {
+const TagPage = () => {
+  const layoutContext = useContext(LayoutContext);
+
   const axios = useSelector((state) => state.axios.axios);
-  useEffect(() => {
-    toggleTheme(false);
-  }, [toggleTheme]);
 
   let history = useHistory();
   const location = useLocation();
+
   const { tagApi } = queryString.parse(location.search);
   let { address, tag } = useParams();
   const source = useSourcePost(address);
@@ -31,8 +32,8 @@ const TagPage = ({ toggleTheme }) => {
   const [openMenuHash, setOpenMenuHash] = useState(null);
 
   useEffect(() => {
-    toggleTheme(false);
-  }, [toggleTheme]);
+    layoutContext.toggleTheme(false);
+  }, [layoutContext]);
 
   //    try {
   //     if (source && source.hosts[0].tag) {

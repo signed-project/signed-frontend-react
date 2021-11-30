@@ -6,7 +6,7 @@ import { routes as routs } from "../../../config/routes.config";
 import { getFilePath } from "../../customHooks/getImgSources";
 import { robotHash } from '../../../config/http.config.js';
 
-const Avatar = ({ imgSmall = false, imgBig = false, isDirect = true, avatar, srcData, address, id }) => {
+const Avatar = ({ imgSmall = false, imgBig = false, isDirect = true, avatar, srcData, address, id, updateRouterContext }) => {
   const history = useHistory();
 
   const [src, setSrc] = useState('');
@@ -50,6 +50,9 @@ const Avatar = ({ imgSmall = false, imgBig = false, isDirect = true, avatar, src
     <div
       className={`${!imgBig && styles.imgAvatarWrapper}`}
       onClick={isDirect ? () => {
+        if (updateRouterContext) {
+          updateRouterContext();
+        }
         history.push(`${routs.source}/${address}`, { elementId: id });
       } : () => { }
       }
