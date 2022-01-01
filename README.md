@@ -3,17 +3,17 @@
 - getPosts for a particular timestamp range (createdAt)
   - of several source addresses 
   - OR with a particular tag
-- getSource by address
+- getSources by a list of addresses
 - getDefaultSources
 
 # Inbox API
 
 # Private API
-- add-post
-- add-source
-- delete-post - need to specify the createdAt timestamp
-- upload-asset
-- register-user
+- addPost
+- addSource
+- deletePost - need to specify the createdAt timestamp
+- uploadAsset
+- registerUser
 - login
 
 # Data Dictionary
