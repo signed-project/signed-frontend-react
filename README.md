@@ -7,7 +7,11 @@
 - getSources by a list of addresses
 - getDefaultSources
 
+The public API is protected by rate limiting and caching
+
 # Inbox API
+
+The Inbox API is protected by rate limiting
 
 # Private API
 - addPost
