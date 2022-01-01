@@ -1,37 +1,39 @@
 # Public API
 
-- get-posts of several source addresses for a particular timestamp range (createdAt)
-- get-source by addresses
-- get-post by post_id and source_address
-- get-default-sources
+- getPosts for a particular timestamp range (createdAt)
+  - of several source addresses 
+  - OR with a particular tag
+- getSource by address
+- getDefaultSources
 
 # Inbox API
 
 # Private API
-- 
-
-# Search and tagging API
-
+- add-post
+- add-source
+- delete-post - need to specify the createdAt timestamp
+- upload-asset
+- register-user
+- login
 
 # Data Dictionary
 
 ## post
-* source - source
-* id - string
+* address - source address
+* createdAt - epoch time in milliseconds, serves as the id of the post (!)
 * type - 'post' | 'like' | 'repost' | 'reply'
-* createdAt - epoch time in milliseconds
 * updatedAt - epoch time in milliseconds, the client may reject anything updated in the future
 * text
 * attachments - [media]
 * target
-  * sourceHash - hash. Retrieve the file from the same fileStore
+  * address - source address of the target
   * postHash - hash. Retrieve the file from the replyToSource.fileStores
-* signatures - [signature], optional 
+* signature - string, optional 
 * likesCount - int
 * repostsCount - int
 * commentsCount - int
 * mentions - [source]
-* hash - string, every post shall be stored as a separate file in the fileStore
+* hash - string, every post version will be stored as a separate file in the fileStore
 
 ## source
 * address
@@ -39,12 +41,12 @@
 * updatedAt - epoch time in milliseconds
 * avatar - media
 * hosts - [host]
-* signatures - [signature], optional
-* hash - string, every source shall be stored as a separate file in the fileStore
+* signature - signature, optional
 
 ## host
 * assets - url
-* index - url
+* api - url
+* index - url, optional, contains an archive of all posts 
 * inbox - url
 
 ## signature
