@@ -26,12 +26,10 @@
         "statusBarItem.hoverBackground": "#3a2545",
         "titleBar.inactiveBackground": "#1e132499",
         "titleBar.inactiveForeground": "#e7e7e799",
-        "editorGroup.border": "#3a2545",
-        "panel.border": "#3a2545",
         "sash.hoverBorder": "#3a2545",
-        "sideBar.border": "#3a2545",
         "statusBarItem.remoteBackground": "#1e1324",
         "statusBarItem.remoteForeground": "#e7e7e7"
     },
-    "peacock.color": "#1e1324"
+    "peacock.color": "#1e1324",
+    "compile-hero.disable-compile-files-on-did-save-code": true
 }

@@ -1,6 +1,43 @@
 .louder {
-  padding:10px;
+  padding: 10px;
   display: flex;
   flex-direction: row;
   justify-content: center;
+}
+
+.postsWindow {
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.postsWindow::-webkit-scrollbar {
+  display: none;
+}
+
+.previousPage {
+  width: 100%;
+  color: rebeccapurple;
+  border: 0;
+  background-color: snow;
+  padding-bottom: 3%;
+  cursor: pointer;
+}
+
+.nextPageButton {
+  width: 100%;
+  color: rebeccapurple;
+  border: 0;
+  background-color: snow;
+  padding-bottom: 15%;
+  cursor: pointer;
+}
+
+.showLoadedPostsButton {
+  width: 100%;
+  color: rebeccapurple;
+  border: 0;
+  background-color: snow;
+  padding-bottom: 3%;
+  cursor: pointer;
 }

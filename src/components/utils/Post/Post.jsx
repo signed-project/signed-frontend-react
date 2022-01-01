@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import InfoAuthor from "../InfoAuthor/InfoAuthor";
 import Avatar from "../Avatar/Avatar";
@@ -13,13 +12,13 @@ import { getReadFormat } from "../../../libs/date.js";
 import styles from "./post.module.scss";
 import useReaction from "../../customHooks/useReaction";
 import useTargetPost from "../../customHooks/useTargetPost";
-import getCommentTrees from "../../customHooks/getCommentTrees";
 import useSourcePost from "../../customHooks/useSourcePost";
 import Preview from "../Preview/Preview";
 import getImgArr from "../../customHooks/getImgSources";
 import MenuPost from "../MenuPost/MenuPost";
+import { useSelector } from "react-redux";
 
-const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
+const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost, id, updateRouterContext }) => {
   const {
     type,
     text,
@@ -30,30 +29,16 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
     createdAt,
     source: { address, publicName, avatar },
     target: { postHash },
-  } = post;
+  } = post.rootPost ? post.rootPost : post;
 
   let sourcePost = useSourcePost(address);
-  let targetPost = useTargetPost(postHash);
+  let { rootPost: targetPost } = useTargetPost(postHash);
+  const { isAuth } = useSelector((state) => state.user);
 
   let sourceTargetPost = useSourcePost(targetPost?.source?.address);
   const reaction = useReaction();
 
-  const [targetPostHashMap, setTargetPostHashMap] = useState({});
-  const [comments, setComments] = useState([]);
   const [imgPreview, setImgPreview] = useState([]);
-  const hashedTargetPostStore = useSelector((state) => state.post.hashedTargetPost);
-
-  useEffect(() => {
-    setTargetPostHashMap(hashedTargetPostStore);
-  }, [hashedTargetPostStore]);
-
-  useEffect(() => {
-    const commentsTrees = getCommentTrees({
-      targetHashMap: targetPostHashMap,
-      currentPostHash: hash,
-    });
-    setComments(commentsTrees);
-  }, [targetPostHashMap, hash]);
 
   useEffect(() => {
     const imgSources = getImgArr(attachments);
@@ -74,55 +59,80 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
     };
   }
 
-  const renderComments = comments.map((c, i) => {
-    if (i === 3) {
-      return (
-        <div key={i} className={styles.gap}>
-          <div className={styles.gapBlockLine}></div>
-          <span className={styles.gapTitle}>Show this thread</span>
-        </div>
+  const renderComments = () => {
+    const comments = [];
+
+    for (let index = 0; index < post.replies?.length; index++) {
+      if (index === 3) {
+        comments.push(
+          <div key={index} className={styles.gap}>
+            <div className={styles.gapBlockLine}></div>
+            <span className={styles.gapTitle}>Show this thread</span>
+          </div>
+        );
+
+        break;
+      }
+
+      comments.push(
+        <CommentBlock
+          key={index}
+          post={post.replies[index]}
+          renderKey={index}
+          removeLastLine={index + 1 === post.replies?.length}
+          dotsLine={true}
+          showReactionBlock={true}
+          id={id}
+          updateRouterContext={updateRouterContext}
+        />
       );
     }
 
-    // if (subscribed.includes(c.source.address) && i !== 3) {
-    return (
-      <CommentBlock
-        key={i}
-        post={c}
-        renderKey={i}
-        removeLastLine={i + 1 === comments.length}
-        dotsLine={true}
-        showReactionBlock={true}
-      />
-    );
-  });
+    return comments;
+  };
 
   const reactionBlock = () => {
     return (
       <Reaction
         likesCount={targetPost?.likesCount}
         repostsCount={targetPost?.repostsCount}
-        handleLike={() => reaction.handleLike(post)}
-        handleRepost={() => reaction.handleRepost(post)}
-        handleReply={() => reaction.handleReply(post)}
+        handleLike={() => reaction.handleLike({ 
+          rootPost: post.rootPost, 
+          elementId: id,
+          updateRouterContext: updateRouterContext,
+        })}
+        handleRepost={() => reaction.handleRepost({ 
+          rootPost: post.rootPost, 
+          elementId: id, 
+          updateRouterContext: updateRouterContext,  
+        })}
+        handleReply={() => reaction.handleReply({ 
+          rootPost: post.rootPost, 
+          elementId: id,
+          updateRouterContext: updateRouterContext,
+        })}
       />
     );
   };
 
-  const isHideLine = comments.length < 1;
-
   return (
     <>
       {sourcePost && (
-        <div className={styles.post}>
+        <div id={id} className={styles.post}>
           {type === "post" && sourcePost.hosts && (
             <>
               <div className={styles.typePost}>
                 <div className={styles.avatarBlock}>
-                  <Avatar avatar={sourcePost.avatar} address={address} />
+                  <Avatar 
+                    avatar={sourcePost.avatar} 
+                    address={address} 
+                    id={id} 
+                    updateRouterContext={updateRouterContext} 
+                  />
                   <div
-                    className={`${styles.verticalLine}  ${comments.length === 0 && styles.verticalLineRemove
-                      }`}
+                    className={`${styles.verticalLine}  ${
+                      post.replies?.length === 0 && styles.verticalLineRemove
+                    }`}
                   ></div>
                 </div>
                 <div className={styles.postMain}>
@@ -131,6 +141,8 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
                       createdAt={getReadFormat(createdAt)}
                       name={sourcePost.publicName}
                       address={address}
+                      id={id}
+                      updateRouterContext={updateRouterContext}
                     />
                     <div
                       className={styles.menuIconWrapper}
@@ -148,6 +160,7 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
 
                     {isShowMenu(hash) && (
                       <MenuPost
+                        id={id}
                         dataHash={hash}
                         handleEditPost={handleEditPost}
                       />
@@ -160,11 +173,13 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
                       postHash={hash}
                       text={text}
                       address={address}
-                    // imgHostArr={imgPreview}
+                      id={id}
+                      updateRouterContext={updateRouterContext}
+                      // imgHostArr={imgPreview}
                     />
                     <Preview uploadImgArr={imgPreview} postHash={hash} />
                   </div>
-                  {reactionBlock()}
+                  { isAuth && reactionBlock() }
                 </div>
               </div>
             </>
@@ -185,8 +200,9 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
                       address={address}
                     />
                     <div
-                      className={`${styles.verticalLine}    ${type === "like" && styles.verticalLineRemove
-                        }`}
+                      className={`${styles.verticalLine}    ${
+                        type === "like" && styles.verticalLineRemove
+                      }`}
                     ></div>
                   </div>
                   <div className={styles.postBody}>
@@ -210,20 +226,22 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
                         postHash={targetPost.hash}
                       />
                     </div>
-                    {reactionBlock()}
+                    { isAuth && reactionBlock() }
                   </div>
                 </div>
               </div>
             </>
           )}
+
           {type === "repost" && targetPost && (
             <>
               <div className={styles.typePost}>
                 <div className={styles.avatarBlock}>
                   <Avatar avatar={sourcePost.avatar} address={address} />
                   <div
-                    className={`${styles.verticalLine}  ${comments.length === 0 && styles.verticalLineRemove
-                      }`}
+                    className={`${styles.verticalLine}  ${
+                      post.replies?.length === 0 && styles.verticalLineRemove
+                    }`}
                   ></div>
                 </div>
                 <div className={styles.postMain}>
@@ -249,13 +267,14 @@ const Post = ({ post, handleShowMenu, isShowMenu, handleEditPost }) => {
                     />
                   </div>
                   <RepostBlock postHash={targetPost.hash} />
-                  {reactionBlock()}
+                  { isAuth && reactionBlock() }
                 </div>
               </div>
             </>
           )}
-          {comments && (
-            <div className={styles.commentsWrapper}>{renderComments}</div>
+
+          {post.replies && (
+            <div className={styles.commentsWrapper}>{renderComments()}</div>
           )}
         </div>
       )}

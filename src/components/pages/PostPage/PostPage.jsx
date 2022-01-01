@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import queryString from "query-string";
 import icon from "../../../assets/svg/icon";
@@ -10,19 +10,28 @@ import { getReadFormat } from "../../../libs/date.js";
 import Reaction from "../../utils/Reaction/Reaction";
 import PostContent from "../../utils/PostContent/PostContent";
 import useReaction from "../../customHooks/useReaction";
-import getCommentTrees from "../../customHooks/getCommentTrees";
 import getImgSources from "../../customHooks/getImgSources";
 import Preview from "../../utils/Preview/Preview";
 import Avatar from "../../utils/Avatar/Avatar";
 import InfoAuthor from "../../utils/InfoAuthor/InfoAuthor";
 import Slider from "../../utils/Slider/Slider";
-import routes from "../../../config/routes.config";
+
+import {
+  getPostByHash,
+  getSourceByAddress,
+} from "./../../../api/customNpmPackage/signedLoader";
+import { LayoutContext } from "../../layout/LayoutProvider";
 
 // TODO: refactor this component to use module Post if it possible
-const PostPage = ({ toggleTheme }) => {
-  const postMapState = useSelector((state) => state.post.hashed);
-  const hashedTargetPostStore = useSelector((state) => state.post.hashedTargetPost);
-  const sourceStateLatest = useSelector(state => state.source.latest);
+const PostPage = () => {
+  const layoutContext = useContext(LayoutContext);
+
+  const subscribedSources = useSelector((state) => state.source.subscribed);
+  const {
+    isAuth,
+    subscribed,
+    source: userSource,
+  } = useSelector((state) => state.user);
   const location = useLocation();
   const { slider } = queryString.parse(location.search);
 
@@ -38,38 +47,45 @@ const PostPage = ({ toggleTheme }) => {
   const [currentPost, setCurrentPost] = useState("");
   const [source, setSource] = useState("");
 
-  // console.log('currentPost', currentPost);
-  // console.log('source[currentPost]', source);
-  // console.log('source[currentPost.source.address]', currentPost.source.address);
-  // const source = useSourcePost(currentPost.source.address);
-
   useEffect(() => {
-    const post = postMapState[hash];
-    setCurrentPost(post);
-  }, [hash, postMapState])
+    let post = {};
 
-  useEffect(() => {
-    toggleTheme(false);
-  }, [toggleTheme]);
+    if (!isAuth) {
+      post = getPostByHash({ hash, subscribedSources: subscribedSources });
 
-  useEffect(() => {
-    setPost(currentPost);
-    if (currentPost?.source?.address) {
-      const sourceData = sourceStateLatest[currentPost.source.address];
-      setSource(sourceData);
+      setCurrentPost(post);
+    } else {
+      post = getPostByHash({
+        hash,
+        subscribedSources: [...subscribed, userSource],
+      });
+
+      setCurrentPost(post);
     }
-  }, [currentPost, sourceStateLatest]);
+  }, [hash, subscribedSources]);
 
   useEffect(() => {
-    const commentsTrees = getCommentTrees({
-      targetHashMap: hashedTargetPostStore,
-      currentPostHash: hash,
-    });
-    setComments(commentsTrees);
-  }, [hashedTargetPostStore, hash]);
+    layoutContext.toggleTheme(false);
+  }, [layoutContext]);
 
   useEffect(() => {
-    if (post?.attachments?.length) {
+    if (currentPost) {
+      setPost(currentPost.rootPost);
+      if (currentPost.rootPost.source?.address) {
+        const sourceData = getSourceByAddress(
+          currentPost.rootPost.source.address
+        );
+        setSource(sourceData);
+      }
+    }
+  }, [currentPost]);
+
+  useEffect(() => {
+    setComments(currentPost.replies);
+  }, [currentPost]);
+
+  useEffect(() => {
+    if (post.attachments?.length) {
       const imgSourceArr = getImgSources(post.attachments);
       setImgPreview(imgSourceArr);
     }
@@ -82,11 +98,8 @@ const PostPage = ({ toggleTheme }) => {
     }
   }, [slider]);
 
-  console.log('post[post]', post);
-  console.log('post[source]', source);
-
   const renderComments = comments
-    .slice()
+    ?.slice()
     .map((post, i) => (
       <CommentBlock
         post={post}
@@ -106,6 +119,10 @@ const PostPage = ({ toggleTheme }) => {
     setSliderNum(i);
   };
 
+  const handleArrowBackClick = () => {
+    history.goBack();
+  };
+
   return showSlider ? (
     <Slider
       uploadImgArr={imgPreview}
@@ -117,7 +134,7 @@ const PostPage = ({ toggleTheme }) => {
       <div className={styles.backBlock}>
         <img
           src={icon.arrowBack}
-          onClick={() => history.push(routes.feed)}
+          onClick={handleArrowBackClick}
           alt="arrow back icon"
         />
       </div>
@@ -126,12 +143,12 @@ const PostPage = ({ toggleTheme }) => {
           <div className={styles.typePost}>
             <div className={styles.avatarBlock}>
               <Avatar avatar={post.source.avatar} address={source.address} />
-              {/*  ${styles.verticalLineRemove} */}
               <div
                 className={`${styles.verticalLine} 
-                             ${comments.length === 0 &&
-                  styles.verticalLineRemove
-                  }`}
+                             ${
+                               comments.length === 0 &&
+                               styles.verticalLineRemove
+                             }`}
               ></div>
             </div>
             <div className={styles.postMain}>
@@ -153,25 +170,37 @@ const PostPage = ({ toggleTheme }) => {
                   hosts={source.hosts}
                   text={post.text}
                   type={post.type}
-                  address={currentPost.source.address}
+                  address={currentPost.rootPost.source.address}
                 />
                 <Preview
                   uploadImgArr={imgPreview}
                   handleFullSlider={handleFullSlider}
                 />
-                {post?.type === "repost" && (
+                {post.rootPost?.type === "repost" && (
                   <div className={styles.repostBlockWrapper}>
                     <RepostBlock postHash={post.target.postHash} />
                   </div>
                 )}
               </div>
-              <Reaction
-                likesCount={post.likesCount}
-                repostsCount={post.repostsCount}
-                handleLike={() => reaction.handleLike(post)}
-                handleRepost={() => reaction.handleRepost(post)}
-                handleReply={() => reaction.handleReply(post)}
-              />
+              { isAuth && (
+                <Reaction
+                  likesCount={post.likesCount}
+                  repostsCount={post.repostsCount}
+                  handleLike={() => reaction.handleLike({ 
+                    rootPost: post, 
+                    elementId: location.state.elementId 
+                  })}
+                  handleRepost={() => reaction.handleRepost({ 
+                    rootPost: post, 
+                    elementId: location.state.elementId 
+                  })}
+                  handleReply={() => reaction.handleReply({ 
+                    rootPost: post, 
+                    elementId: location.state.elementId 
+                  })}
+                />
+              ) 
+            }
             </div>
           </div>
 

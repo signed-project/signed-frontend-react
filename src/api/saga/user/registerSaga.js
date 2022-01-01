@@ -6,7 +6,7 @@ import { ACTIONS as ACTIONS_AXIOS } from "../../storage/axios";
 import srp from 'secure-remote-password/client';
 import { getRegisterUserData } from '../../../libs/signature.js';
 import { User } from '../../models/user';
-import routes from '../../../config/routes.config';
+import { routes } from '../../../config/routes.config';
 
 const getDataSrp = ({ userName, password }) => {
     const salt = srp.generateSalt();

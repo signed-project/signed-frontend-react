@@ -2,9 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, NavLink, useHistory } from "react-router-dom";
 import styles from '../profile.module.scss';
 import Post from '../../../utils/Post/Post';
-import routes from "../../../../config/routes.config";
-
-
+import { routes } from "../../../../config/routes.config";
 
 const ProfilePosts = ({ ownPost }) => {
     let history = useHistory();
@@ -25,7 +23,7 @@ const ProfilePosts = ({ ownPost }) => {
         }
     };
 
-    const handleEditPost = (hash) => {
+    const handleEditPost = (hash, id) => {
         history.push(`${routes.newPost}?edit=${hash}`);
     };
 
@@ -33,18 +31,18 @@ const ProfilePosts = ({ ownPost }) => {
         return (
             <Post
                 post={p}
-                avatar={p.source.avatar}
+                avatar={p.rootPost.source.avatar}
                 key={i}
                 renderKey={i}
-                type={p.type}
-                name={p.source.name}
-                text={p.text}
-                postHash={p?.target?.postHash}
-                createdAt={p.createdAt}
-                likesCount={p.likesCount}
-                repostsCount={p.repostsCount}
-                attachments={p.attachments}
-                hash={p.hash}
+                type={p.rootPost.type}
+                name={p.rootPost.source.name}
+                text={p.rootPost.text}
+                postHash={p.rootPost?.target?.postHash}
+                createdAt={p.rootPost.createdAt}
+                likesCount={p.rootPost.likesCount}
+                repostsCount={p.rootPost.repostsCount}
+                attachments={p.rootPost.attachments}
+                hash={p.rootPost.hash}
                 handleShowMenu={handleShowMenu}
                 isShowMenu={isShowMenu}
                 handleEditPost={handleEditPost}

@@ -140,9 +140,9 @@ function accessDataFrontStorage() {
 function* callSelfOnTimer({ axios, address }) {
 
   const index = yield call(getCashData, { arrPosts, arrSources });
-  yield put({ type: POST_ACTIONS.SET_POST_STREAM, payload: index.stream });
-  yield put({ type: POST_ACTIONS.SET_POST_HASH, payload: index.hashedPost });
-  yield put({ type: POST_ACTIONS.SET_POST_LATEST, payload: index.latestPost });
+  // yield put({ type: POST_ACTIONS.SET_POST_STREAM, payload: index.stream });
+  // yield put({ type: POST_ACTIONS.SET_POST_HASH, payload: index.hashedPost });
+  // yield put({ type: POST_ACTIONS.SET_POST_LATEST, payload: index.latestPost });
   yield put({
     type: SOURCE_ACTIONS.SET_SOURCE_LATEST,
     payload: index.latestSource,
@@ -256,9 +256,9 @@ function* workerGetIndex(action) {
     return;
   }
   const index = yield call(getCashData, { arrPosts, arrSources });
-  yield put({ type: POST_ACTIONS.SET_POST_STREAM, payload: index.stream });
-  yield put({ type: POST_ACTIONS.SET_POST_HASH, payload: index.hashedPost });
-  yield put({ type: POST_ACTIONS.SET_POST_LATEST, payload: index.latestPost });
+  // yield put({ type: POST_ACTIONS.SET_POST_STREAM, payload: index.stream });
+  // yield put({ type: POST_ACTIONS.SET_POST_HASH, payload: index.hashedPost });
+  // yield put({ type: POST_ACTIONS.SET_POST_LATEST, payload: index.latestPost });
   yield put({
     type: SOURCE_ACTIONS.SET_SOURCE_LATEST,
     payload: index.latestSource,

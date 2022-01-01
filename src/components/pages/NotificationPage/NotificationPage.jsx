@@ -5,7 +5,7 @@ import styles from './notificationPage.module.scss';
 import { useHistory } from "react-router-dom";
 import AllNotification from './sub/AllNotification';
 
-const NotificationPage = ({ toggleTheme }) => {
+const NotificationPage = () => {
   const inboxState = useSelector(state => state.inbox.inbox);
 
   useEffect(() => {

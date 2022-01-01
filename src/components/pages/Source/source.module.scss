@@ -82,6 +82,7 @@
   // margin-left: 16px;
   margin-right: 26px !important;
   color: lime;
+  cursor: pointer;
 }
 
 .buttonWrapper {
@@ -90,4 +91,22 @@
   justify-content: center;
   max-width: 81px;
   // height: 30px;
+}
+
+.nextPageButton {
+  width: 100%;
+  color: rebeccapurple;
+  border: 0;
+  background-color: snow;
+  padding-bottom: 3%;
+  cursor: pointer;
+}
+
+.previousPage {
+  width: 100%;
+  color: rebeccapurple;
+  border: 0;
+  background-color: snow;
+  padding-bottom: 3%;
+  cursor: pointer;
 }

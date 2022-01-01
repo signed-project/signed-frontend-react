@@ -1,7 +1,7 @@
 import { useHistory } from 'react-router-dom';
 import styles from './preview.module.scss';
 import icon from '../../../assets/svg/icon';
-import routes from '../../../config/routes.config';
+import { routes } from '../../../config/routes.config';
 
 // TODO: move to this module calculate  uploadImgArr 
 // TODO:  think about what please better for function 

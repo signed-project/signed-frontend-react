@@ -4,7 +4,7 @@ import { userApi } from "../../../config/http.config";
 import { ACTIONS as ACTIONS_USER } from "../../storage/user";
 import { ACTIONS as ACTIONS_POST } from "../../storage/post";
 import { User } from '../../models/user';
-import routes from '../../../config/routes.config';
+import { routes } from '../../../config/routes.config';
 import wif from 'wif';
 import bip38 from 'bip38';
 import { parseJson } from '../../../libs/json';

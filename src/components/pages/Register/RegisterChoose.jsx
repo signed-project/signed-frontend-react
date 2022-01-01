@@ -1,23 +1,25 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { NavLink, useHistory } from 'react-router-dom';
 import RegisterHeader from '../../utils/RegisterHeader/RegisterHeader';
 import styles from './register.module.scss';
 import Input from '../../utils/Input/Input';
 import Button from '../../utils/Button/Button';
-import routes from '../../../config/routes.config';
+import { routes } from '../../../config/routes.config';
 import { userApi } from '../../../config/http.config';
 import srp from 'secure-remote-password/client';
 import { getRegisterUserData } from '../../../libs/signature.js';
 import { userActions } from '../../../api/storage/user';
+import { LayoutContext } from '../../layout/LayoutProvider';
 
-const Register = ({ toggleTheme }) => {
-
+const Register = () => {
+    const layoutContext = useContext(LayoutContext);
     const history = useHistory();
     const dispatch = useDispatch();
+    
     useEffect(() => {
-        toggleTheme(false);
-    }, [toggleTheme]);
+        layoutContext.toggleTheme(false);
+    }, [layoutContext]);
 
     const initialForm = {
         login: { value: '', warning: '' },

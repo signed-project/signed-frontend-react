@@ -1,15 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './profile.module.scss';
 import icon from '../../../assets/svg/icon';
 import ProfilePosts from './sub/ProfilePosts';
 import ProfileInfo from './sub/ProfileInfo';
+import { LayoutContext } from '../../layout/LayoutProvider';
 
-const Profile = ({ toggleTheme }) => {
+const Profile = () => {
+  const layoutContext = useContext(LayoutContext);
 
+  console.log("|_____------------------ PROFILE PAGE!");
   useEffect(() => {
-    toggleTheme(true);
-  }, [toggleTheme]);
+    layoutContext.toggleTheme(true);
+  }, [layoutContext]);
 
   const tabList = {
     posts: 'posts',
@@ -22,7 +25,9 @@ const Profile = ({ toggleTheme }) => {
 
   useEffect(() => {
     if (Array.isArray(stream)) {
-      const userPost = stream.filter(post => post.source.address === source.address)
+      const userPost = stream.filter(post => post.rootPost.source.address === source.address)
+      console.log("userPost---userPost");
+      console.dir(userPost);
       setOwnPost(userPost);
     }
   }, [stream]);
@@ -47,7 +52,7 @@ const Profile = ({ toggleTheme }) => {
         <span className={`${styles.tabsItem} ${isActiveTab(tabList.info)}`} onClick={() => goToTab(tabList.info)}>Info</span>
         <span className={styles.tabsItem}>Users</span>
       </div>
-      {tab === tabList.posts && < ProfilePosts ownPost={ownPost} />}
+      {tab === tabList.posts && <ProfilePosts ownPost={ownPost} />}
       {tab === tabList.info && <ProfileInfo />}
     </>
   );

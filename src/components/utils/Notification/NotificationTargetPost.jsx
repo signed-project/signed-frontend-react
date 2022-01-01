@@ -1,7 +1,7 @@
 import styles from './notification.module.scss';
 import { getFilePath } from '../../customHooks/getImgSources';
 import { useHistory } from "react-router-dom";
-import routes from "../../../config/routes.config.js";
+import { routes } from "../../../config/routes.config.js";
 
 
 const NotificationTargetPost = ({ text, img, postHash }) => {

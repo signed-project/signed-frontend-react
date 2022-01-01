@@ -3,7 +3,6 @@ import style from './newPost.module.scss';
 import Avatar from '../../utils/Avatar/Avatar';
 import InfoAuthor from '../../utils/InfoAuthor/InfoAuthor';
 
-
 const ReplyingUser = ({ name, avatar, checked, checkBoxName, onChange }) => {
     return (
         <div className={style.authorRow}>

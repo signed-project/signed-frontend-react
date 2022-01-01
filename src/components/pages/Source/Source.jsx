@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import icon from '../../../assets/svg/icon';
 import styles from './source.module.scss';
 import { useParams, useHistory } from "react-router-dom";
-import routes from '../../../config/routes.config';
 import Avatar from '../../utils/Avatar/Avatar';
 import InfoAuthor from '../../utils/InfoAuthor/InfoAuthor';
 import useSourcePost from "../../customHooks/useSourcePost";
@@ -12,9 +11,14 @@ import SourceInfo from './sub/SourceInfo';
 import Button from "../../utils/Button/Button";
 import { userApi } from '../../../config/http.config';
 import { postActions } from '../../../api/storage/post';
+import { getStreamPage } from '../../../api/customNpmPackage/signedLoader';
+import { handleSwitchPages } from "./../../helpers";
+import { LayoutContext } from '../../layout/LayoutProvider';
 
 // TODO: refactor this component to use module Post if it possible
-const Source = ({ toggleTheme }) => {
+const Source = () => {
+    const layoutContext = useContext(LayoutContext);
+
     const tabList = {
         posts: 'posts',
         info: 'info'
@@ -32,8 +36,8 @@ const Source = ({ toggleTheme }) => {
     const history = useHistory();
 
     useEffect(() => {
-        toggleTheme(false);
-    }, [toggleTheme]);
+        layoutContext.toggleTheme(false);
+    }, [layoutContext]);
 
     useEffect(() => {
         if (user.subscribed.find(sub => sub.address === address)) {
@@ -44,15 +48,47 @@ const Source = ({ toggleTheme }) => {
     }, [user, address]);
 
     useEffect(() => {
-        if (Array.isArray(stream)) {
-            const userPost = stream.filter(post => post.source.address === address)
-            setOwnPost(userPost);
-        }
-    }, [stream]);
+        const userPost = getStreamPage({
+            postsSource: address, 
+            subscribedSources: [], 
+            blacklistedSourcesByAddress: {}, 
+            afterPost: {}, 
+            limit: 10, 
+            callback: () => {} 
+        });
+
+        setOwnPost(userPost);
+    }, [address]);
 
     const goToTab = (tab) => {
         setTab(tab);
     }
+
+    const updatePosts = ({ stream }) => {
+        setOwnPost(stream);
+    }
+
+    const handleNextPage = () => {
+        handleSwitchPages({
+            postsStream: ownPost,
+            next: true,
+            callbackForUpdateStream: updatePosts,
+            limit: 10,
+            blacklistedSourcesByAddress: {},
+            postsSource: address,
+        });
+    };
+
+    const handlePreviousPage = () => {
+        handleSwitchPages({
+            postsStream: ownPost,
+            next: false,
+            callbackForUpdateStream: updatePosts,
+            limit: 10,
+            blacklistedSourcesByAddress: {},
+            postsSource: address,
+        });
+    };
 
     const isActiveTab = (currentTab) => {
         return tab === currentTab && styles.activeTab
@@ -69,7 +105,7 @@ const Source = ({ toggleTheme }) => {
             if (data === 'Ok') {
                 setIsAlreadyFollow(action);
                 if (action === false) {
-                    const newStream = stream.filter(post => post.source.address !== address);
+                    const newStream = stream.filter(post => post.rootPost.source.address !== address);
                     dispatch(postActions.updatePostStream(newStream));
                 }
             }
@@ -79,10 +115,14 @@ const Source = ({ toggleTheme }) => {
         }
     }
 
+    const handleArrowBackClick = () => {
+        history.goBack();
+    };
+
     return (
         <>
             {source && <> <div className={styles.header}>
-                <img src={icon.arrowBack} onClick={() => history.push(routes.feed)} alt="arrow back icon" className={styles.iconBack} />
+                <img src={icon.arrowBack} onClick={handleArrowBackClick} alt="arrow back icon" className={styles.iconBack} />
                 <Avatar avatar={source.avatar} address={address} />
                 <InfoAuthor name={source.publicName} address={address} />
             </div>
@@ -100,7 +140,7 @@ const Source = ({ toggleTheme }) => {
 
             </>
             }
-            {tab === tabList.posts && < SourcePosts ownPost={ownPost} />}
+            {tab === tabList.posts && <SourcePosts ownPost={ownPost} handlePreviousPage={handlePreviousPage} handleNextPage={handleNextPage} />}
             {tab === tabList.info && <SourceInfo source={source} />}
         </>
     );

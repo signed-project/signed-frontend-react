@@ -1,4 +1,3 @@
-
 import { ACTIONS } from "./reducer";
 
 export const setPostStream = (payload) => ({
@@ -8,6 +7,16 @@ export const setPostStream = (payload) => ({
 
 export const updatePostStream = (payload) => ({
   type: ACTIONS.UPDATE_POST_STREAM,
+  payload,
+});
+
+export const setAlreadyLoadedPosts = (payload) => ({
+  type: ACTIONS.SET_ALREADY_LOADED_POSTS,
+  payload,
+});
+
+export const setLoadedPosts = (payload) => ({
+  type: ACTIONS.SET_LOADED_POSTS,
   payload,
 });
 
@@ -30,5 +39,3 @@ export const addTempPost = (payload) => ({
   type: ACTIONS.ADD_TEMP_POST_ITEM,
   payload,
 });
-
-

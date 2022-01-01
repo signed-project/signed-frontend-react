@@ -1,18 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { NavLink, useHistory } from 'react-router-dom';
 import RegisterHeader from '../../utils/RegisterHeader/RegisterHeader';
 import styles from './login.module.scss';
 import Input from '../../utils/Input/Input';
 import Button from '../../utils/Button/Button';
-import routes from '../../../config/routes.config';
+import { routes } from '../../../config/routes.config';
 import { userApi } from '../../../config/http.config';
 import srp from 'secure-remote-password/client';
 import { userActions } from '../../../api/storage/user';
 import { postActions } from '../../../api/storage/post';
 import Loader from '../../utils/loader/Loader';
+import { LayoutContext } from '../../layout/LayoutProvider';
 
-const Login = ({ toggleTheme }) => {
+const Login = () => {
+    const layoutContext = useContext(LayoutContext);
 
     useEffect(() => {
 
@@ -21,8 +23,8 @@ const Login = ({ toggleTheme }) => {
     }, [])
 
     useEffect(() => {
-        toggleTheme(false);
-    }, [toggleTheme]);
+        layoutContext.toggleTheme(false);
+    }, [layoutContext]);
 
     const initialForm = {
         userName: { value: '', warning: '' },
