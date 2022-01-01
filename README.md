@@ -8,8 +8,7 @@
 - getDefaultSources
 
 # Inbox API
-
-The Inbox API is protected by rate limiting
+- addPost(post, source)
 
 # Private API
 - addPost
@@ -32,13 +31,19 @@ The APIs may be protected by AWS WAF
 * attachments - [media]
 * target
   * address - source address of the target
-  * postHash - hash. Retrieve the file from the replyToSource.fileStores
-* signature - string, optional 
+  * postHash - hash. Retrieve the file from the asset store
+* signature - string 
+* mentions - [sourceMention]
+* hash - string, every post version will be stored as a separate file in the fileStore
+
+## sourceMention
+* name
+* address
+
+## postStats
 * likesCount - int
 * repostsCount - int
 * commentsCount - int
-* mentions - [source]
-* hash - string, every post version will be stored as a separate file in the fileStore
 
 ## source
 * address
@@ -46,7 +51,7 @@ The APIs may be protected by AWS WAF
 * updatedAt - epoch time in milliseconds
 * avatar - media
 * hosts - [host]
-* signature - signature, optional
+* signature - string
 
 ## host
 * assets - url
@@ -67,27 +72,3 @@ The APIs may be protected by AWS WAF
 * height - optional
 * thumbnail - media, optional
 
-## index
-* mainSource - source
-* recentPosts - [post]
-* pinnedPosts - [post]
-* sources - [source]
-* archives - [archive]
-* tags - [tag]
-
-## archive
-* dateStart - unixtime
-* dateEnd - unixtime
-* posts - [post]
-* sources - [source]
-* hash - optional
-
-## tag
-* name
-* posts - [post]
-* sources - [source]
-* hash - optional
-
-## inbox_request
-* post_url
-* signature
