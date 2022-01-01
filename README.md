@@ -7,8 +7,6 @@
 - getSources by a list of addresses
 - getDefaultSources
 
-The public API is protected by rate limiting and caching
-
 # Inbox API
 
 The Inbox API is protected by rate limiting
@@ -20,6 +18,8 @@ The Inbox API is protected by rate limiting
 - uploadAsset
 - registerUser
 - login
+
+The APIs may be protected by AWS WAF
 
 # Data Dictionary
 
