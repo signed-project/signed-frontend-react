@@ -1,3 +1,18 @@
+# Public API
+
+- get-posts of several source addresses for a particular timestamp range (createdAt)
+- get-source by addresses
+- get-post by post_id and source_address
+- get-default-sources
+
+# Inbox API
+
+# Private API
+- 
+
+# Search and tagging API
+
+
 # Data Dictionary
 
 ## post
