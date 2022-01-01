@@ -3,6 +3,7 @@
 - getPosts for a particular timestamp range (createdAt)
   - of several source addresses 
   - OR with a particular tag
+  - OR replies to a specific post hash
 - getSources by a list of addresses
 - getDefaultSources
 
