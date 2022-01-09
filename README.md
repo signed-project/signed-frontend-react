@@ -1,10 +1,10 @@
 # Public API
 
-- GET /posts?createdBefore=<timestamp>&createdAfter=<timestamp> for a particular timestamp range (createdAt)
-  - of several source addresses: &address=<comma-separated list of addresses>
-  - OR with a particular tag: &tag=<tag>
-  - OR replies to a specific post hash: &replyTo=<hash>
-- GET /sources?address=<comma-separated list of addresses>
+- GET /posts?createdBefore=[timestamp]&createdAfter=[timestamp] for a particular timestamp range (createdAt)
+  - of several source addresses: &address=[comma-separated list of addresses]
+  - OR with a particular tag: &tag=[tag]
+  - OR replies to a specific post hash: &replyTo=[hash]
+- GET /sources?address=[comma-separated list of addresses]
 - GET /sources - returns default sources
 
 # Inbox API
