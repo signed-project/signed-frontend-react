@@ -1,11 +1,11 @@
 # Public API
 
-- getPosts for a particular timestamp range (createdAt)
-  - of several source addresses 
-  - OR with a particular tag
-  - OR replies to a specific post hash
-- getSources by a list of addresses
-- getDefaultSources
+- GET /posts?createdBefore=<timestamp>&createdAfter=<timestamp> for a particular timestamp range (createdAt)
+  - of several source addresses: &address=<comma-separated list of addresses>
+  - OR with a particular tag: &tag=<tag>
+  - OR replies to a specific post hash: &replyTo=<hash>
+- GET /sources?address=<comma-separated list of addresses>
+- GET /sources - returns default sources
 
 # Inbox API
 - addPost(post, source)
