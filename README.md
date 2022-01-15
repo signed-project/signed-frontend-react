@@ -45,19 +45,33 @@ The APIs may be protected by AWS WAF
 * repostsCount - int
 * commentsCount - int
 
+## sourceStats
+* likesCount - int
+* repostsCount - int
+* commentsCount - int
+* postsCount - int
+
 ## source
 * address
 * name
 * updatedAt - epoch time in milliseconds
 * avatar - media
-* hosts - [host]
+* nodes - [string] - url addresses of nodes
 * signature - string
 
-## host
-* assets - url
-* api - url
-* index - url, optional, contains an archive of all posts 
-* inbox - url
+## nodeConfig
+* assetUrlPrefix - url, where the assets are stored
+* publicApiEndpoint - url
+* publicApiType - string, optional, 'signed' is the default
+* publicApiVersion -  string, optional, '1.0' is the default
+* privateApiEndpoint - url
+* privateApiType - string, optional, 'signed' is the default
+* privateApiVersion -  string, optional, '1.0' is the default
+* inboxEndpoint - url
+* inboxVersion - string, optional, '1.0' is the default
+* inboxType - string, optional, 'signed' is the default
+* allSources - url, optional, contains an JSON array of all sources
+* defaultSources - url, optional, contains a JSON array of the default sources
 
 ## signature
 * address - string
