@@ -61,15 +61,18 @@ The APIs may be protected by AWS WAF
 
 ## nodeConfig
 * assetUrlPrefix - url, where the assets are stored
-* publicApiEndpoint - url
-* publicApiType - string, optional, 'signed' is the default
-* publicApiVersion -  string, optional, '1.0' is the default
-* privateApiEndpoint - url
-* privateApiType - string, optional, 'signed' is the default
-* privateApiVersion -  string, optional, '1.0' is the default
-* inboxEndpoint - url
-* inboxVersion - string, optional, '1.0' is the default
-* inboxType - string, optional, 'signed' is the default
+* publicApi
+  * endpoint - url
+  * type - string, optional, 'signed' is the default
+  * version -  string, optional, '1.0' is the default
+* privateApi
+  * endpoint - url
+  * type - string, optional, 'signed' is the default
+  * version -  string, optional, '1.0' is the default
+* inbox
+  * endpoint - url
+  * type - string, optional, 'signed' is the default
+  * version -  string, optional, '1.0' is the default
 * allSources - url, optional, contains an JSON array of all sources
 * defaultSources - url, optional, contains a JSON array of the default sources
 
