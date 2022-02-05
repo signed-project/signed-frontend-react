@@ -28,7 +28,7 @@ The APIs may be protected by AWS WAF
 * id - post id: [address,createdAt,id] should be globally unique 
 * type - 'post' | 'like' | 'repost' | 'reply'
 * updatedAt - epoch time in milliseconds, the client may reject anything updated in the future
-* text
+* content
 * attachments - [media]
 * target
   * address - source address of the target
